@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <!-- Basic -->
+    <meta charset="UTF-8" />
+
+    <title>Dashboard | Nadhif - Responsive Admin Template</title>
+
+    <link rel="stylesheet" href="static/asset/js/bootstrap.min.css">
+    <link rel="stylesheet" href="static/asset/js/bootstrap-table.css">
+
+    <script src="static/asset/js/jquery.min.js"></script>
+    <script src="static/asset/js/bootstrap.min.js"></script>
+    <script src="static/asset/js/bootstrap-table.js"></script>
+    <script src="static/asset/js/bootstrap-table-zh-CN.js"></script>
+
+</head>
+
+<body>
+
+
+
+<section id="table" class="portfolio section-bg">
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="section-title">
+          <h2>二手房信息表</h2>
+          <p>以下是北京市已成交二手房的信息表</p>
+        </div>
+
+
+        <div class="row portfolio-container">
+            <table class="table table-striped">
+                <tr>
+                  <td>小区名称</td>
+                  <td>房屋户型</td>
+                  <td>建筑面积</td>
+                  <td>总价</td>
+                  <td>单价</td>
+                  <td>成交日期</td>
+                  <td>房屋朝向</td>
+                  <td>装修情况</td>
+                  <td>所在楼层</td>
+                  <td>建成时间</td>
+              </tr>
+                {% for data in datalist%}
+                <tr>
+
+                    <td>{{ data[0] }}</td>
+                    <td>{{ data[1] }}</td>
+                    <td>{{ data[2] }}</td>
+                    <td>{{ data[3] }}</td>
+                    <td>{{ data[4] }}</td>
+                    <td>{{ data[5] }}</td>
+                    <td>{{ data[6] }}</td>
+                    <td>{{ data[7] }}</td>
+                    <td>{{ data[8] }}</td>
+                    <td>{{ data[9] }}</td>
+              </tr>
+
+            {% endfor %}
+            </table>
+
+        </div>
+
+      </div>
+    </section><!-- End Our Portfolio Section -->
+
+
+
+
+</body>
+
+</html>

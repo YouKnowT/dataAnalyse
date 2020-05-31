@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <script src="https://www.echartsjs.com/examples/vendors/echarts/echarts.min.js?_v_=1578305236132"></script>
+  <!--引入中国的地图数据js文件，引入后会自动注册地图名字和数据-->
+  <script src="https://www.echartsjs.com/examples/vendors/echarts/map/js/china.js?_v_=1578305236132"></script>
+
+  <title>Mamba Bootstrap Template - Index</title>
+  <meta content="" name="descriptison">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="static/assets/img/favicon.png" rel="icon">
+  <link href="static/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,600,600i,700,700i,900" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="static/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="static/assets/vendor/icofont/icofont.min.css" rel="stylesheet">
+  <link href="static/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="static/assets/vendor/animate.css/animate.min.css" rel="stylesheet">
+  <link href="static/assets/vendor/venobox/venobox.css" rel="stylesheet">
+  <link href="static/assets/vendor/aos/aos.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="static/assets/css/style.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Mamba - v2.0.1
+  * Template URL: https://bootstrapmade.com/mamba-one-page-bootstrap-template-free/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+
+
+
+  <!-- ======= Header ======= -->
+  <header id="header">
+    <div class="container">
+
+      <div class="logo float-left">
+        <h1 class="text-light"><a href="/"><span>HOUSE</span></a></h1>
+        <!-- Uncomment below if you prefer to use an image logo -->
+        <!-- <a href="index.html"><img src="static/assets/img/logo.png" alt="" class="img-fluid"></a>-->
+      </div>
+
+
+    </div>
+  </header><!-- End Header -->
+
+   <!-- ======= Our Portfolio Section ======= -->
+    <section id="portfolio" class="portfolio section-bg">
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="section-title">
+          <h2>全国二手房交易地图</h2>
+          <p>这是全国二手房交易的表格，请单击省份，进入该省主页</p>
+        </div>
+
+        <div class="row">
+            <div id="myEcharts" style="width: 800px;height:600px;left: 15% !important;"></div>
+            <script>
+    //初始化echarts实例
+    var myChart = echarts.init(document.getElementById('myEcharts'));
+    // 指定图表的配置项和数据
+    option = {
+      tooltip: {
+        trigger: 'item'
+      },
+      legend: {
+        orient: 'vertical',
+        left: 'left',
+        data: ['中国疫情图']
+      },
+      visualMap: {
+         type: 'piecewise',
+        pieces: [
+            {min: 200},
+            {min: 160, max: 200},
+            {min: 120, max: 160},
+            {min: 80, max: 120},
+            // {min: 10, max: 200, label: '10 到 200（自定义label）'},
+            {value: 123, label: '123（自定义特殊颜色）', color: 'grey'},
+            // {min: 5, max: 5, label: '5（自定义特殊颜色）', color: 'black'},
+            {max: 80}
+        ],
+        color: ['#E0022B', '#E09107', '#A3E00B']
+      },
+      toolbox: {
+        show: true,
+        orient: 'vertical',
+        left: 'right',
+        top: 'center',
+        feature: {
+          mark: { show: true },
+          dataView: { show: true, readOnly: false },
+          restore: { show: true },
+          saveAsImage: { show: true }
+        }
+      },
+      roamController: {
+        show: true,
+        left: 'right',
+        mapTypeControl: {
+          'china': true
+        }
+      },
+      series: [
+        {
+          name: '成交均价',
+          type: 'map',
+          mapType: 'china',
+          roam: false,
+          label: {
+            show: true,
+            color: 'rgb(249, 249, 249)'
+          },
+          data: [
+            {
+              name: '北京',
+              value: 506
+            }, {
+              name: '天津',
+              value: Math.round(Math.random()*150)
+            }, {
+              name: '上海',
+              value: 404
+            }, {
+              name: '重庆',
+              value: 105
+            }, {
+              name: '河北',
+              value: Math.round(90+Math.random()*30)
+            }, {
+              name: '河南',
+              value: Math.round(80+Math.random()*30)
+            }, {
+              name: '云南',
+              value: Math.round(80+Math.random()*30)
+            }, {
+              name: '辽宁',
+              value: Math.round(90+Math.random()*30)
+            }, {
+              name: '黑龙江',
+              value: Math.round(90+Math.random()*50)
+            }, {
+              name: '湖南',
+              value: Math.round(90+Math.random()*10)
+            }, {
+              name: '安徽',
+              value: Math.round(90+Math.random()*10)
+            }, {
+              name: '山东',
+              value: Math.round(100+Math.random()*10)
+            }, {
+              name: '新疆',
+              value: Math.round(80+Math.random()*10)
+            }, {
+              name: '江苏',
+              value: Math.round(100+Math.random()*10)
+            }, {
+              name: '浙江',
+              value: Math.round(100+Math.random()*40)
+            }, {
+              name: '江西',
+              value: Math.round(80+Math.random()*10)
+            }, {
+              name: '湖北',
+              value: Math.round(100+Math.random()*10)
+            }, {
+              name: '广西',
+              value: Math.round(80+Math.random()*10)
+            }, {
+              name: '甘肃',
+              value: Math.round(80+Math.random()*10)
+            }, {
+              name: '山西',
+              value: Math.round(80+Math.random()*20)
+            }, {
+              name: '内蒙古',
+              value: Math.round(80+Math.random()*10)
+            }, {
+              name: '陕西',
+              value: Math.round(80+Math.random()*20)
+            }, {
+              name: '吉林',
+              value: Math.round(100+Math.random()*20)
+            }, {
+              name: '福建',
+              value: Math.round(100+Math.random()*20)
+            }, {
+              name: '贵州',
+              value: Math.round(80+Math.random()*10)
+            }, {
+              name: '广东',
+              value: Math.round(100+Math.random()*50)
+            }, {
+              name: '青海',
+              value: Math.round(80+Math.random()*10)
+            }, {
+              name: '西藏',
+              value: Math.round(Math.random()*90)
+            }, {
+              name: '四川',
+              value: Math.round(90+Math.random()*10)
+            }, {
+              name: '宁夏',
+              value: Math.round(Math.random()*100)
+            }, {
+              name: '海南',
+              value: Math.round(150+Math.random()*20)
+            }, {
+              name: '台湾',
+              value: Math.round(100+Math.random()*20)
+            }, {
+              name: '香港',
+              value: Math.round(120+Math.random()*20)
+            }, {
+              name: '澳门',
+              value: Math.round(100+Math.random()*20)
+            }
+          ]
+        }
+      ]
+    };
+    myChart.on('click',function (param) {
+        var select = param.name;
+        switch (select) {
+            case '北京':
+                location.herf="/Beijing";
+                break;
+            case '上海':
+                location.herf='Shanghai.html';
+                break;
+            default:
+                location.herf='Map.html';
+                break;
+        }
+    });
+
+    //使用指定的配置项和数据显示图表
+    myChart.setOption(option);
+  </script>
+
+{#          <div class="col-lg-12">#}
+{#              <table class="table table-striped">#}
+{#                <tr>#}
+{#                    <td><a href="/Beijing">北京</a></td>#}
+{#                    <td><a href="/Shanghai">上海</a></td>#}
+{#                    <td>天津</td>#}
+{#                    <td><a href="/Chongqing">重庆</a></td>#}
+{#                    <td>黑龙江省</td>#}
+{#                    <td>吉林省</td>#}
+{#                </tr>#}
+{#                  <tr>#}
+{#                    <td>辽宁省</td>#}
+{#                    <td>江苏省</td>#}
+{#                    <td>山东省</td>#}
+{#                    <td>安徽省</td>#}
+{#                    <td>河北省</td>#}
+{#                    <td>河北省</td>#}
+{#                </tr>#}
+{#                  <tr>#}
+{#                    <td>湖北省</td>#}
+{#                    <td>湖南省</td>#}
+{#                    <td>江西省</td>#}
+{#                    <td>陕西省</td>#}
+{#                    <td>山西省</td>#}
+{#                    <td>四川省</td>#}
+{#                </tr>#}
+{#                  <tr>#}
+{#                    <td>青海省</td>#}
+{#                    <td>海南省</td>#}
+{#                    <td>广东省</td>#}
+{#                    <td>贵州省</td>#}
+{#                    <td>浙江省</td>#}
+{#                    <td>福建省</td>#}
+{#                </tr>#}
+{#                  <tr>#}
+{#                    <td>台湾省</td>#}
+{#                    <td>甘肃省</td>#}
+{#                    <td>云南省</td>#}
+{#                    <td>内蒙古自治区</td>#}
+{#                    <td>宁夏回族自治区</td>#}
+{#                    <td>新疆维吾尔自治区</td>#}
+{#                </tr>#}
+{#                  <tr>#}
+{#                    <td>西藏自治区</td>#}
+{#                    <td>广西壮族自治区</td>#}
+{#                    <td>澳门特别行政区</td>#}
+{#                    <td>香港特别行政区</td>#}
+{##}
+{#                </tr>#}
+{#                  #}
+{#              </table>#}
+{##}
+{##}
+{##}
+{#          </div>#}
+        </div>
+
+        <div class="row portfolio-container">
+
+
+
+
+        </div>
+
+      </div>
+    </section><!-- End Our Portfolio Section -->
+
+
+
+
+
+  <!-- ======= Footer ======= -->
+
+
+  <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="static/assets/vendor/jquery/jquery.min.js"></script>
+  <script src="static/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="static/assets/vendor/jquery.easing/jquery.easing.min.js"></script>
+  <script src="static/assets/vendor/php-email-form/validate.js"></script>
+  <script src="static/assets/vendor/jquery-sticky/jquery.sticky.js"></script>
+  <script src="static/assets/vendor/venobox/venobox.min.js"></script>
+  <script src="static/assets/vendor/waypoints/jquery.waypoints.min.js"></script>
+  <script src="static/assets/vendor/counterup/counterup.min.js"></script>
+  <script src="static/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="static/assets/vendor/aos/aos.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="static/assets/js/main.js"></script>
+
+</body>
+
+</html>
