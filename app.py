@@ -15,7 +15,7 @@ def index():
 
 @app.route('/Beijing')
 def Beijing():
-    with open(r"D:\pylearning\dataAnalyse\北京成交房源数据表.csv","r") as f:
+    with open(r"D:\pylearning\dataAnalyse\dataAnalyse\北京成交房源数据表.csv","r") as f:
         ran=['<200','201-400','401-600','601-800','801-1000','>1000']    #成交金额范围
         l=[0,0,0,0,0,0] #各成交金额范围的数量
         datalist=list(csv.reader(f))
@@ -40,7 +40,7 @@ def Beijing():
 
 @app.route('/BeijingTable')
 def BeijingTable():
-    with open(r"D:\pylearning\dataAnalyse\北京成交房源数据表.csv","r") as f:
+    with open(r"D:\pylearning\dataAnalyse\dataAnalyse\北京成交房源数据表.csv","r") as f:
         # ran=['<200','201-400','401-600','601-800','801-1000','>1000']    #成交金额范围
         # l=[0,0,0,0,0,0] #各成交金额范围的数量
         datalist=list(csv.reader(f))
@@ -50,7 +50,7 @@ def BeijingTable():
 
 @app.route('/Shanghai')
 def Shanghai():
-    with open(r"D:\pylearning\dataAnalyse\上海成交房源数据表.csv","r") as f:
+    with open(r"D:\pylearning\dataAnalyse\dataAnalyse\上海成交房源数据表.csv","r") as f:
         ran=['<200','201-400','401-600','601-800','801-1000','>1000']    #成交金额范围
         l=[0,0,0,0,0,0] #各成交金额范围的数量
         datalist=list(csv.reader(f))
@@ -74,7 +74,7 @@ def Shanghai():
     return render_template('Shanghai.html',l=l)
 @app.route('/ShanghaiTable')
 def ShanghaiTable():
-    with open(r"D:\pylearning\dataAnalyse\上海成交房源数据表.csv","r") as f:
+    with open(r"D:\pylearning\dataAnalyse\dataAnalyse\上海成交房源数据表.csv","r") as f:
         # ran=['<200','201-400','401-600','601-800','801-1000','>1000']    #成交金额范围
         # l=[0,0,0,0,0,0] #各成交金额范围的数量
         datalist=list(csv.reader(f))
@@ -89,7 +89,7 @@ def Tianjin():
 
 @app.route('/Chongqing')
 def Chongqing():
-    with open(r"D:\pylearning\dataAnalyse\重庆成交房源数据表.csv","r") as f:
+    with open(r"D:\pylearning\dataAnalyse\dataAnalyse\重庆成交房源数据表.csv","r") as f:
         ran=['<200','201-400','401-600','601-800','801-1000','>1000']    #成交金额范围
         l=[0,0,0,0,0,0] #各成交金额范围的数量
         datalist=list(csv.reader(f))
@@ -113,7 +113,7 @@ def Chongqing():
     return render_template('Chongqing.html',l=l)
 @app.route('/ChongqingTable')
 def ChongqingTable():
-    with open(r"D:\pylearning\dataAnalyse\重庆成交房源数据表.csv","r") as f:
+    with open(r"D:\pylearning\dataAnalyse\dataAnalyse\重庆成交房源数据表.csv","r") as f:
         # ran=['<200','201-400','401-600','601-800','801-1000','>1000']    #成交金额范围
         # l=[0,0,0,0,0,0] #各成交金额范围的数量
         datalist=list(csv.reader(f))
