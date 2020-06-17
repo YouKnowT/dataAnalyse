@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <!-- 引入 ECharts 文件 -->
+  <script src="static/assets/js/echarts.min.js"></script>
+
+  <title>Mamba Bootstrap Template - Index</title>
+  <meta content="" name="descriptison">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="static/assets/img/favicon.png" rel="icon">
+  <link href="static/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,600,600i,700,700i,900" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="static/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="static/assets/vendor/icofont/icofont.min.css" rel="stylesheet">
+  <link href="static/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="static/assets/vendor/animate.css/animate.min.css" rel="stylesheet">
+  <link href="static/assets/vendor/venobox/venobox.css" rel="stylesheet">
+  <link href="static/assets/vendor/aos/aos.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="static/assets/css/style.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Mamba - v2.0.1
+  * Template URL: https://bootstrapmade.com/mamba-one-page-bootstrap-template-free/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+
+
+
+  <!-- ======= Header ======= -->
+  <header id="header">
+    <div class="container">
+
+      <div class="logo float-left">
+        <h1 class="text-light"><a href="/"><span>HOUSE</span></a></h1>
+        <!-- Uncomment below if you prefer to use an image logo -->
+        <!-- <a href="index.html"><img src="static/assets/img/logo.png" alt="" class="img-fluid"></a>-->
+      </div>
+
+      <nav class="nav-menu float-right d-none d-lg-block">
+        <ul>
+          <li class="active"><a href="#situation">Situation</a></li>
+          <li><a href="#echarts">Echarts</a></li>
+
+          <li><a href="/HuzhouTable" target="_blank">Table</a></li>
+        </ul>
+      </nav><!-- .nav-menu -->
+
+    </div>
+  </header><!-- End Header -->
+  <!-- ======= Hero Section ======= -->
+  <section id="hero">
+    <div class="hero-container">
+      <div id="heroCarousel" class="carousel slide carousel-fade" data-ride="carousel">
+
+        <ol class="carousel-indicators" id="hero-carousel-indicators"></ol>
+
+        <div class="carousel-inner" role="listbox">
+
+          <!-- Slide 1 -->
+          <div class="carousel-item active" style="background-image: url('static/assets/img/slide/slide-1.jpg');">
+            <div class="carousel-container">
+              <div class="carousel-content container">
+                <h2 class="animated fadeInDown">湖州<span>房产交易数据</span></h2>
+                <p class="animated fadeInUp">设计人：Demogorgon 数据分析：Mao WQ</p>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 2 -->
+          <div class="carousel-item" style="background-image: url('static/assets/img/slide/slide-2.jpg');">
+            <div class="carousel-container">
+              <div class="carousel-content container">
+                <h2 class="animated fadeInDown">二手房与新房交易数据</h2>
+                <p class="animated fadeInUp">通过二手房与新房成交量对比，可轻松帮您锁定市场。</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 3 -->
+          <div class="carousel-item" style="background-image: url('static/assets/img/slide/slide-3.jpg');">
+            <div class="carousel-container">
+              <div class="carousel-content container">
+                <h2 class="animated fadeInDown">清晰的数据分析</h2>
+                <p class="animated fadeInUp">通过EChart，Wordcloud，与真实的数据统计表，再现交易场景，替您选到合适好房。</p>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <a class="carousel-control-prev" href="#heroCarousel" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon icofont-rounded-left" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#heroCarousel" role="button" data-slide="next">
+          <span class="carousel-control-next-icon icofont-rounded-right" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+
+      </div>
+    </div>
+  </section><!-- End Hero -->
+
+
+
+  <main id="main">
+    <!-- ======= situation Section ======= -->
+    <section id="situation" class="counts section-bg">
+      <div class="container">
+
+        <div class="row">
+            <div class="col-lg-3 col-md-6 text-center" data-aos="fade-up" style="left: 30% !important;">
+            <div class="count-box">
+              <i class="icofont-simple-smile" style="color: #20b38e;"></i>
+              <span data-toggle="counter-up">{{ count }}</span>
+              <p>疫情期间二手房成交数量</p>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 text-center" data-aos="fade-up" data-aos-delay="200" style="left: 30% !important;">
+            <div class="count-box">
+              <i class="icofont-document-folder" style="color: #c042ff;"></i>
+              <span data-toggle="counter-up">{{ count1 }}</span>
+              <p>疫情之前二手房成交数量</p>
+            </div>
+
+            </div>
+
+
+        </div>
+
+      </div>
+    </section><!-- End Counts Section -->
+    <!-- ======= echart Section ======= -->
+      <section id="echarts" class="echarts">
+      <div class="container">
+
+          <div class="section-title" style="left: 50% !important;">
+          <h2>2019-2020 二手房成交总价分布图</h2>
+            <div id="ec" style="width: 700px;height:400px;left: 20% !important;"></div>
+
+        </div>
+          <div class="section-title" style="left: 50% !important;">
+          <h2>2019-2020 二手房成交单价分布图</h2>
+            <div id="ec1" style="width: 700px;height:400px;left: 20% !important;"></div>
+
+        </div>
+          <div class="section-title" style="left: 50% !important;">
+          <h2>2019-2020 二手房成交量及平均单价分布图</h2>
+            <div id="ec2" style="width: 1000px;height:400px;left: 15% !important;"></div>
+
+        </div>
+          <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('ec'));
+
+        // 指定图表的配置项和数据
+        var option = {
+            color:['#3398db'],
+            tooltip: {},
+            legend: {
+                data:['成交量']
+            },
+            xAxis: {
+                name:'单位：万',
+                data: ['<200','201-400','401-600','601-800','801-1000','>1000']
+            },
+            yAxis: {},
+            series: [{
+                name: '成交量',
+                type: 'bar',
+                data: {{ l }}
+            }]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+          <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('ec1'));
+
+        // 指定图表的配置项和数据
+        var option = {
+            color:['#3398db'],
+            tooltip: {},
+            legend: {
+                data:['成交量']
+            },
+            xAxis: {
+                name:'单位：万',
+                data: ['<10000','10000-20000','20000-30000','30000-40000','>50000']
+            },
+            yAxis: {},
+            series: [{
+                name: '成交量',
+                type: 'bar',
+                data: {{ ll }}
+            }]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+          <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('ec2'));
+
+        // 指定图表的配置项和数据
+        var option = {
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'cross',
+            crossStyle: {
+                color: '#999'
+            }
+        }
+    },
+    toolbox: {
+        feature: {
+            dataView: {show: true, readOnly: false},
+            magicType: {show: true, type: ['line', 'bar']},
+            restore: {show: true},
+            saveAsImage: {show: true}
+        }
+    },
+    legend: {
+        data: ['单价', '成交量']
+    },
+    xAxis: [
+        {
+            type: 'category',
+            data: ['2019年1月', '2019年2月', '2019年3月', '2019年4月', '2019年5月', '2019年6月', '2019年7月', '2019年8月', '2019年9月', '2019年10月', '2019年11月', '2019年12月',
+                '2020年1月','2020年2月','2020年3月','2020年4月','2020年5月',],
+            axisPointer: {
+                type: 'shadow'
+            }
+        }
+    ],
+    yAxis: [
+        {
+            type: 'value',
+            name: '单价',
+            min: 0,
+            max: 35000,
+            interval: 5000,
+            axisLabel: {
+                formatter: '{value} 万/平米'
+            }
+        },
+        {
+            type: 'value',
+            name: '成交量',
+            min: 0,
+            max: 2800,
+            interval: 400,
+            axisLabel: {
+                formatter: '{value} 套'
+            }
+        }
+    ],
+    series: [
+        {
+            name: '单价',
+            type: 'bar',
+            data: {{ sum }}
+        },
+
+        {
+            name: '成交量',
+            type: 'line',
+            yAxisIndex: 1,
+            data: {{ ran }}
+        }
+    ]
+};
+
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+
+
+      </div>
+    </section>
+
+    <!-- ======= Services Section ======= -->
+
+
+    <!-- ======= Our Portfolio Section ======= -->
+
+
+
+
+  </main><!-- End #main -->
+
+
+
+  <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="static/assets/vendor/jquery/jquery.min.js"></script>
+  <script src="static/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="static/assets/vendor/jquery.easing/jquery.easing.min.js"></script>
+  <script src="static/assets/vendor/php-email-form/validate.js"></script>
+  <script src="static/assets/vendor/jquery-sticky/jquery.sticky.js"></script>
+  <script src="static/assets/vendor/venobox/venobox.min.js"></script>
+  <script src="static/assets/vendor/waypoints/jquery.waypoints.min.js"></script>
+  <script src="static/assets/vendor/counterup/counterup.min.js"></script>
+  <script src="static/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="static/assets/vendor/aos/aos.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="static/assets/js/main.js"></script>
+
+</body>
+
+</html>html>

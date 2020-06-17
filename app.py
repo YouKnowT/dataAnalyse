@@ -7751,10 +7751,3347 @@ def ZhengzhouTable():
     conn.close()
     return render_template('ZhengzhouTable.html', datalist=datalist)
 
+
+
+
 #6
 
+@app.route('/Baoji')
+def Baoji():
+    count = 0
+    count1 = 0
+    datalist = []
+    datalist1 = []
+    datalist2 = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #     select totalprice,price,hdata from Fuzhou
+    #     '''
+    sql = '''
+       select * from Baoji
+       '''
+    d = cur.execute(sql)
+    for item in d:
+        # count+=1
+        datalist.append(item)
+        # datalist1.append(item[1])
+        # datalist2.append(item[2])
+    cur.close()
+    conn.close()
+    print(datalist2)
+
+    ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
+    sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
+    ll = [0, 0, 0, 0, 0]  # 单价
+    for data in datalist:
+        # print(type(data[6]))
+        if data[6] > 0 and data[6] <= 200:
+            l[0] += 1
+        elif data[6] > 200 and data[6] <= 400:
+            l[1] += 1
+        elif data[6] > 400 and data[6] <= 600:
+            l[2] += 1
+        elif data[6] > 600 and data[6] <= 800:
+            l[3] += 1
+        elif data[6] > 800 and data[6] <= 1000:
+            l[4] += 1
+        else:
+            l[5] += 1
+    for data in datalist:
+        if data[7] > 0 and data[7] <= 10000:
+            ll[0] += 1
+        elif data[7] > 10000 and data[7] <= 20000:
+            ll[1] += 1
+        elif data[7] > 20000 and data[7] <= 30000:
+            ll[2] += 1
+        elif data[7] > 30000 and data[7] <= 40000:
+            ll[3] += 1
+        else:
+            ll[4] += 1
+
+    for data in datalist:
+        if data[8] <= '2019.01.31':
+            count1 += 1
+            ran[0] += 1
+            sum[0] += data[7]
+        elif data[8] >= '2019.02.01' and data[8] <= '2019.02.29':
+            count1 += 1
+            ran[1] += 1
+            sum[1] += data[7]
+        elif data[8] >= '2019.03.01' and data[8] <= '2019.03.31':
+            count1 += 1
+            ran[2] += 1
+            sum[2] += data[7]
+        elif data[8] > '2019.04.01' and data[8] <= '2019.04.30':
+            count1 += 1
+            ran[3] += 1
+            sum[3] += data[7]
+        elif data[8] > '2019.05.01' and data[8] <= '2019.05.31':
+            count1 += 1
+            ran[4] += 1
+            sum[4] += data[7]
+        elif data[8] > '2019.06.01' and data[8] <= '2019.06.30':
+            count1 += 1
+            ran[5] += 1
+            sum[5] += data[7]
+        elif data[8] >= '2019.07.01' and data[8] <= '2019.07.31':
+            count1 += 1
+            ran[6] += 1
+            sum[6] += data[7]
+        elif data[8] >= '2019.08.01' and data[8] <= '2019.08.31':
+            count1 += 1
+            ran[7] += 1
+            sum[7] += data[7]
+        elif data[8] >= '2019.09.01' and data[8] <= '2019.09.30':
+            count1 += 1
+            ran[8] += 1
+            sum[8] += data[7]
+        elif data[8] >= '2019.10.01' and data[8] <= '2019.10.31':
+            count1 += 1
+            ran[9] += 1
+            sum[9] += data[7]
+        elif data[8] >= '2019.11.01' and data[8] <= '2019.11.30':
+            count1 += 1
+            ran[10] += 1
+            sum[10] += data[7]
+        elif data[8] >= '2019.12.01' and data[8] <= '2019.12.31':
+            count1 += 1
+            ran[11] += 1
+            sum[11] += data[7]
+        elif data[8] >= '2020.01.01' and data[8] <= '2020.01.31':
+            count1 += 1
+            ran[12] += 1
+            sum[12] += data[7]
+        elif data[8] >= '2020.02.01' and data[8] <= '2020.02.29':
+            count += 1
+            ran[13] += 1
+            sum[13] += data[7]
+        elif data[8] >= '2020.03.01' and data[8] <= '2020.03.31':
+            count += 1
+            ran[14] += 1
+            sum[14] += data[7]
+        elif data[8] > '2020.04.01' and data[8] <= '2020.04.30':
+            count += 1
+            ran[15] += 1
+            sum[15] += data[7]
+        elif data[8] >= '2020.05.01' and data[8] <= '2020.05.31':
+            count += 1
+            ran[16] += 1
+            sum[16] += data[7]
+    for i in range(0, 17):
+        sum[i] = sum[i] / ran[i]
 
 
+    return render_template('Baoji.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
+
+@app.route('/BaojiTable')
+def BaojiTable():
+    datalist = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    sql = '''
+            select * from Baoji
+            '''
+    d = cur.execute(sql)
+    for item in d:
+        datalist.append(item)
+    cur.close()
+    conn.close()
+    return render_template('BaojiTable.html', datalist=datalist)
+
+@app.route('/Baoding')
+def Baoding():
+    count = 0
+    count1 = 0
+    datalist = []
+    datalist1 = []
+    datalist2 = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #     select totalprice,price,hdata from Fuzhou
+    #     '''
+    sql = '''
+       select * from Baoding
+       '''
+    d = cur.execute(sql)
+    for item in d:
+        # count+=1
+        datalist.append(item)
+        # datalist1.append(item[1])
+        # datalist2.append(item[2])
+    cur.close()
+    conn.close()
+    print(datalist2)
+
+    ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
+    sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
+    ll = [0, 0, 0, 0, 0]  # 单价
+    for data in datalist:
+        # print(type(data[6]))
+        if data[6] > 0 and data[6] <= 200:
+            l[0] += 1
+        elif data[6] > 200 and data[6] <= 400:
+            l[1] += 1
+        elif data[6] > 400 and data[6] <= 600:
+            l[2] += 1
+        elif data[6] > 600 and data[6] <= 800:
+            l[3] += 1
+        elif data[6] > 800 and data[6] <= 1000:
+            l[4] += 1
+        else:
+            l[5] += 1
+    for data in datalist:
+        if data[7] > 0 and data[7] <= 10000:
+            ll[0] += 1
+        elif data[7] > 10000 and data[7] <= 20000:
+            ll[1] += 1
+        elif data[7] > 20000 and data[7] <= 30000:
+            ll[2] += 1
+        elif data[7] > 30000 and data[7] <= 40000:
+            ll[3] += 1
+        else:
+            ll[4] += 1
+
+    for data in datalist:
+        if data[8] <= '2019.01.31':
+            count1 += 1
+            ran[0] += 1
+            sum[0] += data[7]
+        elif data[8] >= '2019.02.01' and data[8] <= '2019.02.29':
+            count1 += 1
+            ran[1] += 1
+            sum[1] += data[7]
+        elif data[8] >= '2019.03.01' and data[8] <= '2019.03.31':
+            count1 += 1
+            ran[2] += 1
+            sum[2] += data[7]
+        elif data[8] > '2019.04.01' and data[8] <= '2019.04.30':
+            count1 += 1
+            ran[3] += 1
+            sum[3] += data[7]
+        elif data[8] > '2019.05.01' and data[8] <= '2019.05.31':
+            count1 += 1
+            ran[4] += 1
+            sum[4] += data[7]
+        elif data[8] > '2019.06.01' and data[8] <= '2019.06.30':
+            count1 += 1
+            ran[5] += 1
+            sum[5] += data[7]
+        elif data[8] >= '2019.07.01' and data[8] <= '2019.07.31':
+            count1 += 1
+            ran[6] += 1
+            sum[6] += data[7]
+        elif data[8] >= '2019.08.01' and data[8] <= '2019.08.31':
+            count1 += 1
+            ran[7] += 1
+            sum[7] += data[7]
+        elif data[8] >= '2019.09.01' and data[8] <= '2019.09.30':
+            count1 += 1
+            ran[8] += 1
+            sum[8] += data[7]
+        elif data[8] >= '2019.10.01' and data[8] <= '2019.10.31':
+            count1 += 1
+            ran[9] += 1
+            sum[9] += data[7]
+        elif data[8] >= '2019.11.01' and data[8] <= '2019.11.30':
+            count1 += 1
+            ran[10] += 1
+            sum[10] += data[7]
+        elif data[8] >= '2019.12.01' and data[8] <= '2019.12.31':
+            count1 += 1
+            ran[11] += 1
+            sum[11] += data[7]
+        elif data[8] >= '2020.01.01' and data[8] <= '2020.01.31':
+            count1 += 1
+            ran[12] += 1
+            sum[12] += data[7]
+        elif data[8] >= '2020.02.01' and data[8] <= '2020.02.29':
+            count += 1
+            ran[13] += 1
+            sum[13] += data[7]
+        elif data[8] >= '2020.03.01' and data[8] <= '2020.03.31':
+            count += 1
+            ran[14] += 1
+            sum[14] += data[7]
+        elif data[8] > '2020.04.01' and data[8] <= '2020.04.30':
+            count += 1
+            ran[15] += 1
+            sum[15] += data[7]
+        elif data[8] >= '2020.05.01' and data[8] <= '2020.05.31':
+            count += 1
+            ran[16] += 1
+            sum[16] += data[7]
+    for i in range(0, 17):
+        sum[i] = sum[i] / ran[i]
+
+
+    return render_template('Baoding.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
+
+@app.route('/BaodingTable')
+def BaodingTable():
+    datalist = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    sql = '''
+            select * from Baoding
+            '''
+    d = cur.execute(sql)
+    for item in d:
+        datalist.append(item)
+    cur.close()
+    conn.close()
+    return render_template('BaodingTable.html', datalist=datalist)
+
+
+@app.route('/Changde')
+def Changde():
+    count = 0
+    count1 = 0
+    datalist = []
+    datalist1 = []
+    datalist2 = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #     select totalprice,price,hdata from Fuzhou
+    #     '''
+    sql = '''
+       select * from Changde
+       '''
+    d = cur.execute(sql)
+    for item in d:
+        # count+=1
+        datalist.append(item)
+        # datalist1.append(item[1])
+        # datalist2.append(item[2])
+    cur.close()
+    conn.close()
+    print(datalist2)
+
+    ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
+    sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
+    ll = [0, 0, 0, 0, 0]  # 单价
+    for data in datalist:
+        # print(type(data[6]))
+        if data[6] > 0 and data[6] <= 200:
+            l[0] += 1
+        elif data[6] > 200 and data[6] <= 400:
+            l[1] += 1
+        elif data[6] > 400 and data[6] <= 600:
+            l[2] += 1
+        elif data[6] > 600 and data[6] <= 800:
+            l[3] += 1
+        elif data[6] > 800 and data[6] <= 1000:
+            l[4] += 1
+        else:
+            l[5] += 1
+    for data in datalist:
+        if data[7] > 0 and data[7] <= 10000:
+            ll[0] += 1
+        elif data[7] > 10000 and data[7] <= 20000:
+            ll[1] += 1
+        elif data[7] > 20000 and data[7] <= 30000:
+            ll[2] += 1
+        elif data[7] > 30000 and data[7] <= 40000:
+            ll[3] += 1
+        else:
+            ll[4] += 1
+
+    for data in datalist:
+        if data[8] <= '2019.01.31':
+            count1 += 1
+            ran[0] += 1
+            sum[0] += data[7]
+        elif data[8] >= '2019.02.01' and data[8] <= '2019.02.29':
+            count1 += 1
+            ran[1] += 1
+            sum[1] += data[7]
+        elif data[8] >= '2019.03.01' and data[8] <= '2019.03.31':
+            count1 += 1
+            ran[2] += 1
+            sum[2] += data[7]
+        elif data[8] > '2019.04.01' and data[8] <= '2019.04.30':
+            count1 += 1
+            ran[3] += 1
+            sum[3] += data[7]
+        elif data[8] > '2019.05.01' and data[8] <= '2019.05.31':
+            count1 += 1
+            ran[4] += 1
+            sum[4] += data[7]
+        elif data[8] > '2019.06.01' and data[8] <= '2019.06.30':
+            count1 += 1
+            ran[5] += 1
+            sum[5] += data[7]
+        elif data[8] >= '2019.07.01' and data[8] <= '2019.07.31':
+            count1 += 1
+            ran[6] += 1
+            sum[6] += data[7]
+        elif data[8] >= '2019.08.01' and data[8] <= '2019.08.31':
+            count1 += 1
+            ran[7] += 1
+            sum[7] += data[7]
+        elif data[8] >= '2019.09.01' and data[8] <= '2019.09.30':
+            count1 += 1
+            ran[8] += 1
+            sum[8] += data[7]
+        elif data[8] >= '2019.10.01' and data[8] <= '2019.10.31':
+            count1 += 1
+            ran[9] += 1
+            sum[9] += data[7]
+        elif data[8] >= '2019.11.01' and data[8] <= '2019.11.30':
+            count1 += 1
+            ran[10] += 1
+            sum[10] += data[7]
+        elif data[8] >= '2019.12.01' and data[8] <= '2019.12.31':
+            count1 += 1
+            ran[11] += 1
+            sum[11] += data[7]
+        elif data[8] >= '2020.01.01' and data[8] <= '2020.01.31':
+            count1 += 1
+            ran[12] += 1
+            sum[12] += data[7]
+        elif data[8] >= '2020.02.01' and data[8] <= '2020.02.29':
+            count += 1
+            ran[13] += 1
+            sum[13] += data[7]
+        elif data[8] >= '2020.03.01' and data[8] <= '2020.03.31':
+            count += 1
+            ran[14] += 1
+            sum[14] += data[7]
+        elif data[8] > '2020.04.01' and data[8] <= '2020.04.30':
+            count += 1
+            ran[15] += 1
+            sum[15] += data[7]
+        elif data[8] >= '2020.05.01' and data[8] <= '2020.05.31':
+            count += 1
+            ran[16] += 1
+            sum[16] += data[7]
+    for i in range(0, 17):
+        sum[i] = sum[i] / ran[i]
+
+
+    return render_template('Changde.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
+
+@app.route('/ChangdeTable')
+def ChangdeTable():
+    datalist = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    sql = '''
+            select * from Changde
+            '''
+    d = cur.execute(sql)
+    for item in d:
+        datalist.append(item)
+    cur.close()
+    conn.close()
+    return render_template('ChangdeTable.html', datalist=datalist)
+
+@app.route('/Chifeng')
+def Chifeng():
+    count = 0
+    count1 = 0
+    datalist = []
+    datalist1 = []
+    datalist2 = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #     select totalprice,price,hdata from Fuzhou
+    #     '''
+    sql = '''
+       select * from Chifeng
+       '''
+    d = cur.execute(sql)
+    for item in d:
+        # count+=1
+        datalist.append(item)
+        # datalist1.append(item[1])
+        # datalist2.append(item[2])
+    cur.close()
+    conn.close()
+    print(datalist2)
+
+    ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
+    sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
+    ll = [0, 0, 0, 0, 0]  # 单价
+    for data in datalist:
+        # print(type(data[6]))
+        if data[6] > 0 and data[6] <= 200:
+            l[0] += 1
+        elif data[6] > 200 and data[6] <= 400:
+            l[1] += 1
+        elif data[6] > 400 and data[6] <= 600:
+            l[2] += 1
+        elif data[6] > 600 and data[6] <= 800:
+            l[3] += 1
+        elif data[6] > 800 and data[6] <= 1000:
+            l[4] += 1
+        else:
+            l[5] += 1
+    for data in datalist:
+        if data[7] > 0 and data[7] <= 10000:
+            ll[0] += 1
+        elif data[7] > 10000 and data[7] <= 20000:
+            ll[1] += 1
+        elif data[7] > 20000 and data[7] <= 30000:
+            ll[2] += 1
+        elif data[7] > 30000 and data[7] <= 40000:
+            ll[3] += 1
+        else:
+            ll[4] += 1
+
+    for data in datalist:
+        if data[8] <= '2019.01.31':
+            count1 += 1
+            ran[0] += 1
+            sum[0] += data[7]
+        elif data[8] >= '2019.02.01' and data[8] <= '2019.02.29':
+            count1 += 1
+            ran[1] += 1
+            sum[1] += data[7]
+        elif data[8] >= '2019.03.01' and data[8] <= '2019.03.31':
+            count1 += 1
+            ran[2] += 1
+            sum[2] += data[7]
+        elif data[8] > '2019.04.01' and data[8] <= '2019.04.30':
+            count1 += 1
+            ran[3] += 1
+            sum[3] += data[7]
+        elif data[8] > '2019.05.01' and data[8] <= '2019.05.31':
+            count1 += 1
+            ran[4] += 1
+            sum[4] += data[7]
+        elif data[8] > '2019.06.01' and data[8] <= '2019.06.30':
+            count1 += 1
+            ran[5] += 1
+            sum[5] += data[7]
+        elif data[8] >= '2019.07.01' and data[8] <= '2019.07.31':
+            count1 += 1
+            ran[6] += 1
+            sum[6] += data[7]
+        elif data[8] >= '2019.08.01' and data[8] <= '2019.08.31':
+            count1 += 1
+            ran[7] += 1
+            sum[7] += data[7]
+        elif data[8] >= '2019.09.01' and data[8] <= '2019.09.30':
+            count1 += 1
+            ran[8] += 1
+            sum[8] += data[7]
+        elif data[8] >= '2019.10.01' and data[8] <= '2019.10.31':
+            count1 += 1
+            ran[9] += 1
+            sum[9] += data[7]
+        elif data[8] >= '2019.11.01' and data[8] <= '2019.11.30':
+            count1 += 1
+            ran[10] += 1
+            sum[10] += data[7]
+        elif data[8] >= '2019.12.01' and data[8] <= '2019.12.31':
+            count1 += 1
+            ran[11] += 1
+            sum[11] += data[7]
+        elif data[8] >= '2020.01.01' and data[8] <= '2020.01.31':
+            count1 += 1
+            ran[12] += 1
+            sum[12] += data[7]
+        elif data[8] >= '2020.02.01' and data[8] <= '2020.02.29':
+            count += 1
+            ran[13] += 1
+            sum[13] += data[7]
+        elif data[8] >= '2020.03.01' and data[8] <= '2020.03.31':
+            count += 1
+            ran[14] += 1
+            sum[14] += data[7]
+        elif data[8] > '2020.04.01' and data[8] <= '2020.04.30':
+            count += 1
+            ran[15] += 1
+            sum[15] += data[7]
+        elif data[8] >= '2020.05.01' and data[8] <= '2020.05.31':
+            count += 1
+            ran[16] += 1
+            sum[16] += data[7]
+    for i in range(0, 17):
+        sum[i] = sum[i] / ran[i]
+
+
+    return render_template('Chifeng.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
+
+@app.route('/ChifengTable')
+def ChifengTable():
+    datalist = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    sql = '''
+            select * from Chifeng
+            '''
+    d = cur.execute(sql)
+    for item in d:
+        datalist.append(item)
+    cur.close()
+    conn.close()
+    return render_template('ChifengTable.html', datalist=datalist)
+
+@app.route('/Guiyang')
+def Guiyang():
+    count = 0
+    count1 = 0
+    datalist = []
+    datalist1 = []
+    datalist2 = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #     select totalprice,price,hdata from Fuzhou
+    #     '''
+    sql = '''
+       select * from Guiyang
+       '''
+    d = cur.execute(sql)
+    for item in d:
+        # count+=1
+        datalist.append(item)
+        # datalist1.append(item[1])
+        # datalist2.append(item[2])
+    cur.close()
+    conn.close()
+    print(datalist2)
+
+    ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
+    sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
+    ll = [0, 0, 0, 0, 0]  # 单价
+    for data in datalist:
+        # print(type(data[6]))
+        if data[6] > 0 and data[6] <= 200:
+            l[0] += 1
+        elif data[6] > 200 and data[6] <= 400:
+            l[1] += 1
+        elif data[6] > 400 and data[6] <= 600:
+            l[2] += 1
+        elif data[6] > 600 and data[6] <= 800:
+            l[3] += 1
+        elif data[6] > 800 and data[6] <= 1000:
+            l[4] += 1
+        else:
+            l[5] += 1
+    for data in datalist:
+        if data[7] > 0 and data[7] <= 10000:
+            ll[0] += 1
+        elif data[7] > 10000 and data[7] <= 20000:
+            ll[1] += 1
+        elif data[7] > 20000 and data[7] <= 30000:
+            ll[2] += 1
+        elif data[7] > 30000 and data[7] <= 40000:
+            ll[3] += 1
+        else:
+            ll[4] += 1
+
+    for data in datalist:
+        if data[8] <= '2019.01.31':
+            count1 += 1
+            ran[0] += 1
+            sum[0] += data[7]
+        elif data[8] >= '2019.02.01' and data[8] <= '2019.02.29':
+            count1 += 1
+            ran[1] += 1
+            sum[1] += data[7]
+        elif data[8] >= '2019.03.01' and data[8] <= '2019.03.31':
+            count1 += 1
+            ran[2] += 1
+            sum[2] += data[7]
+        elif data[8] > '2019.04.01' and data[8] <= '2019.04.30':
+            count1 += 1
+            ran[3] += 1
+            sum[3] += data[7]
+        elif data[8] > '2019.05.01' and data[8] <= '2019.05.31':
+            count1 += 1
+            ran[4] += 1
+            sum[4] += data[7]
+        elif data[8] > '2019.06.01' and data[8] <= '2019.06.30':
+            count1 += 1
+            ran[5] += 1
+            sum[5] += data[7]
+        elif data[8] >= '2019.07.01' and data[8] <= '2019.07.31':
+            count1 += 1
+            ran[6] += 1
+            sum[6] += data[7]
+        elif data[8] >= '2019.08.01' and data[8] <= '2019.08.31':
+            count1 += 1
+            ran[7] += 1
+            sum[7] += data[7]
+        elif data[8] >= '2019.09.01' and data[8] <= '2019.09.30':
+            count1 += 1
+            ran[8] += 1
+            sum[8] += data[7]
+        elif data[8] >= '2019.10.01' and data[8] <= '2019.10.31':
+            count1 += 1
+            ran[9] += 1
+            sum[9] += data[7]
+        elif data[8] >= '2019.11.01' and data[8] <= '2019.11.30':
+            count1 += 1
+            ran[10] += 1
+            sum[10] += data[7]
+        elif data[8] >= '2019.12.01' and data[8] <= '2019.12.31':
+            count1 += 1
+            ran[11] += 1
+            sum[11] += data[7]
+        elif data[8] >= '2020.01.01' and data[8] <= '2020.01.31':
+            count1 += 1
+            ran[12] += 1
+            sum[12] += data[7]
+        elif data[8] >= '2020.02.01' and data[8] <= '2020.02.29':
+            count += 1
+            ran[13] += 1
+            sum[13] += data[7]
+        elif data[8] >= '2020.03.01' and data[8] <= '2020.03.31':
+            count += 1
+            ran[14] += 1
+            sum[14] += data[7]
+        elif data[8] > '2020.04.01' and data[8] <= '2020.04.30':
+            count += 1
+            ran[15] += 1
+            sum[15] += data[7]
+        elif data[8] >= '2020.05.01' and data[8] <= '2020.05.31':
+            count += 1
+            ran[16] += 1
+            sum[16] += data[7]
+    for i in range(0, 17):
+        sum[i] = sum[i] / ran[i]
+
+
+    return render_template('Guiyang.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
+
+@app.route('/GuiyangTable')
+def GuiyangTable():
+    datalist = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    sql = '''
+            select * from Guiyang
+            '''
+    d = cur.execute(sql)
+    for item in d:
+        datalist.append(item)
+    cur.close()
+    conn.close()
+    return render_template('GuiyangTable.html', datalist=datalist)
+
+@app.route('/Hanzhong')
+def Hanzhong():
+    count = 0
+    count1 = 0
+    datalist = []
+    datalist1 = []
+    datalist2 = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #     select totalprice,price,hdata from Fuzhou
+    #     '''
+    sql = '''
+       select * from Hanzhong
+       '''
+    d = cur.execute(sql)
+    for item in d:
+        # count+=1
+        datalist.append(item)
+        # datalist1.append(item[1])
+        # datalist2.append(item[2])
+    cur.close()
+    conn.close()
+    print(datalist2)
+
+    ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
+    sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
+    ll = [0, 0, 0, 0, 0]  # 单价
+    for data in datalist:
+        # print(type(data[6]))
+        if data[6] > 0 and data[6] <= 200:
+            l[0] += 1
+        elif data[6] > 200 and data[6] <= 400:
+            l[1] += 1
+        elif data[6] > 400 and data[6] <= 600:
+            l[2] += 1
+        elif data[6] > 600 and data[6] <= 800:
+            l[3] += 1
+        elif data[6] > 800 and data[6] <= 1000:
+            l[4] += 1
+        else:
+            l[5] += 1
+    for data in datalist:
+        if data[7] > 0 and data[7] <= 10000:
+            ll[0] += 1
+        elif data[7] > 10000 and data[7] <= 20000:
+            ll[1] += 1
+        elif data[7] > 20000 and data[7] <= 30000:
+            ll[2] += 1
+        elif data[7] > 30000 and data[7] <= 40000:
+            ll[3] += 1
+        else:
+            ll[4] += 1
+
+    for data in datalist:
+        if data[8] <= '2019.01.31':
+            count1 += 1
+            ran[0] += 1
+            sum[0] += data[7]
+        elif data[8] >= '2019.02.01' and data[8] <= '2019.02.29':
+            count1 += 1
+            ran[1] += 1
+            sum[1] += data[7]
+        elif data[8] >= '2019.03.01' and data[8] <= '2019.03.31':
+            count1 += 1
+            ran[2] += 1
+            sum[2] += data[7]
+        elif data[8] > '2019.04.01' and data[8] <= '2019.04.30':
+            count1 += 1
+            ran[3] += 1
+            sum[3] += data[7]
+        elif data[8] > '2019.05.01' and data[8] <= '2019.05.31':
+            count1 += 1
+            ran[4] += 1
+            sum[4] += data[7]
+        elif data[8] > '2019.06.01' and data[8] <= '2019.06.30':
+            count1 += 1
+            ran[5] += 1
+            sum[5] += data[7]
+        elif data[8] >= '2019.07.01' and data[8] <= '2019.07.31':
+            count1 += 1
+            ran[6] += 1
+            sum[6] += data[7]
+        elif data[8] >= '2019.08.01' and data[8] <= '2019.08.31':
+            count1 += 1
+            ran[7] += 1
+            sum[7] += data[7]
+        elif data[8] >= '2019.09.01' and data[8] <= '2019.09.30':
+            count1 += 1
+            ran[8] += 1
+            sum[8] += data[7]
+        elif data[8] >= '2019.10.01' and data[8] <= '2019.10.31':
+            count1 += 1
+            ran[9] += 1
+            sum[9] += data[7]
+        elif data[8] >= '2019.11.01' and data[8] <= '2019.11.30':
+            count1 += 1
+            ran[10] += 1
+            sum[10] += data[7]
+        elif data[8] >= '2019.12.01' and data[8] <= '2019.12.31':
+            count1 += 1
+            ran[11] += 1
+            sum[11] += data[7]
+        elif data[8] >= '2020.01.01' and data[8] <= '2020.01.31':
+            count1 += 1
+            ran[12] += 1
+            sum[12] += data[7]
+        elif data[8] >= '2020.02.01' and data[8] <= '2020.02.29':
+            count += 1
+            ran[13] += 1
+            sum[13] += data[7]
+        elif data[8] >= '2020.03.01' and data[8] <= '2020.03.31':
+            count += 1
+            ran[14] += 1
+            sum[14] += data[7]
+        elif data[8] > '2020.04.01' and data[8] <= '2020.04.30':
+            count += 1
+            ran[15] += 1
+            sum[15] += data[7]
+        elif data[8] >= '2020.05.01' and data[8] <= '2020.05.31':
+            count += 1
+            ran[16] += 1
+            sum[16] += data[7]
+    for i in range(0, 17):
+        sum[i] = sum[i] / ran[i]
+
+
+    return render_template('Hanzhong.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
+
+@app.route('/HanzhongTable')
+def HanzhongTable():
+    datalist = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    sql = '''
+            select * from Hanzhong
+            '''
+    d = cur.execute(sql)
+    for item in d:
+        datalist.append(item)
+    cur.close()
+    conn.close()
+    return render_template('HanzhongTable.html', datalist=datalist)
+
+@app.route('/Huhehaote')
+def Huhehaote():
+    count = 0
+    count1 = 0
+    datalist = []
+    datalist1 = []
+    datalist2 = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #     select totalprice,price,hdata from Fuzhou
+    #     '''
+    sql = '''
+       select * from Huhehaote
+       '''
+    d = cur.execute(sql)
+    for item in d:
+        # count+=1
+        datalist.append(item)
+        # datalist1.append(item[1])
+        # datalist2.append(item[2])
+    cur.close()
+    conn.close()
+    print(datalist2)
+
+    ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
+    sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
+    ll = [0, 0, 0, 0, 0]  # 单价
+    for data in datalist:
+        # print(type(data[6]))
+        if data[6] > 0 and data[6] <= 200:
+            l[0] += 1
+        elif data[6] > 200 and data[6] <= 400:
+            l[1] += 1
+        elif data[6] > 400 and data[6] <= 600:
+            l[2] += 1
+        elif data[6] > 600 and data[6] <= 800:
+            l[3] += 1
+        elif data[6] > 800 and data[6] <= 1000:
+            l[4] += 1
+        else:
+            l[5] += 1
+    for data in datalist:
+        if data[7] > 0 and data[7] <= 10000:
+            ll[0] += 1
+        elif data[7] > 10000 and data[7] <= 20000:
+            ll[1] += 1
+        elif data[7] > 20000 and data[7] <= 30000:
+            ll[2] += 1
+        elif data[7] > 30000 and data[7] <= 40000:
+            ll[3] += 1
+        else:
+            ll[4] += 1
+
+    for data in datalist:
+        if data[8] <= '2019.01.31':
+            count1 += 1
+            ran[0] += 1
+            sum[0] += data[7]
+        elif data[8] >= '2019.02.01' and data[8] <= '2019.02.29':
+            count1 += 1
+            ran[1] += 1
+            sum[1] += data[7]
+        elif data[8] >= '2019.03.01' and data[8] <= '2019.03.31':
+            count1 += 1
+            ran[2] += 1
+            sum[2] += data[7]
+        elif data[8] > '2019.04.01' and data[8] <= '2019.04.30':
+            count1 += 1
+            ran[3] += 1
+            sum[3] += data[7]
+        elif data[8] > '2019.05.01' and data[8] <= '2019.05.31':
+            count1 += 1
+            ran[4] += 1
+            sum[4] += data[7]
+        elif data[8] > '2019.06.01' and data[8] <= '2019.06.30':
+            count1 += 1
+            ran[5] += 1
+            sum[5] += data[7]
+        elif data[8] >= '2019.07.01' and data[8] <= '2019.07.31':
+            count1 += 1
+            ran[6] += 1
+            sum[6] += data[7]
+        elif data[8] >= '2019.08.01' and data[8] <= '2019.08.31':
+            count1 += 1
+            ran[7] += 1
+            sum[7] += data[7]
+        elif data[8] >= '2019.09.01' and data[8] <= '2019.09.30':
+            count1 += 1
+            ran[8] += 1
+            sum[8] += data[7]
+        elif data[8] >= '2019.10.01' and data[8] <= '2019.10.31':
+            count1 += 1
+            ran[9] += 1
+            sum[9] += data[7]
+        elif data[8] >= '2019.11.01' and data[8] <= '2019.11.30':
+            count1 += 1
+            ran[10] += 1
+            sum[10] += data[7]
+        elif data[8] >= '2019.12.01' and data[8] <= '2019.12.31':
+            count1 += 1
+            ran[11] += 1
+            sum[11] += data[7]
+        elif data[8] >= '2020.01.01' and data[8] <= '2020.01.31':
+            count1 += 1
+            ran[12] += 1
+            sum[12] += data[7]
+        elif data[8] >= '2020.02.01' and data[8] <= '2020.02.29':
+            count += 1
+            ran[13] += 1
+            sum[13] += data[7]
+        elif data[8] >= '2020.03.01' and data[8] <= '2020.03.31':
+            count += 1
+            ran[14] += 1
+            sum[14] += data[7]
+        elif data[8] > '2020.04.01' and data[8] <= '2020.04.30':
+            count += 1
+            ran[15] += 1
+            sum[15] += data[7]
+        elif data[8] >= '2020.05.01' and data[8] <= '2020.05.31':
+            count += 1
+            ran[16] += 1
+            sum[16] += data[7]
+    for i in range(0, 17):
+        sum[i] = sum[i] / ran[i]
+
+
+    return render_template('Huhehaote.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
+
+@app.route('/HuhehaoteTable')
+def HuhehaoteTable():
+    datalist = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    sql = '''
+            select * from Huhehaote
+            '''
+    d = cur.execute(sql)
+    for item in d:
+        datalist.append(item)
+    cur.close()
+    conn.close()
+    return render_template('HuhehaoteTable.html', datalist=datalist)
+
+@app.route('/Huzhou')
+def Huzhou():
+    count = 0
+    count1 = 0
+    datalist = []
+    datalist1 = []
+    datalist2 = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #     select totalprice,price,hdata from Fuzhou
+    #     '''
+    sql = '''
+       select * from Huzhou
+       '''
+    d = cur.execute(sql)
+    for item in d:
+        # count+=1
+        datalist.append(item)
+        # datalist1.append(item[1])
+        # datalist2.append(item[2])
+    cur.close()
+    conn.close()
+    print(datalist2)
+
+    ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
+    sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
+    ll = [0, 0, 0, 0, 0]  # 单价
+    for data in datalist:
+        # print(type(data[6]))
+        if data[6] > 0 and data[6] <= 200:
+            l[0] += 1
+        elif data[6] > 200 and data[6] <= 400:
+            l[1] += 1
+        elif data[6] > 400 and data[6] <= 600:
+            l[2] += 1
+        elif data[6] > 600 and data[6] <= 800:
+            l[3] += 1
+        elif data[6] > 800 and data[6] <= 1000:
+            l[4] += 1
+        else:
+            l[5] += 1
+    for data in datalist:
+        if data[7] > 0 and data[7] <= 10000:
+            ll[0] += 1
+        elif data[7] > 10000 and data[7] <= 20000:
+            ll[1] += 1
+        elif data[7] > 20000 and data[7] <= 30000:
+            ll[2] += 1
+        elif data[7] > 30000 and data[7] <= 40000:
+            ll[3] += 1
+        else:
+            ll[4] += 1
+
+    for data in datalist:
+        if data[8] <= '2019.01.31':
+            count1 += 1
+            ran[0] += 1
+            sum[0] += data[7]
+        elif data[8] >= '2019.02.01' and data[8] <= '2019.02.29':
+            count1 += 1
+            ran[1] += 1
+            sum[1] += data[7]
+        elif data[8] >= '2019.03.01' and data[8] <= '2019.03.31':
+            count1 += 1
+            ran[2] += 1
+            sum[2] += data[7]
+        elif data[8] > '2019.04.01' and data[8] <= '2019.04.30':
+            count1 += 1
+            ran[3] += 1
+            sum[3] += data[7]
+        elif data[8] > '2019.05.01' and data[8] <= '2019.05.31':
+            count1 += 1
+            ran[4] += 1
+            sum[4] += data[7]
+        elif data[8] > '2019.06.01' and data[8] <= '2019.06.30':
+            count1 += 1
+            ran[5] += 1
+            sum[5] += data[7]
+        elif data[8] >= '2019.07.01' and data[8] <= '2019.07.31':
+            count1 += 1
+            ran[6] += 1
+            sum[6] += data[7]
+        elif data[8] >= '2019.08.01' and data[8] <= '2019.08.31':
+            count1 += 1
+            ran[7] += 1
+            sum[7] += data[7]
+        elif data[8] >= '2019.09.01' and data[8] <= '2019.09.30':
+            count1 += 1
+            ran[8] += 1
+            sum[8] += data[7]
+        elif data[8] >= '2019.10.01' and data[8] <= '2019.10.31':
+            count1 += 1
+            ran[9] += 1
+            sum[9] += data[7]
+        elif data[8] >= '2019.11.01' and data[8] <= '2019.11.30':
+            count1 += 1
+            ran[10] += 1
+            sum[10] += data[7]
+        elif data[8] >= '2019.12.01' and data[8] <= '2019.12.31':
+            count1 += 1
+            ran[11] += 1
+            sum[11] += data[7]
+        elif data[8] >= '2020.01.01' and data[8] <= '2020.01.31':
+            count1 += 1
+            ran[12] += 1
+            sum[12] += data[7]
+        elif data[8] >= '2020.02.01' and data[8] <= '2020.02.29':
+            count += 1
+            ran[13] += 1
+            sum[13] += data[7]
+        elif data[8] >= '2020.03.01' and data[8] <= '2020.03.31':
+            count += 1
+            ran[14] += 1
+            sum[14] += data[7]
+        elif data[8] > '2020.04.01' and data[8] <= '2020.04.30':
+            count += 1
+            ran[15] += 1
+            sum[15] += data[7]
+        elif data[8] >= '2020.05.01' and data[8] <= '2020.05.31':
+            count += 1
+            ran[16] += 1
+            sum[16] += data[7]
+    for i in range(0, 17):
+        sum[i] = sum[i] / ran[i]
+
+
+    return render_template('Huzhou.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
+
+@app.route('/HuzhouTable')
+def HuzhouTable():
+    datalist = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    sql = '''
+            select * from Huzhou
+            '''
+    d = cur.execute(sql)
+    for item in d:
+        datalist.append(item)
+    cur.close()
+    conn.close()
+    return render_template('HuzhouTable.html', datalist=datalist)
+
+@app.route('/Jinan')
+def Jinan():
+    count = 0
+    count1 = 0
+    datalist = []
+    datalist1 = []
+    datalist2 = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #     select totalprice,price,hdata from Fuzhou
+    #     '''
+    sql = '''
+       select * from Jinan
+       '''
+    d = cur.execute(sql)
+    for item in d:
+        # count+=1
+        datalist.append(item)
+        # datalist1.append(item[1])
+        # datalist2.append(item[2])
+    cur.close()
+    conn.close()
+    print(datalist2)
+
+    ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
+    sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
+    ll = [0, 0, 0, 0, 0]  # 单价
+    for data in datalist:
+        # print(type(data[6]))
+        if data[6] > 0 and data[6] <= 200:
+            l[0] += 1
+        elif data[6] > 200 and data[6] <= 400:
+            l[1] += 1
+        elif data[6] > 400 and data[6] <= 600:
+            l[2] += 1
+        elif data[6] > 600 and data[6] <= 800:
+            l[3] += 1
+        elif data[6] > 800 and data[6] <= 1000:
+            l[4] += 1
+        else:
+            l[5] += 1
+    for data in datalist:
+        if data[7] > 0 and data[7] <= 10000:
+            ll[0] += 1
+        elif data[7] > 10000 and data[7] <= 20000:
+            ll[1] += 1
+        elif data[7] > 20000 and data[7] <= 30000:
+            ll[2] += 1
+        elif data[7] > 30000 and data[7] <= 40000:
+            ll[3] += 1
+        else:
+            ll[4] += 1
+
+    for data in datalist:
+        if data[8] <= '2019.01.31':
+            count1 += 1
+            ran[0] += 1
+            sum[0] += data[7]
+        elif data[8] >= '2019.02.01' and data[8] <= '2019.02.29':
+            count1 += 1
+            ran[1] += 1
+            sum[1] += data[7]
+        elif data[8] >= '2019.03.01' and data[8] <= '2019.03.31':
+            count1 += 1
+            ran[2] += 1
+            sum[2] += data[7]
+        elif data[8] > '2019.04.01' and data[8] <= '2019.04.30':
+            count1 += 1
+            ran[3] += 1
+            sum[3] += data[7]
+        elif data[8] > '2019.05.01' and data[8] <= '2019.05.31':
+            count1 += 1
+            ran[4] += 1
+            sum[4] += data[7]
+        elif data[8] > '2019.06.01' and data[8] <= '2019.06.30':
+            count1 += 1
+            ran[5] += 1
+            sum[5] += data[7]
+        elif data[8] >= '2019.07.01' and data[8] <= '2019.07.31':
+            count1 += 1
+            ran[6] += 1
+            sum[6] += data[7]
+        elif data[8] >= '2019.08.01' and data[8] <= '2019.08.31':
+            count1 += 1
+            ran[7] += 1
+            sum[7] += data[7]
+        elif data[8] >= '2019.09.01' and data[8] <= '2019.09.30':
+            count1 += 1
+            ran[8] += 1
+            sum[8] += data[7]
+        elif data[8] >= '2019.10.01' and data[8] <= '2019.10.31':
+            count1 += 1
+            ran[9] += 1
+            sum[9] += data[7]
+        elif data[8] >= '2019.11.01' and data[8] <= '2019.11.30':
+            count1 += 1
+            ran[10] += 1
+            sum[10] += data[7]
+        elif data[8] >= '2019.12.01' and data[8] <= '2019.12.31':
+            count1 += 1
+            ran[11] += 1
+            sum[11] += data[7]
+        elif data[8] >= '2020.01.01' and data[8] <= '2020.01.31':
+            count1 += 1
+            ran[12] += 1
+            sum[12] += data[7]
+        elif data[8] >= '2020.02.01' and data[8] <= '2020.02.29':
+            count += 1
+            ran[13] += 1
+            sum[13] += data[7]
+        elif data[8] >= '2020.03.01' and data[8] <= '2020.03.31':
+            count += 1
+            ran[14] += 1
+            sum[14] += data[7]
+        elif data[8] > '2020.04.01' and data[8] <= '2020.04.30':
+            count += 1
+            ran[15] += 1
+            sum[15] += data[7]
+        elif data[8] >= '2020.05.01' and data[8] <= '2020.05.31':
+            count += 1
+            ran[16] += 1
+            sum[16] += data[7]
+    for i in range(0, 17):
+        sum[i] = sum[i] / ran[i]
+
+
+    return render_template('Jinan.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
+
+@app.route('/JinanTable')
+def JinanTable():
+    datalist = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    sql = '''
+            select * from Jinan
+            '''
+    d = cur.execute(sql)
+    for item in d:
+        datalist.append(item)
+    cur.close()
+    conn.close()
+    return render_template('JinanTable.html', datalist=datalist)
+
+@app.route('/Jinhua')
+def Jinhua():
+    count = 0
+    count1 = 0
+    datalist = []
+    datalist1 = []
+    datalist2 = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #     select totalprice,price,hdata from Fuzhou
+    #     '''
+    sql = '''
+       select * from Jinhua
+       '''
+    d = cur.execute(sql)
+    for item in d:
+        # count+=1
+        datalist.append(item)
+        # datalist1.append(item[1])
+        # datalist2.append(item[2])
+    cur.close()
+    conn.close()
+    print(datalist2)
+
+    ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
+    sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
+    ll = [0, 0, 0, 0, 0]  # 单价
+    for data in datalist:
+        # print(type(data[6]))
+        if data[6] > 0 and data[6] <= 200:
+            l[0] += 1
+        elif data[6] > 200 and data[6] <= 400:
+            l[1] += 1
+        elif data[6] > 400 and data[6] <= 600:
+            l[2] += 1
+        elif data[6] > 600 and data[6] <= 800:
+            l[3] += 1
+        elif data[6] > 800 and data[6] <= 1000:
+            l[4] += 1
+        else:
+            l[5] += 1
+    for data in datalist:
+        if data[7] > 0 and data[7] <= 10000:
+            ll[0] += 1
+        elif data[7] > 10000 and data[7] <= 20000:
+            ll[1] += 1
+        elif data[7] > 20000 and data[7] <= 30000:
+            ll[2] += 1
+        elif data[7] > 30000 and data[7] <= 40000:
+            ll[3] += 1
+        else:
+            ll[4] += 1
+
+    for data in datalist:
+        if data[8] <= '2019.01.31':
+            count1 += 1
+            ran[0] += 1
+            sum[0] += data[7]
+        elif data[8] >= '2019.02.01' and data[8] <= '2019.02.29':
+            count1 += 1
+            ran[1] += 1
+            sum[1] += data[7]
+        elif data[8] >= '2019.03.01' and data[8] <= '2019.03.31':
+            count1 += 1
+            ran[2] += 1
+            sum[2] += data[7]
+        elif data[8] > '2019.04.01' and data[8] <= '2019.04.30':
+            count1 += 1
+            ran[3] += 1
+            sum[3] += data[7]
+        elif data[8] > '2019.05.01' and data[8] <= '2019.05.31':
+            count1 += 1
+            ran[4] += 1
+            sum[4] += data[7]
+        elif data[8] > '2019.06.01' and data[8] <= '2019.06.30':
+            count1 += 1
+            ran[5] += 1
+            sum[5] += data[7]
+        elif data[8] >= '2019.07.01' and data[8] <= '2019.07.31':
+            count1 += 1
+            ran[6] += 1
+            sum[6] += data[7]
+        elif data[8] >= '2019.08.01' and data[8] <= '2019.08.31':
+            count1 += 1
+            ran[7] += 1
+            sum[7] += data[7]
+        elif data[8] >= '2019.09.01' and data[8] <= '2019.09.30':
+            count1 += 1
+            ran[8] += 1
+            sum[8] += data[7]
+        elif data[8] >= '2019.10.01' and data[8] <= '2019.10.31':
+            count1 += 1
+            ran[9] += 1
+            sum[9] += data[7]
+        elif data[8] >= '2019.11.01' and data[8] <= '2019.11.30':
+            count1 += 1
+            ran[10] += 1
+            sum[10] += data[7]
+        elif data[8] >= '2019.12.01' and data[8] <= '2019.12.31':
+            count1 += 1
+            ran[11] += 1
+            sum[11] += data[7]
+        elif data[8] >= '2020.01.01' and data[8] <= '2020.01.31':
+            count1 += 1
+            ran[12] += 1
+            sum[12] += data[7]
+        elif data[8] >= '2020.02.01' and data[8] <= '2020.02.29':
+            count += 1
+            ran[13] += 1
+            sum[13] += data[7]
+        elif data[8] >= '2020.03.01' and data[8] <= '2020.03.31':
+            count += 1
+            ran[14] += 1
+            sum[14] += data[7]
+        elif data[8] > '2020.04.01' and data[8] <= '2020.04.30':
+            count += 1
+            ran[15] += 1
+            sum[15] += data[7]
+        elif data[8] >= '2020.05.01' and data[8] <= '2020.05.31':
+            count += 1
+            ran[16] += 1
+            sum[16] += data[7]
+    for i in range(0, 17):
+        sum[i] = sum[i] / ran[i]
+
+
+    return render_template('Jinhua.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
+
+@app.route('/JinhuaTable')
+def JinhuaTable():
+    datalist = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    sql = '''
+            select * from Jinhua
+            '''
+    d = cur.execute(sql)
+    for item in d:
+        datalist.append(item)
+    cur.close()
+    conn.close()
+    return render_template('JinhuaTable.html', datalist=datalist)
+
+
+@app.route('/Lanzhou')
+def Lanzhou():
+    count = 0
+    count1 = 0
+    datalist = []
+    datalist1 = []
+    datalist2 = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #     select totalprice,price,hdata from Fuzhou
+    #     '''
+    sql = '''
+       select * from Lanzhou
+       '''
+    d = cur.execute(sql)
+    for item in d:
+        # count+=1
+        datalist.append(item)
+        # datalist1.append(item[1])
+        # datalist2.append(item[2])
+    cur.close()
+    conn.close()
+    print(datalist2)
+
+    ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
+    sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
+    ll = [0, 0, 0, 0, 0]  # 单价
+    for data in datalist:
+        # print(type(data[6]))
+        if data[6] > 0 and data[6] <= 200:
+            l[0] += 1
+        elif data[6] > 200 and data[6] <= 400:
+            l[1] += 1
+        elif data[6] > 400 and data[6] <= 600:
+            l[2] += 1
+        elif data[6] > 600 and data[6] <= 800:
+            l[3] += 1
+        elif data[6] > 800 and data[6] <= 1000:
+            l[4] += 1
+        else:
+            l[5] += 1
+    for data in datalist:
+        if data[7] > 0 and data[7] <= 10000:
+            ll[0] += 1
+        elif data[7] > 10000 and data[7] <= 20000:
+            ll[1] += 1
+        elif data[7] > 20000 and data[7] <= 30000:
+            ll[2] += 1
+        elif data[7] > 30000 and data[7] <= 40000:
+            ll[3] += 1
+        else:
+            ll[4] += 1
+
+    for data in datalist:
+        if data[8] <= '2019.01.31':
+            count1 += 1
+            ran[0] += 1
+            sum[0] += data[7]
+        elif data[8] >= '2019.02.01' and data[8] <= '2019.02.29':
+            count1 += 1
+            ran[1] += 1
+            sum[1] += data[7]
+        elif data[8] >= '2019.03.01' and data[8] <= '2019.03.31':
+            count1 += 1
+            ran[2] += 1
+            sum[2] += data[7]
+        elif data[8] > '2019.04.01' and data[8] <= '2019.04.30':
+            count1 += 1
+            ran[3] += 1
+            sum[3] += data[7]
+        elif data[8] > '2019.05.01' and data[8] <= '2019.05.31':
+            count1 += 1
+            ran[4] += 1
+            sum[4] += data[7]
+        elif data[8] > '2019.06.01' and data[8] <= '2019.06.30':
+            count1 += 1
+            ran[5] += 1
+            sum[5] += data[7]
+        elif data[8] >= '2019.07.01' and data[8] <= '2019.07.31':
+            count1 += 1
+            ran[6] += 1
+            sum[6] += data[7]
+        elif data[8] >= '2019.08.01' and data[8] <= '2019.08.31':
+            count1 += 1
+            ran[7] += 1
+            sum[7] += data[7]
+        elif data[8] >= '2019.09.01' and data[8] <= '2019.09.30':
+            count1 += 1
+            ran[8] += 1
+            sum[8] += data[7]
+        elif data[8] >= '2019.10.01' and data[8] <= '2019.10.31':
+            count1 += 1
+            ran[9] += 1
+            sum[9] += data[7]
+        elif data[8] >= '2019.11.01' and data[8] <= '2019.11.30':
+            count1 += 1
+            ran[10] += 1
+            sum[10] += data[7]
+        elif data[8] >= '2019.12.01' and data[8] <= '2019.12.31':
+            count1 += 1
+            ran[11] += 1
+            sum[11] += data[7]
+        elif data[8] >= '2020.01.01' and data[8] <= '2020.01.31':
+            count1 += 1
+            ran[12] += 1
+            sum[12] += data[7]
+        elif data[8] >= '2020.02.01' and data[8] <= '2020.02.29':
+            count += 1
+            ran[13] += 1
+            sum[13] += data[7]
+        elif data[8] >= '2020.03.01' and data[8] <= '2020.03.31':
+            count += 1
+            ran[14] += 1
+            sum[14] += data[7]
+        elif data[8] > '2020.04.01' and data[8] <= '2020.04.30':
+            count += 1
+            ran[15] += 1
+            sum[15] += data[7]
+        elif data[8] >= '2020.05.01' and data[8] <= '2020.05.31':
+            count += 1
+            ran[16] += 1
+            sum[16] += data[7]
+    for i in range(0, 17):
+        sum[i] = sum[i] / ran[i]
+
+
+    return render_template('Lanzhou.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
+
+@app.route('/LanzhouTable')
+def LanzhouTable():
+    datalist = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    sql = '''
+            select * from Lanzhou
+            '''
+    d = cur.execute(sql)
+    for item in d:
+        datalist.append(item)
+    cur.close()
+    conn.close()
+    return render_template('LanzhouTable.html', datalist=datalist)
+
+@app.route('/Liangshan')
+def Liangshan():
+    count = 0
+    count1 = 0
+    datalist = []
+    datalist1 = []
+    datalist2 = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #     select totalprice,price,hdata from Fuzhou
+    #     '''
+    sql = '''
+       select * from Liangshan
+       '''
+    d = cur.execute(sql)
+    for item in d:
+        # count+=1
+        datalist.append(item)
+        # datalist1.append(item[1])
+        # datalist2.append(item[2])
+    cur.close()
+    conn.close()
+    print(datalist2)
+
+    ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
+    sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
+    ll = [0, 0, 0, 0, 0]  # 单价
+    for data in datalist:
+        # print(type(data[6]))
+        if data[6] > 0 and data[6] <= 200:
+            l[0] += 1
+        elif data[6] > 200 and data[6] <= 400:
+            l[1] += 1
+        elif data[6] > 400 and data[6] <= 600:
+            l[2] += 1
+        elif data[6] > 600 and data[6] <= 800:
+            l[3] += 1
+        elif data[6] > 800 and data[6] <= 1000:
+            l[4] += 1
+        else:
+            l[5] += 1
+    for data in datalist:
+        if data[7] > 0 and data[7] <= 10000:
+            ll[0] += 1
+        elif data[7] > 10000 and data[7] <= 20000:
+            ll[1] += 1
+        elif data[7] > 20000 and data[7] <= 30000:
+            ll[2] += 1
+        elif data[7] > 30000 and data[7] <= 40000:
+            ll[3] += 1
+        else:
+            ll[4] += 1
+
+    for data in datalist:
+        if data[8] <= '2019.01.31':
+            count1 += 1
+            ran[0] += 1
+            sum[0] += data[7]
+        elif data[8] >= '2019.02.01' and data[8] <= '2019.02.29':
+            count1 += 1
+            ran[1] += 1
+            sum[1] += data[7]
+        elif data[8] >= '2019.03.01' and data[8] <= '2019.03.31':
+            count1 += 1
+            ran[2] += 1
+            sum[2] += data[7]
+        elif data[8] > '2019.04.01' and data[8] <= '2019.04.30':
+            count1 += 1
+            ran[3] += 1
+            sum[3] += data[7]
+        elif data[8] > '2019.05.01' and data[8] <= '2019.05.31':
+            count1 += 1
+            ran[4] += 1
+            sum[4] += data[7]
+        elif data[8] > '2019.06.01' and data[8] <= '2019.06.30':
+            count1 += 1
+            ran[5] += 1
+            sum[5] += data[7]
+        elif data[8] >= '2019.07.01' and data[8] <= '2019.07.31':
+            count1 += 1
+            ran[6] += 1
+            sum[6] += data[7]
+        elif data[8] >= '2019.08.01' and data[8] <= '2019.08.31':
+            count1 += 1
+            ran[7] += 1
+            sum[7] += data[7]
+        elif data[8] >= '2019.09.01' and data[8] <= '2019.09.30':
+            count1 += 1
+            ran[8] += 1
+            sum[8] += data[7]
+        elif data[8] >= '2019.10.01' and data[8] <= '2019.10.31':
+            count1 += 1
+            ran[9] += 1
+            sum[9] += data[7]
+        elif data[8] >= '2019.11.01' and data[8] <= '2019.11.30':
+            count1 += 1
+            ran[10] += 1
+            sum[10] += data[7]
+        elif data[8] >= '2019.12.01' and data[8] <= '2019.12.31':
+            count1 += 1
+            ran[11] += 1
+            sum[11] += data[7]
+        elif data[8] >= '2020.01.01' and data[8] <= '2020.01.31':
+            count1 += 1
+            ran[12] += 1
+            sum[12] += data[7]
+        elif data[8] >= '2020.02.01' and data[8] <= '2020.02.29':
+            count += 1
+            ran[13] += 1
+            sum[13] += data[7]
+        elif data[8] >= '2020.03.01' and data[8] <= '2020.03.31':
+            count += 1
+            ran[14] += 1
+            sum[14] += data[7]
+        elif data[8] > '2020.04.01' and data[8] <= '2020.04.30':
+            count += 1
+            ran[15] += 1
+            sum[15] += data[7]
+        elif data[8] >= '2020.05.01' and data[8] <= '2020.05.31':
+            count += 1
+            ran[16] += 1
+            sum[16] += data[7]
+    for i in range(0, 17):
+        sum[i] = sum[i] / ran[i]
+
+
+    return render_template('Liangshan.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
+
+@app.route('/LiangshanTable')
+def LiangshanTable():
+    datalist = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    sql = '''
+            select * from Liangshan
+            '''
+    d = cur.execute(sql)
+    for item in d:
+        datalist.append(item)
+    cur.close()
+    conn.close()
+    return render_template('LiangshanTable.html', datalist=datalist)
+
+@app.route('/Linyi')
+def Linyi():
+    count = 0
+    count1 = 0
+    datalist = []
+    datalist1 = []
+    datalist2 = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #     select totalprice,price,hdata from Fuzhou
+    #     '''
+    sql = '''
+       select * from Linyi
+       '''
+    d = cur.execute(sql)
+    for item in d:
+        # count+=1
+        datalist.append(item)
+        # datalist1.append(item[1])
+        # datalist2.append(item[2])
+    cur.close()
+    conn.close()
+    print(datalist2)
+
+    ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
+    sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
+    ll = [0, 0, 0, 0, 0]  # 单价
+    for data in datalist:
+        # print(type(data[6]))
+        if data[6] > 0 and data[6] <= 200:
+            l[0] += 1
+        elif data[6] > 200 and data[6] <= 400:
+            l[1] += 1
+        elif data[6] > 400 and data[6] <= 600:
+            l[2] += 1
+        elif data[6] > 600 and data[6] <= 800:
+            l[3] += 1
+        elif data[6] > 800 and data[6] <= 1000:
+            l[4] += 1
+        else:
+            l[5] += 1
+    for data in datalist:
+        if data[7] > 0 and data[7] <= 10000:
+            ll[0] += 1
+        elif data[7] > 10000 and data[7] <= 20000:
+            ll[1] += 1
+        elif data[7] > 20000 and data[7] <= 30000:
+            ll[2] += 1
+        elif data[7] > 30000 and data[7] <= 40000:
+            ll[3] += 1
+        else:
+            ll[4] += 1
+
+    for data in datalist:
+        if data[8] <= '2019.01.31':
+            count1 += 1
+            ran[0] += 1
+            sum[0] += data[7]
+        elif data[8] >= '2019.02.01' and data[8] <= '2019.02.29':
+            count1 += 1
+            ran[1] += 1
+            sum[1] += data[7]
+        elif data[8] >= '2019.03.01' and data[8] <= '2019.03.31':
+            count1 += 1
+            ran[2] += 1
+            sum[2] += data[7]
+        elif data[8] > '2019.04.01' and data[8] <= '2019.04.30':
+            count1 += 1
+            ran[3] += 1
+            sum[3] += data[7]
+        elif data[8] > '2019.05.01' and data[8] <= '2019.05.31':
+            count1 += 1
+            ran[4] += 1
+            sum[4] += data[7]
+        elif data[8] > '2019.06.01' and data[8] <= '2019.06.30':
+            count1 += 1
+            ran[5] += 1
+            sum[5] += data[7]
+        elif data[8] >= '2019.07.01' and data[8] <= '2019.07.31':
+            count1 += 1
+            ran[6] += 1
+            sum[6] += data[7]
+        elif data[8] >= '2019.08.01' and data[8] <= '2019.08.31':
+            count1 += 1
+            ran[7] += 1
+            sum[7] += data[7]
+        elif data[8] >= '2019.09.01' and data[8] <= '2019.09.30':
+            count1 += 1
+            ran[8] += 1
+            sum[8] += data[7]
+        elif data[8] >= '2019.10.01' and data[8] <= '2019.10.31':
+            count1 += 1
+            ran[9] += 1
+            sum[9] += data[7]
+        elif data[8] >= '2019.11.01' and data[8] <= '2019.11.30':
+            count1 += 1
+            ran[10] += 1
+            sum[10] += data[7]
+        elif data[8] >= '2019.12.01' and data[8] <= '2019.12.31':
+            count1 += 1
+            ran[11] += 1
+            sum[11] += data[7]
+        elif data[8] >= '2020.01.01' and data[8] <= '2020.01.31':
+            count1 += 1
+            ran[12] += 1
+            sum[12] += data[7]
+        elif data[8] >= '2020.02.01' and data[8] <= '2020.02.29':
+            count += 1
+            ran[13] += 1
+            sum[13] += data[7]
+        elif data[8] >= '2020.03.01' and data[8] <= '2020.03.31':
+            count += 1
+            ran[14] += 1
+            sum[14] += data[7]
+        elif data[8] > '2020.04.01' and data[8] <= '2020.04.30':
+            count += 1
+            ran[15] += 1
+            sum[15] += data[7]
+        elif data[8] >= '2020.05.01' and data[8] <= '2020.05.31':
+            count += 1
+            ran[16] += 1
+            sum[16] += data[7]
+    for i in range(0, 17):
+        sum[i] = sum[i] / ran[i]
+
+
+    return render_template('Linyi.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
+
+@app.route('/LinyiTable')
+def LinyiTable():
+    datalist = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    sql = '''
+            select * from Linyi
+            '''
+    d = cur.execute(sql)
+    for item in d:
+        datalist.append(item)
+    cur.close()
+    conn.close()
+    return render_template('LinyiTable.html', datalist=datalist)
+
+@app.route('/Mianyang')
+def Mianyang():
+    count = 0
+    count1 = 0
+    datalist = []
+    datalist1 = []
+    datalist2 = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #     select totalprice,price,hdata from Fuzhou
+    #     '''
+    sql = '''
+       select * from Mianyang
+       '''
+    d = cur.execute(sql)
+    for item in d:
+        # count+=1
+        datalist.append(item)
+        # datalist1.append(item[1])
+        # datalist2.append(item[2])
+    cur.close()
+    conn.close()
+    print(datalist2)
+
+    ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
+    sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
+    ll = [0, 0, 0, 0, 0]  # 单价
+    for data in datalist:
+        # print(type(data[6]))
+        if data[6] > 0 and data[6] <= 200:
+            l[0] += 1
+        elif data[6] > 200 and data[6] <= 400:
+            l[1] += 1
+        elif data[6] > 400 and data[6] <= 600:
+            l[2] += 1
+        elif data[6] > 600 and data[6] <= 800:
+            l[3] += 1
+        elif data[6] > 800 and data[6] <= 1000:
+            l[4] += 1
+        else:
+            l[5] += 1
+    for data in datalist:
+        if data[7] > 0 and data[7] <= 10000:
+            ll[0] += 1
+        elif data[7] > 10000 and data[7] <= 20000:
+            ll[1] += 1
+        elif data[7] > 20000 and data[7] <= 30000:
+            ll[2] += 1
+        elif data[7] > 30000 and data[7] <= 40000:
+            ll[3] += 1
+        else:
+            ll[4] += 1
+
+    for data in datalist:
+        if data[8] <= '2019.01.31':
+            count1 += 1
+            ran[0] += 1
+            sum[0] += data[7]
+        elif data[8] >= '2019.02.01' and data[8] <= '2019.02.29':
+            count1 += 1
+            ran[1] += 1
+            sum[1] += data[7]
+        elif data[8] >= '2019.03.01' and data[8] <= '2019.03.31':
+            count1 += 1
+            ran[2] += 1
+            sum[2] += data[7]
+        elif data[8] > '2019.04.01' and data[8] <= '2019.04.30':
+            count1 += 1
+            ran[3] += 1
+            sum[3] += data[7]
+        elif data[8] > '2019.05.01' and data[8] <= '2019.05.31':
+            count1 += 1
+            ran[4] += 1
+            sum[4] += data[7]
+        elif data[8] > '2019.06.01' and data[8] <= '2019.06.30':
+            count1 += 1
+            ran[5] += 1
+            sum[5] += data[7]
+        elif data[8] >= '2019.07.01' and data[8] <= '2019.07.31':
+            count1 += 1
+            ran[6] += 1
+            sum[6] += data[7]
+        elif data[8] >= '2019.08.01' and data[8] <= '2019.08.31':
+            count1 += 1
+            ran[7] += 1
+            sum[7] += data[7]
+        elif data[8] >= '2019.09.01' and data[8] <= '2019.09.30':
+            count1 += 1
+            ran[8] += 1
+            sum[8] += data[7]
+        elif data[8] >= '2019.10.01' and data[8] <= '2019.10.31':
+            count1 += 1
+            ran[9] += 1
+            sum[9] += data[7]
+        elif data[8] >= '2019.11.01' and data[8] <= '2019.11.30':
+            count1 += 1
+            ran[10] += 1
+            sum[10] += data[7]
+        elif data[8] >= '2019.12.01' and data[8] <= '2019.12.31':
+            count1 += 1
+            ran[11] += 1
+            sum[11] += data[7]
+        elif data[8] >= '2020.01.01' and data[8] <= '2020.01.31':
+            count1 += 1
+            ran[12] += 1
+            sum[12] += data[7]
+        elif data[8] >= '2020.02.01' and data[8] <= '2020.02.29':
+            count += 1
+            ran[13] += 1
+            sum[13] += data[7]
+        elif data[8] >= '2020.03.01' and data[8] <= '2020.03.31':
+            count += 1
+            ran[14] += 1
+            sum[14] += data[7]
+        elif data[8] > '2020.04.01' and data[8] <= '2020.04.30':
+            count += 1
+            ran[15] += 1
+            sum[15] += data[7]
+        elif data[8] >= '2020.05.01' and data[8] <= '2020.05.31':
+            count += 1
+            ran[16] += 1
+            sum[16] += data[7]
+    for i in range(0, 17):
+        sum[i] = sum[i] / ran[i]
+
+
+    return render_template('Mianyang.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
+
+@app.route('/MianyangTable')
+def MianyangTable():
+    datalist = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    sql = '''
+            select * from Mianyang
+            '''
+    d = cur.execute(sql)
+    for item in d:
+        datalist.append(item)
+    cur.close()
+    conn.close()
+    return render_template('MianyangTable.html', datalist=datalist)
+
+@app.route('/Ningbo')
+def Ningbo():
+    count = 0
+    count1 = 0
+    datalist = []
+    datalist1 = []
+    datalist2 = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #     select totalprice,price,hdata from Fuzhou
+    #     '''
+    sql = '''
+       select * from Ningbo
+       '''
+    d = cur.execute(sql)
+    for item in d:
+        # count+=1
+        datalist.append(item)
+        # datalist1.append(item[1])
+        # datalist2.append(item[2])
+    cur.close()
+    conn.close()
+    print(datalist2)
+
+    ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
+    sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
+    ll = [0, 0, 0, 0, 0]  # 单价
+    for data in datalist:
+        # print(type(data[6]))
+        if data[6] > 0 and data[6] <= 200:
+            l[0] += 1
+        elif data[6] > 200 and data[6] <= 400:
+            l[1] += 1
+        elif data[6] > 400 and data[6] <= 600:
+            l[2] += 1
+        elif data[6] > 600 and data[6] <= 800:
+            l[3] += 1
+        elif data[6] > 800 and data[6] <= 1000:
+            l[4] += 1
+        else:
+            l[5] += 1
+    for data in datalist:
+        if data[7] > 0 and data[7] <= 10000:
+            ll[0] += 1
+        elif data[7] > 10000 and data[7] <= 20000:
+            ll[1] += 1
+        elif data[7] > 20000 and data[7] <= 30000:
+            ll[2] += 1
+        elif data[7] > 30000 and data[7] <= 40000:
+            ll[3] += 1
+        else:
+            ll[4] += 1
+
+    for data in datalist:
+        if data[8] <= '2019.01.31':
+            count1 += 1
+            ran[0] += 1
+            sum[0] += data[7]
+        elif data[8] >= '2019.02.01' and data[8] <= '2019.02.29':
+            count1 += 1
+            ran[1] += 1
+            sum[1] += data[7]
+        elif data[8] >= '2019.03.01' and data[8] <= '2019.03.31':
+            count1 += 1
+            ran[2] += 1
+            sum[2] += data[7]
+        elif data[8] > '2019.04.01' and data[8] <= '2019.04.30':
+            count1 += 1
+            ran[3] += 1
+            sum[3] += data[7]
+        elif data[8] > '2019.05.01' and data[8] <= '2019.05.31':
+            count1 += 1
+            ran[4] += 1
+            sum[4] += data[7]
+        elif data[8] > '2019.06.01' and data[8] <= '2019.06.30':
+            count1 += 1
+            ran[5] += 1
+            sum[5] += data[7]
+        elif data[8] >= '2019.07.01' and data[8] <= '2019.07.31':
+            count1 += 1
+            ran[6] += 1
+            sum[6] += data[7]
+        elif data[8] >= '2019.08.01' and data[8] <= '2019.08.31':
+            count1 += 1
+            ran[7] += 1
+            sum[7] += data[7]
+        elif data[8] >= '2019.09.01' and data[8] <= '2019.09.30':
+            count1 += 1
+            ran[8] += 1
+            sum[8] += data[7]
+        elif data[8] >= '2019.10.01' and data[8] <= '2019.10.31':
+            count1 += 1
+            ran[9] += 1
+            sum[9] += data[7]
+        elif data[8] >= '2019.11.01' and data[8] <= '2019.11.30':
+            count1 += 1
+            ran[10] += 1
+            sum[10] += data[7]
+        elif data[8] >= '2019.12.01' and data[8] <= '2019.12.31':
+            count1 += 1
+            ran[11] += 1
+            sum[11] += data[7]
+        elif data[8] >= '2020.01.01' and data[8] <= '2020.01.31':
+            count1 += 1
+            ran[12] += 1
+            sum[12] += data[7]
+        elif data[8] >= '2020.02.01' and data[8] <= '2020.02.29':
+            count += 1
+            ran[13] += 1
+            sum[13] += data[7]
+        elif data[8] >= '2020.03.01' and data[8] <= '2020.03.31':
+            count += 1
+            ran[14] += 1
+            sum[14] += data[7]
+        elif data[8] > '2020.04.01' and data[8] <= '2020.04.30':
+            count += 1
+            ran[15] += 1
+            sum[15] += data[7]
+        elif data[8] >= '2020.05.01' and data[8] <= '2020.05.31':
+            count += 1
+            ran[16] += 1
+            sum[16] += data[7]
+    for i in range(0, 17):
+        sum[i] = sum[i] / ran[i]
+
+
+    return render_template('Ningbo.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
+
+@app.route('/NingboTable')
+def NingboTable():
+    datalist = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    sql = '''
+            select * from Ningbo
+            '''
+    d = cur.execute(sql)
+    for item in d:
+        datalist.append(item)
+    cur.close()
+    conn.close()
+    return render_template('NingboTable.html', datalist=datalist)
+
+@app.route('/Shaoxing')
+def Shaoxing():
+    count = 0
+    count1 = 0
+    datalist = []
+    datalist1 = []
+    datalist2 = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #     select totalprice,price,hdata from Fuzhou
+    #     '''
+    sql = '''
+       select * from Shaoxing
+       '''
+    d = cur.execute(sql)
+    for item in d:
+        # count+=1
+        datalist.append(item)
+        # datalist1.append(item[1])
+        # datalist2.append(item[2])
+    cur.close()
+    conn.close()
+    print(datalist2)
+
+    ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
+    sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
+    ll = [0, 0, 0, 0, 0]  # 单价
+    for data in datalist:
+        # print(type(data[6]))
+        if data[6] > 0 and data[6] <= 200:
+            l[0] += 1
+        elif data[6] > 200 and data[6] <= 400:
+            l[1] += 1
+        elif data[6] > 400 and data[6] <= 600:
+            l[2] += 1
+        elif data[6] > 600 and data[6] <= 800:
+            l[3] += 1
+        elif data[6] > 800 and data[6] <= 1000:
+            l[4] += 1
+        else:
+            l[5] += 1
+    for data in datalist:
+        if data[7] > 0 and data[7] <= 10000:
+            ll[0] += 1
+        elif data[7] > 10000 and data[7] <= 20000:
+            ll[1] += 1
+        elif data[7] > 20000 and data[7] <= 30000:
+            ll[2] += 1
+        elif data[7] > 30000 and data[7] <= 40000:
+            ll[3] += 1
+        else:
+            ll[4] += 1
+
+    for data in datalist:
+        if data[8] <= '2019.01.31':
+            count1 += 1
+            ran[0] += 1
+            sum[0] += data[7]
+        elif data[8] >= '2019.02.01' and data[8] <= '2019.02.29':
+            count1 += 1
+            ran[1] += 1
+            sum[1] += data[7]
+        elif data[8] >= '2019.03.01' and data[8] <= '2019.03.31':
+            count1 += 1
+            ran[2] += 1
+            sum[2] += data[7]
+        elif data[8] > '2019.04.01' and data[8] <= '2019.04.30':
+            count1 += 1
+            ran[3] += 1
+            sum[3] += data[7]
+        elif data[8] > '2019.05.01' and data[8] <= '2019.05.31':
+            count1 += 1
+            ran[4] += 1
+            sum[4] += data[7]
+        elif data[8] > '2019.06.01' and data[8] <= '2019.06.30':
+            count1 += 1
+            ran[5] += 1
+            sum[5] += data[7]
+        elif data[8] >= '2019.07.01' and data[8] <= '2019.07.31':
+            count1 += 1
+            ran[6] += 1
+            sum[6] += data[7]
+        elif data[8] >= '2019.08.01' and data[8] <= '2019.08.31':
+            count1 += 1
+            ran[7] += 1
+            sum[7] += data[7]
+        elif data[8] >= '2019.09.01' and data[8] <= '2019.09.30':
+            count1 += 1
+            ran[8] += 1
+            sum[8] += data[7]
+        elif data[8] >= '2019.10.01' and data[8] <= '2019.10.31':
+            count1 += 1
+            ran[9] += 1
+            sum[9] += data[7]
+        elif data[8] >= '2019.11.01' and data[8] <= '2019.11.30':
+            count1 += 1
+            ran[10] += 1
+            sum[10] += data[7]
+        elif data[8] >= '2019.12.01' and data[8] <= '2019.12.31':
+            count1 += 1
+            ran[11] += 1
+            sum[11] += data[7]
+        elif data[8] >= '2020.01.01' and data[8] <= '2020.01.31':
+            count1 += 1
+            ran[12] += 1
+            sum[12] += data[7]
+        elif data[8] >= '2020.02.01' and data[8] <= '2020.02.29':
+            count += 1
+            ran[13] += 1
+            sum[13] += data[7]
+        elif data[8] >= '2020.03.01' and data[8] <= '2020.03.31':
+            count += 1
+            ran[14] += 1
+            sum[14] += data[7]
+        elif data[8] > '2020.04.01' and data[8] <= '2020.04.30':
+            count += 1
+            ran[15] += 1
+            sum[15] += data[7]
+        elif data[8] >= '2020.05.01' and data[8] <= '2020.05.31':
+            count += 1
+            ran[16] += 1
+            sum[16] += data[7]
+    for i in range(0, 17):
+        sum[i] = sum[i] / ran[i]
+
+
+    return render_template('Shaoxing.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
+
+@app.route('/ShaoxingTable')
+def ShaoxingTable():
+    datalist = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    sql = '''
+            select * from Shaoxing
+            '''
+    d = cur.execute(sql)
+    for item in d:
+        datalist.append(item)
+    cur.close()
+    conn.close()
+    return render_template('ShaoxingTable.html', datalist=datalist)
+
+@app.route('/Taizhou')
+def Taizhou():
+    count = 0
+    count1 = 0
+    datalist = []
+    datalist1 = []
+    datalist2 = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #     select totalprice,price,hdata from Fuzhou
+    #     '''
+    sql = '''
+       select * from Taizhou
+       '''
+    d = cur.execute(sql)
+    for item in d:
+        # count+=1
+        datalist.append(item)
+        # datalist1.append(item[1])
+        # datalist2.append(item[2])
+    cur.close()
+    conn.close()
+    print(datalist2)
+
+    ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
+    sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
+    ll = [0, 0, 0, 0, 0]  # 单价
+    for data in datalist:
+        # print(type(data[6]))
+        if data[6] > 0 and data[6] <= 200:
+            l[0] += 1
+        elif data[6] > 200 and data[6] <= 400:
+            l[1] += 1
+        elif data[6] > 400 and data[6] <= 600:
+            l[2] += 1
+        elif data[6] > 600 and data[6] <= 800:
+            l[3] += 1
+        elif data[6] > 800 and data[6] <= 1000:
+            l[4] += 1
+        else:
+            l[5] += 1
+    for data in datalist:
+        if data[7] > 0 and data[7] <= 10000:
+            ll[0] += 1
+        elif data[7] > 10000 and data[7] <= 20000:
+            ll[1] += 1
+        elif data[7] > 20000 and data[7] <= 30000:
+            ll[2] += 1
+        elif data[7] > 30000 and data[7] <= 40000:
+            ll[3] += 1
+        else:
+            ll[4] += 1
+
+    for data in datalist:
+        if data[8] <= '2019.01.31':
+            count1 += 1
+            ran[0] += 1
+            sum[0] += data[7]
+        elif data[8] >= '2019.02.01' and data[8] <= '2019.02.29':
+            count1 += 1
+            ran[1] += 1
+            sum[1] += data[7]
+        elif data[8] >= '2019.03.01' and data[8] <= '2019.03.31':
+            count1 += 1
+            ran[2] += 1
+            sum[2] += data[7]
+        elif data[8] > '2019.04.01' and data[8] <= '2019.04.30':
+            count1 += 1
+            ran[3] += 1
+            sum[3] += data[7]
+        elif data[8] > '2019.05.01' and data[8] <= '2019.05.31':
+            count1 += 1
+            ran[4] += 1
+            sum[4] += data[7]
+        elif data[8] > '2019.06.01' and data[8] <= '2019.06.30':
+            count1 += 1
+            ran[5] += 1
+            sum[5] += data[7]
+        elif data[8] >= '2019.07.01' and data[8] <= '2019.07.31':
+            count1 += 1
+            ran[6] += 1
+            sum[6] += data[7]
+        elif data[8] >= '2019.08.01' and data[8] <= '2019.08.31':
+            count1 += 1
+            ran[7] += 1
+            sum[7] += data[7]
+        elif data[8] >= '2019.09.01' and data[8] <= '2019.09.30':
+            count1 += 1
+            ran[8] += 1
+            sum[8] += data[7]
+        elif data[8] >= '2019.10.01' and data[8] <= '2019.10.31':
+            count1 += 1
+            ran[9] += 1
+            sum[9] += data[7]
+        elif data[8] >= '2019.11.01' and data[8] <= '2019.11.30':
+            count1 += 1
+            ran[10] += 1
+            sum[10] += data[7]
+        elif data[8] >= '2019.12.01' and data[8] <= '2019.12.31':
+            count1 += 1
+            ran[11] += 1
+            sum[11] += data[7]
+        elif data[8] >= '2020.01.01' and data[8] <= '2020.01.31':
+            count1 += 1
+            ran[12] += 1
+            sum[12] += data[7]
+        elif data[8] >= '2020.02.01' and data[8] <= '2020.02.29':
+            count += 1
+            ran[13] += 1
+            sum[13] += data[7]
+        elif data[8] >= '2020.03.01' and data[8] <= '2020.03.31':
+            count += 1
+            ran[14] += 1
+            sum[14] += data[7]
+        elif data[8] > '2020.04.01' and data[8] <= '2020.04.30':
+            count += 1
+            ran[15] += 1
+            sum[15] += data[7]
+        elif data[8] >= '2020.05.01' and data[8] <= '2020.05.31':
+            count += 1
+            ran[16] += 1
+            sum[16] += data[7]
+    for i in range(0, 17):
+        sum[i] = sum[i] / ran[i]
+
+
+    return render_template('Taizhou.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
+
+@app.route('/TaizhouTable')
+def TaizhouTable():
+    datalist = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    sql = '''
+            select * from Taizhou
+            '''
+    d = cur.execute(sql)
+    for item in d:
+        datalist.append(item)
+    cur.close()
+    conn.close()
+    return render_template('TaizhouTable.html', datalist=datalist)
+
+@app.route('/Wenzhou')
+def Wenzhou():
+    count = 0
+    count1 = 0
+    datalist = []
+    datalist1 = []
+    datalist2 = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #     select totalprice,price,hdata from Fuzhou
+    #     '''
+    sql = '''
+       select * from Wenzhou
+       '''
+    d = cur.execute(sql)
+    for item in d:
+        # count+=1
+        datalist.append(item)
+        # datalist1.append(item[1])
+        # datalist2.append(item[2])
+    cur.close()
+    conn.close()
+    print(datalist2)
+
+    ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
+    sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
+    ll = [0, 0, 0, 0, 0]  # 单价
+    for data in datalist:
+        # print(type(data[6]))
+        if data[6] > 0 and data[6] <= 200:
+            l[0] += 1
+        elif data[6] > 200 and data[6] <= 400:
+            l[1] += 1
+        elif data[6] > 400 and data[6] <= 600:
+            l[2] += 1
+        elif data[6] > 600 and data[6] <= 800:
+            l[3] += 1
+        elif data[6] > 800 and data[6] <= 1000:
+            l[4] += 1
+        else:
+            l[5] += 1
+    for data in datalist:
+        if data[7] > 0 and data[7] <= 10000:
+            ll[0] += 1
+        elif data[7] > 10000 and data[7] <= 20000:
+            ll[1] += 1
+        elif data[7] > 20000 and data[7] <= 30000:
+            ll[2] += 1
+        elif data[7] > 30000 and data[7] <= 40000:
+            ll[3] += 1
+        else:
+            ll[4] += 1
+
+    for data in datalist:
+        if data[8] <= '2019.01.31':
+            count1 += 1
+            ran[0] += 1
+            sum[0] += data[7]
+        elif data[8] >= '2019.02.01' and data[8] <= '2019.02.29':
+            count1 += 1
+            ran[1] += 1
+            sum[1] += data[7]
+        elif data[8] >= '2019.03.01' and data[8] <= '2019.03.31':
+            count1 += 1
+            ran[2] += 1
+            sum[2] += data[7]
+        elif data[8] > '2019.04.01' and data[8] <= '2019.04.30':
+            count1 += 1
+            ran[3] += 1
+            sum[3] += data[7]
+        elif data[8] > '2019.05.01' and data[8] <= '2019.05.31':
+            count1 += 1
+            ran[4] += 1
+            sum[4] += data[7]
+        elif data[8] > '2019.06.01' and data[8] <= '2019.06.30':
+            count1 += 1
+            ran[5] += 1
+            sum[5] += data[7]
+        elif data[8] >= '2019.07.01' and data[8] <= '2019.07.31':
+            count1 += 1
+            ran[6] += 1
+            sum[6] += data[7]
+        elif data[8] >= '2019.08.01' and data[8] <= '2019.08.31':
+            count1 += 1
+            ran[7] += 1
+            sum[7] += data[7]
+        elif data[8] >= '2019.09.01' and data[8] <= '2019.09.30':
+            count1 += 1
+            ran[8] += 1
+            sum[8] += data[7]
+        elif data[8] >= '2019.10.01' and data[8] <= '2019.10.31':
+            count1 += 1
+            ran[9] += 1
+            sum[9] += data[7]
+        elif data[8] >= '2019.11.01' and data[8] <= '2019.11.30':
+            count1 += 1
+            ran[10] += 1
+            sum[10] += data[7]
+        elif data[8] >= '2019.12.01' and data[8] <= '2019.12.31':
+            count1 += 1
+            ran[11] += 1
+            sum[11] += data[7]
+        elif data[8] >= '2020.01.01' and data[8] <= '2020.01.31':
+            count1 += 1
+            ran[12] += 1
+            sum[12] += data[7]
+        elif data[8] >= '2020.02.01' and data[8] <= '2020.02.29':
+            count += 1
+            ran[13] += 1
+            sum[13] += data[7]
+        elif data[8] >= '2020.03.01' and data[8] <= '2020.03.31':
+            count += 1
+            ran[14] += 1
+            sum[14] += data[7]
+        elif data[8] > '2020.04.01' and data[8] <= '2020.04.30':
+            count += 1
+            ran[15] += 1
+            sum[15] += data[7]
+        elif data[8] >= '2020.05.01' and data[8] <= '2020.05.31':
+            count += 1
+            ran[16] += 1
+            sum[16] += data[7]
+    for i in range(0, 17):
+        sum[i] = sum[i] / ran[i]
+
+
+    return render_template('Wenzhou.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
+
+@app.route('/WenzhouTable')
+def WenzhouTable():
+    datalist = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    sql = '''
+            select * from Wenzhou
+            '''
+    d = cur.execute(sql)
+    for item in d:
+        datalist.append(item)
+    cur.close()
+    conn.close()
+    return render_template('WenzhouTable.html', datalist=datalist)
+
+@app.route('/Xianyang')
+def Xianyang():
+    count = 0
+    count1 = 0
+    datalist = []
+    datalist1 = []
+    datalist2 = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #     select totalprice,price,hdata from Fuzhou
+    #     '''
+    sql = '''
+       select * from Xianyang
+       '''
+    d = cur.execute(sql)
+    for item in d:
+        # count+=1
+        datalist.append(item)
+        # datalist1.append(item[1])
+        # datalist2.append(item[2])
+    cur.close()
+    conn.close()
+    print(datalist2)
+
+    ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
+    sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
+    ll = [0, 0, 0, 0, 0]  # 单价
+    for data in datalist:
+        # print(type(data[6]))
+        if data[6] > 0 and data[6] <= 200:
+            l[0] += 1
+        elif data[6] > 200 and data[6] <= 400:
+            l[1] += 1
+        elif data[6] > 400 and data[6] <= 600:
+            l[2] += 1
+        elif data[6] > 600 and data[6] <= 800:
+            l[3] += 1
+        elif data[6] > 800 and data[6] <= 1000:
+            l[4] += 1
+        else:
+            l[5] += 1
+    for data in datalist:
+        if data[7] > 0 and data[7] <= 10000:
+            ll[0] += 1
+        elif data[7] > 10000 and data[7] <= 20000:
+            ll[1] += 1
+        elif data[7] > 20000 and data[7] <= 30000:
+            ll[2] += 1
+        elif data[7] > 30000 and data[7] <= 40000:
+            ll[3] += 1
+        else:
+            ll[4] += 1
+
+    for data in datalist:
+        if data[8] <= '2019.01.31':
+            count1 += 1
+            ran[0] += 1
+            sum[0] += data[7]
+        elif data[8] >= '2019.02.01' and data[8] <= '2019.02.29':
+            count1 += 1
+            ran[1] += 1
+            sum[1] += data[7]
+        elif data[8] >= '2019.03.01' and data[8] <= '2019.03.31':
+            count1 += 1
+            ran[2] += 1
+            sum[2] += data[7]
+        elif data[8] > '2019.04.01' and data[8] <= '2019.04.30':
+            count1 += 1
+            ran[3] += 1
+            sum[3] += data[7]
+        elif data[8] > '2019.05.01' and data[8] <= '2019.05.31':
+            count1 += 1
+            ran[4] += 1
+            sum[4] += data[7]
+        elif data[8] > '2019.06.01' and data[8] <= '2019.06.30':
+            count1 += 1
+            ran[5] += 1
+            sum[5] += data[7]
+        elif data[8] >= '2019.07.01' and data[8] <= '2019.07.31':
+            count1 += 1
+            ran[6] += 1
+            sum[6] += data[7]
+        elif data[8] >= '2019.08.01' and data[8] <= '2019.08.31':
+            count1 += 1
+            ran[7] += 1
+            sum[7] += data[7]
+        elif data[8] >= '2019.09.01' and data[8] <= '2019.09.30':
+            count1 += 1
+            ran[8] += 1
+            sum[8] += data[7]
+        elif data[8] >= '2019.10.01' and data[8] <= '2019.10.31':
+            count1 += 1
+            ran[9] += 1
+            sum[9] += data[7]
+        elif data[8] >= '2019.11.01' and data[8] <= '2019.11.30':
+            count1 += 1
+            ran[10] += 1
+            sum[10] += data[7]
+        elif data[8] >= '2019.12.01' and data[8] <= '2019.12.31':
+            count1 += 1
+            ran[11] += 1
+            sum[11] += data[7]
+        elif data[8] >= '2020.01.01' and data[8] <= '2020.01.31':
+            count1 += 1
+            ran[12] += 1
+            sum[12] += data[7]
+        elif data[8] >= '2020.02.01' and data[8] <= '2020.02.29':
+            count += 1
+            ran[13] += 1
+            sum[13] += data[7]
+        elif data[8] >= '2020.03.01' and data[8] <= '2020.03.31':
+            count += 1
+            ran[14] += 1
+            sum[14] += data[7]
+        elif data[8] > '2020.04.01' and data[8] <= '2020.04.30':
+            count += 1
+            ran[15] += 1
+            sum[15] += data[7]
+        elif data[8] >= '2020.05.01' and data[8] <= '2020.05.31':
+            count += 1
+            ran[16] += 1
+            sum[16] += data[7]
+    for i in range(0, 17):
+        sum[i] = sum[i] / ran[i]
+
+
+    return render_template('Xianyang.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
+
+@app.route('/XianyangTable')
+def XianyangTable():
+    datalist = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    sql = '''
+            select * from Xianyang
+            '''
+    d = cur.execute(sql)
+    for item in d:
+        datalist.append(item)
+    cur.close()
+    conn.close()
+    return render_template('XianyangTable.html', datalist=datalist)
+
+@app.route('/Yantai')
+def Yantai():
+    count = 0
+    count1 = 0
+    datalist = []
+    datalist1 = []
+    datalist2 = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #     select totalprice,price,hdata from Fuzhou
+    #     '''
+    sql = '''
+       select * from Yantai
+       '''
+    d = cur.execute(sql)
+    for item in d:
+        # count+=1
+        datalist.append(item)
+        # datalist1.append(item[1])
+        # datalist2.append(item[2])
+    cur.close()
+    conn.close()
+    print(datalist2)
+
+    ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
+    sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
+    ll = [0, 0, 0, 0, 0]  # 单价
+    for data in datalist:
+        # print(type(data[6]))
+        if data[6] > 0 and data[6] <= 200:
+            l[0] += 1
+        elif data[6] > 200 and data[6] <= 400:
+            l[1] += 1
+        elif data[6] > 400 and data[6] <= 600:
+            l[2] += 1
+        elif data[6] > 600 and data[6] <= 800:
+            l[3] += 1
+        elif data[6] > 800 and data[6] <= 1000:
+            l[4] += 1
+        else:
+            l[5] += 1
+    for data in datalist:
+        if data[7] > 0 and data[7] <= 10000:
+            ll[0] += 1
+        elif data[7] > 10000 and data[7] <= 20000:
+            ll[1] += 1
+        elif data[7] > 20000 and data[7] <= 30000:
+            ll[2] += 1
+        elif data[7] > 30000 and data[7] <= 40000:
+            ll[3] += 1
+        else:
+            ll[4] += 1
+
+    for data in datalist:
+        if data[8] <= '2019.01.31':
+            count1 += 1
+            ran[0] += 1
+            sum[0] += data[7]
+        elif data[8] >= '2019.02.01' and data[8] <= '2019.02.29':
+            count1 += 1
+            ran[1] += 1
+            sum[1] += data[7]
+        elif data[8] >= '2019.03.01' and data[8] <= '2019.03.31':
+            count1 += 1
+            ran[2] += 1
+            sum[2] += data[7]
+        elif data[8] > '2019.04.01' and data[8] <= '2019.04.30':
+            count1 += 1
+            ran[3] += 1
+            sum[3] += data[7]
+        elif data[8] > '2019.05.01' and data[8] <= '2019.05.31':
+            count1 += 1
+            ran[4] += 1
+            sum[4] += data[7]
+        elif data[8] > '2019.06.01' and data[8] <= '2019.06.30':
+            count1 += 1
+            ran[5] += 1
+            sum[5] += data[7]
+        elif data[8] >= '2019.07.01' and data[8] <= '2019.07.31':
+            count1 += 1
+            ran[6] += 1
+            sum[6] += data[7]
+        elif data[8] >= '2019.08.01' and data[8] <= '2019.08.31':
+            count1 += 1
+            ran[7] += 1
+            sum[7] += data[7]
+        elif data[8] >= '2019.09.01' and data[8] <= '2019.09.30':
+            count1 += 1
+            ran[8] += 1
+            sum[8] += data[7]
+        elif data[8] >= '2019.10.01' and data[8] <= '2019.10.31':
+            count1 += 1
+            ran[9] += 1
+            sum[9] += data[7]
+        elif data[8] >= '2019.11.01' and data[8] <= '2019.11.30':
+            count1 += 1
+            ran[10] += 1
+            sum[10] += data[7]
+        elif data[8] >= '2019.12.01' and data[8] <= '2019.12.31':
+            count1 += 1
+            ran[11] += 1
+            sum[11] += data[7]
+        elif data[8] >= '2020.01.01' and data[8] <= '2020.01.31':
+            count1 += 1
+            ran[12] += 1
+            sum[12] += data[7]
+        elif data[8] >= '2020.02.01' and data[8] <= '2020.02.29':
+            count += 1
+            ran[13] += 1
+            sum[13] += data[7]
+        elif data[8] >= '2020.03.01' and data[8] <= '2020.03.31':
+            count += 1
+            ran[14] += 1
+            sum[14] += data[7]
+        elif data[8] > '2020.04.01' and data[8] <= '2020.04.30':
+            count += 1
+            ran[15] += 1
+            sum[15] += data[7]
+        elif data[8] >= '2020.05.01' and data[8] <= '2020.05.31':
+            count += 1
+            ran[16] += 1
+            sum[16] += data[7]
+    for i in range(0, 17):
+        sum[i] = sum[i] / ran[i]
+
+
+    return render_template('Yantai.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
+
+@app.route('/YantaiTable')
+def YantaiTable():
+    datalist = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    sql = '''
+            select * from Yantai
+            '''
+    d = cur.execute(sql)
+    for item in d:
+        datalist.append(item)
+    cur.close()
+    conn.close()
+    return render_template('YantaiTable.html', datalist=datalist)
+
+@app.route('/Zhenjiang')
+def Zhenjiang():
+    count = 0
+    count1 = 0
+    datalist = []
+    datalist1 = []
+    datalist2 = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #     select totalprice,price,hdata from Fuzhou
+    #     '''
+    sql = '''
+       select * from Zhenjiang
+       '''
+    d = cur.execute(sql)
+    for item in d:
+        # count+=1
+        datalist.append(item)
+        # datalist1.append(item[1])
+        # datalist2.append(item[2])
+    cur.close()
+    conn.close()
+    print(datalist2)
+
+    ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
+    sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
+    ll = [0, 0, 0, 0, 0]  # 单价
+    for data in datalist:
+        # print(type(data[6]))
+        if data[6] > 0 and data[6] <= 200:
+            l[0] += 1
+        elif data[6] > 200 and data[6] <= 400:
+            l[1] += 1
+        elif data[6] > 400 and data[6] <= 600:
+            l[2] += 1
+        elif data[6] > 600 and data[6] <= 800:
+            l[3] += 1
+        elif data[6] > 800 and data[6] <= 1000:
+            l[4] += 1
+        else:
+            l[5] += 1
+    for data in datalist:
+        if data[7] > 0 and data[7] <= 10000:
+            ll[0] += 1
+        elif data[7] > 10000 and data[7] <= 20000:
+            ll[1] += 1
+        elif data[7] > 20000 and data[7] <= 30000:
+            ll[2] += 1
+        elif data[7] > 30000 and data[7] <= 40000:
+            ll[3] += 1
+        else:
+            ll[4] += 1
+
+    for data in datalist:
+        if data[8] <= '2019.01.31':
+            count1 += 1
+            ran[0] += 1
+            sum[0] += data[7]
+        elif data[8] >= '2019.02.01' and data[8] <= '2019.02.29':
+            count1 += 1
+            ran[1] += 1
+            sum[1] += data[7]
+        elif data[8] >= '2019.03.01' and data[8] <= '2019.03.31':
+            count1 += 1
+            ran[2] += 1
+            sum[2] += data[7]
+        elif data[8] > '2019.04.01' and data[8] <= '2019.04.30':
+            count1 += 1
+            ran[3] += 1
+            sum[3] += data[7]
+        elif data[8] > '2019.05.01' and data[8] <= '2019.05.31':
+            count1 += 1
+            ran[4] += 1
+            sum[4] += data[7]
+        elif data[8] > '2019.06.01' and data[8] <= '2019.06.30':
+            count1 += 1
+            ran[5] += 1
+            sum[5] += data[7]
+        elif data[8] >= '2019.07.01' and data[8] <= '2019.07.31':
+            count1 += 1
+            ran[6] += 1
+            sum[6] += data[7]
+        elif data[8] >= '2019.08.01' and data[8] <= '2019.08.31':
+            count1 += 1
+            ran[7] += 1
+            sum[7] += data[7]
+        elif data[8] >= '2019.09.01' and data[8] <= '2019.09.30':
+            count1 += 1
+            ran[8] += 1
+            sum[8] += data[7]
+        elif data[8] >= '2019.10.01' and data[8] <= '2019.10.31':
+            count1 += 1
+            ran[9] += 1
+            sum[9] += data[7]
+        elif data[8] >= '2019.11.01' and data[8] <= '2019.11.30':
+            count1 += 1
+            ran[10] += 1
+            sum[10] += data[7]
+        elif data[8] >= '2019.12.01' and data[8] <= '2019.12.31':
+            count1 += 1
+            ran[11] += 1
+            sum[11] += data[7]
+        elif data[8] >= '2020.01.01' and data[8] <= '2020.01.31':
+            count1 += 1
+            ran[12] += 1
+            sum[12] += data[7]
+        elif data[8] >= '2020.02.01' and data[8] <= '2020.02.29':
+            count += 1
+            ran[13] += 1
+            sum[13] += data[7]
+        elif data[8] >= '2020.03.01' and data[8] <= '2020.03.31':
+            count += 1
+            ran[14] += 1
+            sum[14] += data[7]
+        elif data[8] > '2020.04.01' and data[8] <= '2020.04.30':
+            count += 1
+            ran[15] += 1
+            sum[15] += data[7]
+        elif data[8] >= '2020.05.01' and data[8] <= '2020.05.31':
+            count += 1
+            ran[16] += 1
+            sum[16] += data[7]
+    for i in range(0, 17):
+        sum[i] = sum[i] / ran[i]
+
+
+    return render_template('Zhenjiang.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
+
+@app.route('/ZhenjiangTable')
+def ZhenjiangTable():
+    datalist = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    sql = '''
+            select * from Zhenjiang
+            '''
+    d = cur.execute(sql)
+    for item in d:
+        datalist.append(item)
+    cur.close()
+    conn.close()
+    return render_template('ZhenjiangTable.html', datalist=datalist)
+
+@app.route('/Zhuhai')
+def Zhuhai():
+    count = 0
+    count1 = 0
+    datalist = []
+    datalist1 = []
+    datalist2 = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #     select totalprice,price,hdata from Fuzhou
+    #     '''
+    sql = '''
+       select * from Zhuhai
+       '''
+    d = cur.execute(sql)
+    for item in d:
+        # count+=1
+        datalist.append(item)
+        # datalist1.append(item[1])
+        # datalist2.append(item[2])
+    cur.close()
+    conn.close()
+    print(datalist2)
+
+    ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
+    sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
+    ll = [0, 0, 0, 0, 0]  # 单价
+    for data in datalist:
+        # print(type(data[6]))
+        if data[6] > 0 and data[6] <= 200:
+            l[0] += 1
+        elif data[6] > 200 and data[6] <= 400:
+            l[1] += 1
+        elif data[6] > 400 and data[6] <= 600:
+            l[2] += 1
+        elif data[6] > 600 and data[6] <= 800:
+            l[3] += 1
+        elif data[6] > 800 and data[6] <= 1000:
+            l[4] += 1
+        else:
+            l[5] += 1
+    for data in datalist:
+        if data[7] > 0 and data[7] <= 10000:
+            ll[0] += 1
+        elif data[7] > 10000 and data[7] <= 20000:
+            ll[1] += 1
+        elif data[7] > 20000 and data[7] <= 30000:
+            ll[2] += 1
+        elif data[7] > 30000 and data[7] <= 40000:
+            ll[3] += 1
+        else:
+            ll[4] += 1
+
+    for data in datalist:
+        if data[8] <= '2019.01.31':
+            count1 += 1
+            ran[0] += 1
+            sum[0] += data[7]
+        elif data[8] >= '2019.02.01' and data[8] <= '2019.02.29':
+            count1 += 1
+            ran[1] += 1
+            sum[1] += data[7]
+        elif data[8] >= '2019.03.01' and data[8] <= '2019.03.31':
+            count1 += 1
+            ran[2] += 1
+            sum[2] += data[7]
+        elif data[8] > '2019.04.01' and data[8] <= '2019.04.30':
+            count1 += 1
+            ran[3] += 1
+            sum[3] += data[7]
+        elif data[8] > '2019.05.01' and data[8] <= '2019.05.31':
+            count1 += 1
+            ran[4] += 1
+            sum[4] += data[7]
+        elif data[8] > '2019.06.01' and data[8] <= '2019.06.30':
+            count1 += 1
+            ran[5] += 1
+            sum[5] += data[7]
+        elif data[8] >= '2019.07.01' and data[8] <= '2019.07.31':
+            count1 += 1
+            ran[6] += 1
+            sum[6] += data[7]
+        elif data[8] >= '2019.08.01' and data[8] <= '2019.08.31':
+            count1 += 1
+            ran[7] += 1
+            sum[7] += data[7]
+        elif data[8] >= '2019.09.01' and data[8] <= '2019.09.30':
+            count1 += 1
+            ran[8] += 1
+            sum[8] += data[7]
+        elif data[8] >= '2019.10.01' and data[8] <= '2019.10.31':
+            count1 += 1
+            ran[9] += 1
+            sum[9] += data[7]
+        elif data[8] >= '2019.11.01' and data[8] <= '2019.11.30':
+            count1 += 1
+            ran[10] += 1
+            sum[10] += data[7]
+        elif data[8] >= '2019.12.01' and data[8] <= '2019.12.31':
+            count1 += 1
+            ran[11] += 1
+            sum[11] += data[7]
+        elif data[8] >= '2020.01.01' and data[8] <= '2020.01.31':
+            count1 += 1
+            ran[12] += 1
+            sum[12] += data[7]
+        elif data[8] >= '2020.02.01' and data[8] <= '2020.02.29':
+            count += 1
+            ran[13] += 1
+            sum[13] += data[7]
+        elif data[8] >= '2020.03.01' and data[8] <= '2020.03.31':
+            count += 1
+            ran[14] += 1
+            sum[14] += data[7]
+        elif data[8] > '2020.04.01' and data[8] <= '2020.04.30':
+            count += 1
+            ran[15] += 1
+            sum[15] += data[7]
+        elif data[8] >= '2020.05.01' and data[8] <= '2020.05.31':
+            count += 1
+            ran[16] += 1
+            sum[16] += data[7]
+    for i in range(0, 17):
+        sum[i] = sum[i] / ran[i]
+
+
+    return render_template('Zhuhai.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
+
+@app.route('/ZhuhaiTable')
+def ZhuhaiTable():
+    datalist = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    sql = '''
+            select * from Zhuhai
+            '''
+    d = cur.execute(sql)
+    for item in d:
+        datalist.append(item)
+    cur.close()
+    conn.close()
+    return render_template('ZhuhaiTable.html', datalist=datalist)
+
+@app.route('/Zibo')
+def Zibo():
+    count = 0
+    count1 = 0
+    datalist = []
+    datalist1 = []
+    datalist2 = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #     select totalprice,price,hdata from Fuzhou
+    #     '''
+    sql = '''
+       select * from Zibo
+       '''
+    d = cur.execute(sql)
+    for item in d:
+        # count+=1
+        datalist.append(item)
+        # datalist1.append(item[1])
+        # datalist2.append(item[2])
+    cur.close()
+    conn.close()
+    print(datalist2)
+
+    ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
+    sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
+    ll = [0, 0, 0, 0, 0]  # 单价
+    for data in datalist:
+        # print(type(data[6]))
+        if data[6] > 0 and data[6] <= 200:
+            l[0] += 1
+        elif data[6] > 200 and data[6] <= 400:
+            l[1] += 1
+        elif data[6] > 400 and data[6] <= 600:
+            l[2] += 1
+        elif data[6] > 600 and data[6] <= 800:
+            l[3] += 1
+        elif data[6] > 800 and data[6] <= 1000:
+            l[4] += 1
+        else:
+            l[5] += 1
+    for data in datalist:
+        if data[7] > 0 and data[7] <= 10000:
+            ll[0] += 1
+        elif data[7] > 10000 and data[7] <= 20000:
+            ll[1] += 1
+        elif data[7] > 20000 and data[7] <= 30000:
+            ll[2] += 1
+        elif data[7] > 30000 and data[7] <= 40000:
+            ll[3] += 1
+        else:
+            ll[4] += 1
+
+    for data in datalist:
+        if data[8] <= '2019.01.31':
+            count1 += 1
+            ran[0] += 1
+            sum[0] += data[7]
+        elif data[8] >= '2019.02.01' and data[8] <= '2019.02.29':
+            count1 += 1
+            ran[1] += 1
+            sum[1] += data[7]
+        elif data[8] >= '2019.03.01' and data[8] <= '2019.03.31':
+            count1 += 1
+            ran[2] += 1
+            sum[2] += data[7]
+        elif data[8] > '2019.04.01' and data[8] <= '2019.04.30':
+            count1 += 1
+            ran[3] += 1
+            sum[3] += data[7]
+        elif data[8] > '2019.05.01' and data[8] <= '2019.05.31':
+            count1 += 1
+            ran[4] += 1
+            sum[4] += data[7]
+        elif data[8] > '2019.06.01' and data[8] <= '2019.06.30':
+            count1 += 1
+            ran[5] += 1
+            sum[5] += data[7]
+        elif data[8] >= '2019.07.01' and data[8] <= '2019.07.31':
+            count1 += 1
+            ran[6] += 1
+            sum[6] += data[7]
+        elif data[8] >= '2019.08.01' and data[8] <= '2019.08.31':
+            count1 += 1
+            ran[7] += 1
+            sum[7] += data[7]
+        elif data[8] >= '2019.09.01' and data[8] <= '2019.09.30':
+            count1 += 1
+            ran[8] += 1
+            sum[8] += data[7]
+        elif data[8] >= '2019.10.01' and data[8] <= '2019.10.31':
+            count1 += 1
+            ran[9] += 1
+            sum[9] += data[7]
+        elif data[8] >= '2019.11.01' and data[8] <= '2019.11.30':
+            count1 += 1
+            ran[10] += 1
+            sum[10] += data[7]
+        elif data[8] >= '2019.12.01' and data[8] <= '2019.12.31':
+            count1 += 1
+            ran[11] += 1
+            sum[11] += data[7]
+        elif data[8] >= '2020.01.01' and data[8] <= '2020.01.31':
+            count1 += 1
+            ran[12] += 1
+            sum[12] += data[7]
+        elif data[8] >= '2020.02.01' and data[8] <= '2020.02.29':
+            count += 1
+            ran[13] += 1
+            sum[13] += data[7]
+        elif data[8] >= '2020.03.01' and data[8] <= '2020.03.31':
+            count += 1
+            ran[14] += 1
+            sum[14] += data[7]
+        elif data[8] > '2020.04.01' and data[8] <= '2020.04.30':
+            count += 1
+            ran[15] += 1
+            sum[15] += data[7]
+        elif data[8] >= '2020.05.01' and data[8] <= '2020.05.31':
+            count += 1
+            ran[16] += 1
+            sum[16] += data[7]
+    for i in range(0, 17):
+        sum[i] = sum[i] / ran[i]
+
+
+    return render_template('Zibo.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
+
+@app.route('/ZiboTable')
+def ZiboTable():
+    datalist = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    sql = '''
+            select * from Zibo
+            '''
+    d = cur.execute(sql)
+    for item in d:
+        datalist.append(item)
+    cur.close()
+    conn.close()
+    return render_template('ZiboTable.html', datalist=datalist)
 
 
 

@@ -8,7 +8,7 @@ import sqlite3
 import csv
 
 def convert():
-    with open(r"C:\Users\93991\Desktop\郑州全部数据去重1920.csv","r") as f:
+    with open(r"C:\Users\93991\Desktop\烟台全部数据去重1920.csv","r") as f:
         datalist=list(csv.reader(f))
     f.close()
     dbpath="houseMessage.db"
@@ -22,7 +22,7 @@ def db(datalist,dbpath):
         for index in range(len(data)):
             data[index]='"'+str(data[index])+'"'
         sql='''
-        insert into Zhengzhou
+        insert into Yantai
         (hname,htype,square,direction,degree,totalprice,price,hdata,hfloor,info)values (%s)
         '''%",".join(data)
         print(sql)
