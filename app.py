@@ -5,6 +5,9 @@ from matplotlib import pyplot as plt    #绘图，数据可视化
 from wordcloud import WordCloud     #词云
 from PIL import Image       #图片处理
 import numpy as np
+
+from dataAnalyse.Cloud import text
+
 app = Flask(__name__)
 import sqlite3
 import os.path
@@ -196,6 +199,7 @@ def Shanghai():
         else:
             l[5] += 1
     return render_template('Shanghai.html',count=count,ran=ran,l=l)
+
 @app.route('/ShanghaiTable')
 def ShanghaiTable():
     datalist = []
@@ -7846,8 +7850,6 @@ def ZhengzhouTable():
     return render_template('ZhengzhouTable.html', datalist=datalist)
 
 
-
-
 #6
 
 @app.route('/Baoji')
@@ -11186,39 +11188,6 @@ def ZiboTable():
     cur.close()
     conn.close()
     return render_template('ZiboTable.html', datalist=datalist)
-
-@app.route('/test1',methods=['GET','POST'])
-def test1():
-    start_time = request.args.get('start_time', "")
-    end_time = request.args.get('end_time', "")
-    text1= request.args.get("text1", '', str)
-    result = request.args.get("result", 'ALL', str)
-    offset = request.args.get('offset', 0, int)
-    limit = request.args.get('limit', 20, int)
-
-
-    # SQL 条件
-    sql_text0 = '1=1'
-    sql_text_date_start = ' ' if start_time == '' else ' and datetime >= "{timeStart}" '.format(timeStart=start_time)
-    sql_text_date_end = ' ' if end_time == '' else ' and datetime <= "{timeEnd}" '.format(timeEnd=end_time)
-    sql_text_result = ' ' if result == 'ALL'  else ' and result = "{result}"'.format(result=result)
-    sql_text_text1 = ' ' if text1== '' else ' and text1 like "%%{text1}%%"'.format(text1=text1)
-    sql_text = sql_text0 + sql_text_date_start + sql_text_date_end +  sql_text_result + sql_text_text1
-    # 建表对象
-    table_name= 'Beijing'
-    # 查询数据
-    res = table_name.query.filter(text(sql_text)).order_by(text("id desc")).limit(limit).offset(offset).all()
-    # 查询总数
-    count = table_name.query.filter(text(sql_text)).count()
-
-    return render_template("test/test.html",page_data=res,
-                           start_time=start_time,end_time=end_time,  text1=text1,offset=offset, result=result, limit=limit,count=count)
-
-
-
-
-
-
 
 
 
