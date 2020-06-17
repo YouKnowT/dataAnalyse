@@ -55,7 +55,7 @@
         <ul>
           <li class="active"><a href="#situation">Situation</a></li>
           <li><a href="#echarts">Echarts</a></li>
-          <li><a href="#wordcloud">Word Cloud</a></li>
+
           <li><a href="/BeijingTable" target="_blank">Table</a></li>
         </ul>
       </nav><!-- .nav-menu -->
@@ -130,15 +130,15 @@
             <div class="count-box">
               <i class="icofont-simple-smile" style="color: #20b38e;"></i>
               <span data-toggle="counter-up">{{ count }}</span>
-              <p>二手房成交数量</p>
+              <p>疫情期间二手房成交数量</p>
             </div>
           </div>
 
           <div class="col-lg-3 col-md-6 text-center" data-aos="fade-up" data-aos-delay="200" style="left: 30% !important;">
             <div class="count-box">
               <i class="icofont-document-folder" style="color: #c042ff;"></i>
-              <span data-toggle="counter-up">521</span>
-              <p>新房成交数量</p>
+              <span data-toggle="counter-up">{{ count1 }}</span>
+              <p>疫情之前二手房房成交数量</p>
             </div>
 
             </div>
@@ -152,9 +152,19 @@
       <section id="echarts" class="echarts">
       <div class="container">
 
-        <div class="section-title" style="left: 50% !important;">
-          <h2>二手房成交金额分布图</h2>
+          <div class="section-title" style="left: 50% !important;">
+          <h2>2019-2020 二手房成交总价分布图</h2>
             <div id="ec" style="width: 700px;height:400px;left: 20% !important;"></div>
+
+        </div>
+          <div class="section-title" style="left: 50% !important;">
+          <h2>2019-2020 二手房成交单价分布图</h2>
+            <div id="ec1" style="width: 700px;height:400px;left: 20% !important;"></div>
+
+        </div>
+          <div class="section-title" style="left: 50% !important;">
+          <h2>2019-2020 二手房成交量及平均单价分布图</h2>
+            <div id="ec2" style="width: 1000px;height:400px;left: 15% !important;"></div>
 
         </div>
           <script type="text/javascript">
@@ -183,46 +193,117 @@
         // 使用刚指定的配置项和数据显示图表。
         myChart.setOption(option);
     </script>
+          <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('ec1'));
+
+        // 指定图表的配置项和数据
+        var option = {
+            color:['#3398db'],
+            tooltip: {},
+            legend: {
+                data:['成交量']
+            },
+            xAxis: {
+                name:'单位：万',
+                data: ['<10000','10000-20000','20000-30000','30000-40000','>50000']
+            },
+            yAxis: {},
+            series: [{
+                name: '成交量',
+                type: 'bar',
+                data: {{ ll }}
+            }]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+          <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('ec2'));
+
+        // 指定图表的配置项和数据
+        var option = {
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'cross',
+            crossStyle: {
+                color: '#999'
+            }
+        }
+    },
+    toolbox: {
+        feature: {
+            dataView: {show: true, readOnly: false},
+            magicType: {show: true, type: ['line', 'bar']},
+            restore: {show: true},
+            saveAsImage: {show: true}
+        }
+    },
+    legend: {
+        data: ['单价', '成交量']
+    },
+    xAxis: [
+        {
+            type: 'category',
+            data: ['2019年1月', '2019年2月', '2019年3月', '2019年4月', '2019年5月', '2019年6月', '2019年7月', '2019年8月', '2019年9月', '2019年10月', '2019年11月', '2019年12月',
+                '2020年1月','2020年2月','2020年3月','2020年4月','2020年5月',],
+            axisPointer: {
+                type: 'shadow'
+            }
+        }
+    ],
+    yAxis: [
+        {
+            type: 'value',
+            name: '单价',
+            min: 0,
+            max: 100000,
+            interval: 20000,
+            axisLabel: {
+                formatter: '{value} 万/平米'
+            }
+        },
+        {
+            type: 'value',
+            name: '成交量',
+            min: 0,
+            max: 5000,
+            interval: 1000,
+            axisLabel: {
+                formatter: '{value} 套'
+            }
+        }
+    ],
+    series: [
+        {
+            name: '单价',
+            type: 'bar',
+            data: {{ sum }}
+        },
+
+        {
+            name: '成交量',
+            type: 'line',
+            yAxisIndex: 1,
+            data: {{ ran }}
+        }
+    ]
+};
+
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
 
 
       </div>
     </section>
 
     <!-- ======= Services Section ======= -->
-    <section id="wordcloud" class="services">
-      <div class="container">
 
-        <div class="row no-gutters">
-          <div class="col-lg-6 video-box">
-            <img src="static/assets/img/wordcloudbj.jpg" class="img-fluid" alt="">
-            </div>
-
-          <div class="col-lg-6 d-flex flex-column justify-content-center about-content">
-
-            <div class="section-title">
-              <h2>二手房热词</h2>
-              <p>根据成交热词，提炼出词云树，可以使我们更清晰地了解到人们对二手房交易的关注重点。</p>
-            </div>
-
-            <div class="icon-box" data-aos="fade-up" data-aos-delay="100">
-              <div class="icon"><i class="bx bx-fingerprint"></i></div>
-              <h4 class="title"><a href="">关于二手房</a></h4>
-              <p class="description">二手房胜一手房，住着舒心，用着放心，幸福家庭现在就行。</p>
-            </div>
-
-
-
-
-          </div>
-        </div>
-
-      </div>
-
-
-
-
-      </div>
-    </section><!-- End Services Section -->
 
     <!-- ======= Our Portfolio Section ======= -->
 

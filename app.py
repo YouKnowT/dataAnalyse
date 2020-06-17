@@ -1,4 +1,4 @@
-from flask import Flask,render_template
+from flask import Flask,render_template,request
 import csv
 import jieba    #分词
 from matplotlib import pyplot as plt    #绘图，数据可视化
@@ -19,38 +19,132 @@ def index():
 @app.route('/Beijing')
 def Beijing():
     count = 0
+    count1 = 0
     datalist = []
+    datalist1 = []
+    datalist2 = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
+    # sql = '''
+    #     select totalprice,price,hdata from Fuzhou
+    #     '''
     sql = '''
-            select totalprice from Beijing
-            '''
+           select * from Beijing
+           '''
     d = cur.execute(sql)
     for item in d:
-        count += 1
-        datalist.append(item[0])
+        # count+=1
+        datalist.append(item)
+        # datalist1.append(item[1])
+        # datalist2.append(item[2])
     cur.close()
     conn.close()
-    print(datalist)
+    print(datalist2)
 
-    ran = ['<200', '201-400', '401-600', '601-800', '801-1000', '>1000']  # 成交金额范围
-    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量
+    ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
+    sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
+    ll = [0, 0, 0, 0, 0]  # 单价
     for data in datalist:
         # print(type(data[6]))
-        if data > 0 and data <= 200:
+        if data[6] > 0 and data[6] <= 200:
             l[0] += 1
-        elif data > 200 and data <= 400:
+        elif data[6] > 200 and data[6] <= 400:
             l[1] += 1
-        elif data > 400 and data <= 600:
+        elif data[6] > 400 and data[6] <= 600:
             l[2] += 1
-        elif data > 600 and data <= 800:
+        elif data[6] > 600 and data[6] <= 800:
             l[3] += 1
-        elif data > 800 and data <= 1000:
+        elif data[6] > 800 and data[6] <= 1000:
             l[4] += 1
         else:
             l[5] += 1
+    for data in datalist:
+        if data[7] > 0 and data[7] <= 10000:
+            ll[0] += 1
+        elif data[7] > 10000 and data[7] <= 20000:
+            ll[1] += 1
+        elif data[7] > 20000 and data[7] <= 30000:
+            ll[2] += 1
+        elif data[7] > 30000 and data[7] <= 40000:
+            ll[3] += 1
+        else:
+            ll[4] += 1
 
-    return render_template('Beijing.html',count=count,ran=ran,l=l,datalist=datalist)
+    for data in datalist:
+        if data[8] <= '2019.01.31':
+            count1 += 1
+            ran[0] += 1
+            sum[0] += data[7]
+        elif data[8] >= '2019.02.01' and data[8] <= '2019.02.29':
+            count1 += 1
+            ran[1] += 1
+            sum[1] += data[7]
+        elif data[8] >= '2019.03.01' and data[8] <= '2019.03.31':
+            count1 += 1
+            ran[2] += 1
+            sum[2] += data[7]
+        elif data[8] > '2019.04.01' and data[8] <= '2019.04.30':
+            count1 += 1
+            ran[3] += 1
+            sum[3] += data[7]
+        elif data[8] > '2019.05.01' and data[8] <= '2019.05.31':
+            count1 += 1
+            ran[4] += 1
+            sum[4] += data[7]
+        elif data[8] > '2019.06.01' and data[8] <= '2019.06.30':
+            count1 += 1
+            ran[5] += 1
+            sum[5] += data[7]
+        elif data[8] >= '2019.07.01' and data[8] <= '2019.07.31':
+            count1 += 1
+            ran[6] += 1
+            sum[6] += data[7]
+        elif data[8] >= '2019.08.01' and data[8] <= '2019.08.31':
+            count1 += 1
+            ran[7] += 1
+            sum[7] += data[7]
+        elif data[8] >= '2019.09.01' and data[8] <= '2019.09.30':
+            count1 += 1
+            ran[8] += 1
+            sum[8] += data[7]
+        elif data[8] >= '2019.10.01' and data[8] <= '2019.10.31':
+            count1 += 1
+            ran[9] += 1
+            sum[9] += data[7]
+        elif data[8] >= '2019.11.01' and data[8] <= '2019.11.30':
+            count1 += 1
+            ran[10] += 1
+            sum[10] += data[7]
+        elif data[8] >= '2019.12.01' and data[8] <= '2019.12.31':
+            count1 += 1
+            ran[11] += 1
+            sum[11] += data[7]
+        elif data[8] >= '2020.01.01' and data[8] <= '2020.01.31':
+            count1 += 1
+            ran[12] += 1
+            sum[12] += data[7]
+        elif data[8] >= '2020.02.01' and data[8] <= '2020.02.29':
+            count += 1
+            ran[13] += 1
+            sum[13] += data[7]
+        elif data[8] >= '2020.03.01' and data[8] <= '2020.03.31':
+            count += 1
+            ran[14] += 1
+            sum[14] += data[7]
+        elif data[8] > '2020.04.01' and data[8] <= '2020.04.30':
+            count += 1
+            ran[15] += 1
+            sum[15] += data[7]
+        elif data[8] >= '2020.05.01' and data[8] <= '2020.05.31':
+            count += 1
+            ran[16] += 1
+            sum[16] += data[7]
+    for i in range(0, 17):
+        sum[i] = sum[i] / ran[i]
+
+
+    return render_template('Beijing.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
 @app.route('/BeijingTable')
 def BeijingTable():
@@ -11093,7 +11187,32 @@ def ZiboTable():
     conn.close()
     return render_template('ZiboTable.html', datalist=datalist)
 
+@app.route('/test1',methods=['GET','POST'])
+def test1():
+    start_time = request.args.get('start_time', "")
+    end_time = request.args.get('end_time', "")
+    text1= request.args.get("text1", '', str)
+    result = request.args.get("result", 'ALL', str)
+    offset = request.args.get('offset', 0, int)
+    limit = request.args.get('limit', 20, int)
 
+
+    # SQL 条件
+    sql_text0 = '1=1'
+    sql_text_date_start = ' ' if start_time == '' else ' and datetime >= "{timeStart}" '.format(timeStart=start_time)
+    sql_text_date_end = ' ' if end_time == '' else ' and datetime <= "{timeEnd}" '.format(timeEnd=end_time)
+    sql_text_result = ' ' if result == 'ALL'  else ' and result = "{result}"'.format(result=result)
+    sql_text_text1 = ' ' if text1== '' else ' and text1 like "%%{text1}%%"'.format(text1=text1)
+    sql_text = sql_text0 + sql_text_date_start + sql_text_date_end +  sql_text_result + sql_text_text1
+    # 建表对象
+    table_name= 'Beijing'
+    # 查询数据
+    res = table_name.query.filter(text(sql_text)).order_by(text("id desc")).limit(limit).offset(offset).all()
+    # 查询总数
+    count = table_name.query.filter(text(sql_text)).count()
+
+    return render_template("test/test.html",page_data=res,
+                           start_time=start_time,end_time=end_time,  text1=text1,offset=offset, result=result, limit=limit,count=count)
 
 
 
