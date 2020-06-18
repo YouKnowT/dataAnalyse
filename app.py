@@ -1,4 +1,4 @@
-from flask import Flask,render_template,request
+from flask import Flask,render_template,request,jsonify
 # import csv
 # import jieba    #分词
 # from matplotlib import pyplot as plt    #绘图，数据可视化
@@ -11183,6 +11183,26 @@ def Zibo():
 @app.route('/ZiboTable',methods={"POST","GET"})
 def ZiboTable():
     args=request.args
+    page=args.get("page",1,0)
+    size=int(args.get("size"))
+    offset= size * page
+    print(args)
+    datalist = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    sql=f'select * from Zibo limit {size} offset {offset}'
+    # sql = '''
+    #         select * from Zibo
+    #         '''
+    d = cur.execute(sql)
+    for item in d:
+        datalist.append(item)
+    cur.close()
+    conn.close()
+    return render_template('ZiboTable.html', datalist=datalist)
+@app.route('/ZiboTableData',methods={"POST","GET"})
+def ZiboTableData():
+    args=request.args
     page=int(args.get("page"))
     size=int(args.get("size"))
     offset= size * page
@@ -11200,7 +11220,6 @@ def ZiboTable():
     cur.close()
     conn.close()
     return render_template('ZiboTable.html', datalist=datalist)
-
 
 
 if __name__ == '__main__':
