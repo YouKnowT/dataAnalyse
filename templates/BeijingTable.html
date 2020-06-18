@@ -111,9 +111,10 @@
 
                 {% endfor %}
             </tbody>
-
-
-            </table>
+        <tfoot>
+        <button onclick="next()">下一页</button>
+        </tfoot>
+        </table>
       <script>
     $("#table").bootstrapTable({
         pagination: true,   //是否显示分页条
@@ -134,7 +135,14 @@
 
 
   <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>
-
+  <script>
+      let currentPage=1;
+      let limit=10;
+      function next(){
+          currentPage++;
+          window.open("BeijingTable?page="+currentPage+"&size"+limit,"_self");
+      }
+  </script>
   <!-- Vendor JS Files -->
   <script src="static/assets/vendor/jquery/jquery.min.js"></script>
   <script src="static/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
