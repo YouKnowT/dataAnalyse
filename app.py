@@ -1,12 +1,12 @@
 from flask import Flask,render_template,request
-import csv
-import jieba    #分词
-from matplotlib import pyplot as plt    #绘图，数据可视化
-from wordcloud import WordCloud     #词云
-from PIL import Image       #图片处理
-import numpy as np
-
-from dataAnalyse.Cloud import text
+# import csv
+# import jieba    #分词
+# from matplotlib import pyplot as plt    #绘图，数据可视化
+# from wordcloud import WordCloud     #词云
+# from PIL import Image       #图片处理
+# import numpy as np
+#
+# from dataAnalyse.Cloud import text
 
 app = Flask(__name__)
 import sqlite3
@@ -149,14 +149,20 @@ def Beijing():
 
     return render_template('Beijing.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/BeijingTable')
+@app.route('/BeijingTable',methods={"POST","GET"})
 def BeijingTable():
+    args = request.args
+    page = int(args.get("page"))
+    size = int(args.get("size"))
+    offset = size * page
+    print(args)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-                select * from Beijing
-                '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Beijing limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
@@ -11174,14 +11180,20 @@ def Zibo():
 
     return render_template('Zibo.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/ZiboTable')
+@app.route('/ZiboTable',methods={"POST","GET"})
 def ZiboTable():
+    args=request.args
+    page=int(args.get("page"))
+    size=int(args.get("size"))
+    offset= size * page
+    print(args)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Zibo
-            '''
+    sql=f'select * from Zibo limit {size} offset {offset}'
+    # sql = '''
+    #         select * from Zibo
+    #         '''
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
