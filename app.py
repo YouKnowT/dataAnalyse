@@ -19,13 +19,23 @@ def index():
     # Map=['澳门特别行政区','香港特别行政区','内蒙古自治区','宁夏回族自治区','新疆维吾尔自治区','西藏自治区','广西壮族自治区','云南省','甘肃省','台湾省','福建省','贵州省','浙江省','海南省','广东省','上海','北京','天津','重庆','黑龙江省','吉林省','辽宁省','江苏省','山东省','安徽省','河北省','河南省','湖北省','湖南省','江西省','陕西省','山西省','四川省','青海省']
     return render_template('Map.html')
 
-@app.route('/Beijing')
+
+@app.route('/Shandong')
+def Shandong():
+    # Map=['澳门特别行政区','香港特别行政区','内蒙古自治区','宁夏回族自治区','新疆维吾尔自治区','西藏自治区','广西壮族自治区','云南省','甘肃省','台湾省','福建省','贵州省','浙江省','海南省','广东省','上海','北京','天津','重庆','黑龙江省','吉林省','辽宁省','江苏省','山东省','安徽省','河北省','河南省','湖北省','湖南省','江西省','陕西省','山西省','四川省','青海省']
+    return render_template('Shandong.html')
+
+@app.route('/Beijing',methods={"POST","GET"})
 def Beijing():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
@@ -34,15 +44,20 @@ def Beijing():
     sql = '''
            select * from Beijing
            '''
+    sql1 = f'select * from Beijing limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
+
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -147,15 +162,17 @@ def Beijing():
         sum[i] = sum[i] / ran[i]
 
 
-    return render_template('Beijing.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
+    return render_template('Beijing.html',count=count,count1=count1,ran=ran,l=l,ll=ll,
+                           datalist=datalist,sum=sum,datalist1=datalist1)
 
-@app.route('/BeijingTable',methods={"POST","GET"})
-def BeijingTable():
-    args = request.args
-    page = int(args.get("page"))
-    size = int(args.get("size"))
+
+@app.route('/BeijingTableData',methods={"POST","GET"})
+def BeijingTableData():
+    values = request.values
+    page = values.get("page",1,int)
+    size = values.get("limit",10,int)
     offset = size * page
-    print(args)
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
@@ -168,144 +185,48 @@ def BeijingTable():
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('BeijingTable.html',datalist=datalist)
+    return jsonify(datalist)
 
 
-@app.route('/Shanghai')
+
+
+@app.route('/Shanghai', methods={"POST", "GET"})
 def Shanghai():
     count = 0
-    datalist = []
-    conn = sqlite3.connect(db_path)
-    cur = conn.cursor()
-    sql = '''
-                select totalprice from Shanghai
-                '''
-    d = cur.execute(sql)
-    for item in d:
-        count += 1
-        datalist.append(item[0])
-    cur.close()
-    conn.close()
-    print(datalist)
-
-    ran = ['<200', '201-400', '401-600', '601-800', '801-1000', '>1000']  # 成交金额范围
-    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量
-    for data in datalist:
-        # print(type(data[6]))
-        if data > 0 and data <= 200:
-            l[0] += 1
-        elif data > 200 and data <= 400:
-            l[1] += 1
-        elif data > 400 and data <= 600:
-            l[2] += 1
-        elif data > 600 and data <= 800:
-            l[3] += 1
-        elif data > 800 and data <= 1000:
-            l[4] += 1
-        else:
-            l[5] += 1
-    return render_template('Shanghai.html',count=count,ran=ran,l=l)
-
-@app.route('/ShanghaiTable')
-def ShanghaiTable():
-    datalist = []
-    conn = sqlite3.connect(db_path)
-    cur = conn.cursor()
-    sql = '''
-                    select * from Shanghai
-                    '''
-    d = cur.execute(sql)
-    for item in d:
-        datalist.append(item)
-    cur.close()
-    conn.close()
-    return render_template('ShanghaiTable.html',datalist=datalist)
-
-
-
-@app.route('/Tianjin')
-def Tianjin():
-    return render_template('Tianjin.html')
-
-@app.route('/Chongqing')
-def Chongqing():
-    count = 0
-    datalist = []
-    conn = sqlite3.connect(db_path)
-    cur = conn.cursor()
-    sql = '''
-                    select totalprice from Chongqing
-                    '''
-    d = cur.execute(sql)
-    for item in d:
-        count += 1
-        datalist.append(item[0])
-    cur.close()
-    conn.close()
-    print(datalist)
-    print(type(datalist[2]))
-    ran = ['<200', '201-400', '401-600', '601-800', '801-1000', '>1000']  # 成交金额范围
-    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量
-    for data in datalist:
-        # print(type(data))
-        if data > 0 and data <= 200:
-            l[0] += 1
-        elif data > 200 and data <= 400:
-            l[1] += 1
-        elif data > 400 and data <= 600:
-            l[2] += 1
-        elif data > 600 and data <= 800:
-            l[3] += 1
-        elif data > 800 and data <= 1000:
-            l[4] += 1
-        else:
-            l[5] += 1
-
-    return render_template('Chongqing.html',count=count,ran=ran,l=l)
-@app.route('/ChongqingTable')
-def ChongqingTable():
-    datalist = []
-    conn = sqlite3.connect(db_path)
-    cur = conn.cursor()
-    sql = '''
-                        select * from Chongqing
-                        '''
-    d = cur.execute(sql)
-    for item in d:
-        datalist.append(item)
-    cur.close()
-    conn.close()
-    return render_template('ChongqingTable.html',datalist=datalist)
-
-@app.route('/Fuzhou')
-def Fuzhou():
-    count=0
-    count1=0
+    count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
-    sql='''
-    select * from Fuzhou
-    '''
+    sql = '''
+               select * from Shanghai
+               '''
+    sql1 = f'select * from Shaghai limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
-    ran=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]    #成交金额范围
+    ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    l=[0,0,0,0,0,0] #各成交金额范围的数量,总价
-    ll=[0,0,0,0,0]#单价
+    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
+    ll = [0, 0, 0, 0, 0]  # 单价
     for data in datalist:
         # print(type(data[6]))
         if data[6] > 0 and data[6] <= 200:
@@ -334,7 +255,7 @@ def Fuzhou():
 
     for data in datalist:
         if data[8] <= '2019.01.31':
-            count1+=1
+            count1 += 1
             ran[0] += 1
             sum[0] += data[7]
         elif data[8] >= '2019.02.01' and data[8] <= '2019.02.29':
@@ -386,7 +307,166 @@ def Fuzhou():
             ran[12] += 1
             sum[12] += data[7]
         elif data[8] >= '2020.02.01' and data[8] <= '2020.02.29':
-            count+=1
+            count += 1
+            ran[13] += 1
+            sum[13] += data[7]
+        elif data[8] >= '2020.03.01' and data[8] <= '2020.03.31':
+            count += 1
+            ran[14] += 1
+            sum[14] += data[7]
+        elif data[8] > '2020.04.01' and data[8] <= '2020.04.30':
+            count += 1
+            ran[15] += 1
+            sum[15] += data[7]
+        elif data[8] >= '2020.05.01' and data[8] <= '2020.05.31':
+            count += 1
+            ran[16] += 1
+            sum[16] += data[7]
+    for i in range(0, 17):
+        sum[i] = sum[i] / ran[i]
+    return render_template('Shanghai.html',count=count,count1=count1,ran=ran,l=l,ll=ll,
+                           datalist=datalist,sum=sum,datalist1=datalist1)
+@app.route('/SanghaiTableData',methods={"POST","GET"})
+def ShanghaiTableData():
+    values = request.values
+    page = values.get("page",1,int)
+    size = values.get("limit",10,int)
+    offset = size * page
+    print(values)
+    datalist = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Shanghai limit {size} offset {offset}'
+    d = cur.execute(sql)
+    for item in d:
+        datalist.append(item)
+    cur.close()
+    conn.close()
+    return jsonify(datalist)
+
+
+
+@app.route('/Chongqing', methods={"POST", "GET"})
+def Chongqing():
+    count = 0
+    count1 = 0
+    datalist = []
+    datalist1 = []
+    datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #     select totalprice,price,hdata from Fuzhou
+    #     '''
+    sql = '''
+               select * from Chongqing
+               '''
+    sql1 = f'select * from Chongqing limit {size} offset {offset}'
+
+    d = cur.execute(sql)
+    for item in d:
+        # count+=1
+        datalist.append(item)
+        # datalist1.append(item[1])
+        # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
+    cur.close()
+    conn.close()
+
+    ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
+    sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
+    ll = [0, 0, 0, 0, 0]  # 单价
+    for data in datalist:
+        # print(type(data[6]))
+        if data[6] > 0 and data[6] <= 200:
+            l[0] += 1
+        elif data[6] > 200 and data[6] <= 400:
+            l[1] += 1
+        elif data[6] > 400 and data[6] <= 600:
+            l[2] += 1
+        elif data[6] > 600 and data[6] <= 800:
+            l[3] += 1
+        elif data[6] > 800 and data[6] <= 1000:
+            l[4] += 1
+        else:
+            l[5] += 1
+    for data in datalist:
+        if data[7] > 0 and data[7] <= 10000:
+            ll[0] += 1
+        elif data[7] > 10000 and data[7] <= 20000:
+            ll[1] += 1
+        elif data[7] > 20000 and data[7] <= 30000:
+            ll[2] += 1
+        elif data[7] > 30000 and data[7] <= 40000:
+            ll[3] += 1
+        else:
+            ll[4] += 1
+
+    for data in datalist:
+        if data[8] <= '2019.01.31':
+            count1 += 1
+            ran[0] += 1
+            sum[0] += data[7]
+        elif data[8] >= '2019.02.01' and data[8] <= '2019.02.29':
+            count1 += 1
+            ran[1] += 1
+            sum[1] += data[7]
+        elif data[8] >= '2019.03.01' and data[8] <= '2019.03.31':
+            count1 += 1
+            ran[2] += 1
+            sum[2] += data[7]
+        elif data[8] > '2019.04.01' and data[8] <= '2019.04.30':
+            count1 += 1
+            ran[3] += 1
+            sum[3] += data[7]
+        elif data[8] > '2019.05.01' and data[8] <= '2019.05.31':
+            count1 += 1
+            ran[4] += 1
+            sum[4] += data[7]
+        elif data[8] > '2019.06.01' and data[8] <= '2019.06.30':
+            count1 += 1
+            ran[5] += 1
+            sum[5] += data[7]
+        elif data[8] >= '2019.07.01' and data[8] <= '2019.07.31':
+            count1 += 1
+            ran[6] += 1
+            sum[6] += data[7]
+        elif data[8] >= '2019.08.01' and data[8] <= '2019.08.31':
+            count1 += 1
+            ran[7] += 1
+            sum[7] += data[7]
+        elif data[8] >= '2019.09.01' and data[8] <= '2019.09.30':
+            count1 += 1
+            ran[8] += 1
+            sum[8] += data[7]
+        elif data[8] >= '2019.10.01' and data[8] <= '2019.10.31':
+            count1 += 1
+            ran[9] += 1
+            sum[9] += data[7]
+        elif data[8] >= '2019.11.01' and data[8] <= '2019.11.30':
+            count1 += 1
+            ran[10] += 1
+            sum[10] += data[7]
+        elif data[8] >= '2019.12.01' and data[8] <= '2019.12.31':
+            count1 += 1
+            ran[11] += 1
+            sum[11] += data[7]
+        elif data[8] >= '2020.01.01' and data[8] <= '2020.01.31':
+            count1 += 1
+            ran[12] += 1
+            sum[12] += data[7]
+        elif data[8] >= '2020.02.01' and data[8] <= '2020.02.29':
+            count += 1
             ran[13] += 1
             sum[13] += data[7]
         elif data[8] >= '2020.03.01' and data[8] <= '2020.03.31':
@@ -404,49 +484,223 @@ def Fuzhou():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Chongqing.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Fuzhou.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/FuzhouTable')
-def FuzhouTable():
-    datalist=[]
+@app.route('/ChongqingTableData', methods={"POST", "GET"})
+def ChongqingTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
+    datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Fuzhou
-            '''
-    d=cur.execute(sql)
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Chongqing limit {size} offset {offset}'
+    d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('FuzhouTable.html',datalist=datalist)
+    return jsonify(datalist)
+
+@app.route('/Fuzhou', methods={"POST", "GET"})
+def Fuzhou():
+    count = 0
+    count1 = 0
+    datalist = []
+    datalist1 = []
+    datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #     select totalprice,price,hdata from Fuzhou
+    #     '''
+    sql = '''
+               select * from Fuzhou
+               '''
+    sql1 = f'select * from Fuzhou limit {size} offset {offset}'
+
+    d = cur.execute(sql)
+    for item in d:
+        # count+=1
+        datalist.append(item)
+        # datalist1.append(item[1])
+        # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
+    cur.close()
+    conn.close()
+
+    ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
+    sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
+    ll = [0, 0, 0, 0, 0]  # 单价
+    for data in datalist:
+        # print(type(data[6]))
+        if data[6] > 0 and data[6] <= 200:
+            l[0] += 1
+        elif data[6] > 200 and data[6] <= 400:
+            l[1] += 1
+        elif data[6] > 400 and data[6] <= 600:
+            l[2] += 1
+        elif data[6] > 600 and data[6] <= 800:
+            l[3] += 1
+        elif data[6] > 800 and data[6] <= 1000:
+            l[4] += 1
+        else:
+            l[5] += 1
+    for data in datalist:
+        if data[7] > 0 and data[7] <= 10000:
+            ll[0] += 1
+        elif data[7] > 10000 and data[7] <= 20000:
+            ll[1] += 1
+        elif data[7] > 20000 and data[7] <= 30000:
+            ll[2] += 1
+        elif data[7] > 30000 and data[7] <= 40000:
+            ll[3] += 1
+        else:
+            ll[4] += 1
+
+    for data in datalist:
+        if data[8] <= '2019.01.31':
+            count1 += 1
+            ran[0] += 1
+            sum[0] += data[7]
+        elif data[8] >= '2019.02.01' and data[8] <= '2019.02.29':
+            count1 += 1
+            ran[1] += 1
+            sum[1] += data[7]
+        elif data[8] >= '2019.03.01' and data[8] <= '2019.03.31':
+            count1 += 1
+            ran[2] += 1
+            sum[2] += data[7]
+        elif data[8] > '2019.04.01' and data[8] <= '2019.04.30':
+            count1 += 1
+            ran[3] += 1
+            sum[3] += data[7]
+        elif data[8] > '2019.05.01' and data[8] <= '2019.05.31':
+            count1 += 1
+            ran[4] += 1
+            sum[4] += data[7]
+        elif data[8] > '2019.06.01' and data[8] <= '2019.06.30':
+            count1 += 1
+            ran[5] += 1
+            sum[5] += data[7]
+        elif data[8] >= '2019.07.01' and data[8] <= '2019.07.31':
+            count1 += 1
+            ran[6] += 1
+            sum[6] += data[7]
+        elif data[8] >= '2019.08.01' and data[8] <= '2019.08.31':
+            count1 += 1
+            ran[7] += 1
+            sum[7] += data[7]
+        elif data[8] >= '2019.09.01' and data[8] <= '2019.09.30':
+            count1 += 1
+            ran[8] += 1
+            sum[8] += data[7]
+        elif data[8] >= '2019.10.01' and data[8] <= '2019.10.31':
+            count1 += 1
+            ran[9] += 1
+            sum[9] += data[7]
+        elif data[8] >= '2019.11.01' and data[8] <= '2019.11.30':
+            count1 += 1
+            ran[10] += 1
+            sum[10] += data[7]
+        elif data[8] >= '2019.12.01' and data[8] <= '2019.12.31':
+            count1 += 1
+            ran[11] += 1
+            sum[11] += data[7]
+        elif data[8] >= '2020.01.01' and data[8] <= '2020.01.31':
+            count1 += 1
+            ran[12] += 1
+            sum[12] += data[7]
+        elif data[8] >= '2020.02.01' and data[8] <= '2020.02.29':
+            count += 1
+            ran[13] += 1
+            sum[13] += data[7]
+        elif data[8] >= '2020.03.01' and data[8] <= '2020.03.31':
+            count += 1
+            ran[14] += 1
+            sum[14] += data[7]
+        elif data[8] > '2020.04.01' and data[8] <= '2020.04.30':
+            count += 1
+            ran[15] += 1
+            sum[15] += data[7]
+        elif data[8] >= '2020.05.01' and data[8] <= '2020.05.31':
+            count += 1
+            ran[16] += 1
+            sum[16] += data[7]
+    for i in range(0, 17):
+        sum[i] = sum[i] / ran[i]
+
+    return render_template('Fuzhou.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
 
-@app.route('/Shenyang')
+@app.route('/FuzhouTableData', methods={"POST", "GET"})
+def FuzhouTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
+    datalist = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Fuzhou limit {size} offset {offset}'
+    d = cur.execute(sql)
+    for item in d:
+        datalist.append(item)
+    cur.close()
+    conn.close()
+    return jsonify(datalist)
+
+@app.route('/Shenyang', methods={"POST", "GET"})
 def Shenyang():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Shenyang
-       '''
+               select * from Shenyang
+               '''
+    sql1 = f'select * from Shenyang limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -550,50 +804,65 @@ def Shenyang():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Shenyang.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Shenyang.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-
-@app.route('/ShenyangTable')
-def ShenyangTable():
+@app.route('/ShenyangTableData', methods={"POST", "GET"})
+def ShenyangTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Shenyang
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Shenyang limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('ShenyangTable.html', datalist=datalist)
+    return jsonify(datalist)
 
 
-@app.route('/Hefei')
+
+@app.route('/Hefei', methods={"POST", "GET"})
 def Hefei():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Hefei
-       '''
+               select * from Hefei
+               '''
+    sql1 = f'select * from Hefei limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -697,50 +966,63 @@ def Hefei():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Hefei.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Heifei.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-
-@app.route('/HefeiTable')
-def HeifeiTable():
+@app.route('/HefeiTableData', methods={"POST", "GET"})
+def HefeiTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Hefei
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Hefei limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('HeifeiTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-
-@app.route('/Guangzhou')
+@app.route('/Guangzhou', methods={"POST", "GET"})
 def Guangzhou():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Guangzhou
-       '''
+               select * from Guangzhou
+               '''
+    sql1 = f'select * from Guangzhou limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -844,51 +1126,65 @@ def Guangzhou():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Guangzhou.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Guangzhou.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-
-@app.route('/GuangzhouTable')
-def GuangzhouTable():
+@app.route('/GuangzhouTableData', methods={"POST", "GET"})
+def GuangzhouTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Guangzhou
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Guangzhou limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('GuangzhouTable.html', datalist=datalist)
+    return jsonify(datalist)
 
 
 
-@app.route('/Hangzhou')
-def Hangzhou():
+@app.route('/Huangzhou', methods={"POST", "GET"})
+def Huangzhou():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Hangzhou
-       '''
+               select * from Huangzhou
+               '''
+    sql1 = f'select * from Huangzhou limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -992,53 +1288,67 @@ def Hangzhou():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Huangzhou.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Hangzhou.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-
-@app.route('/HangzhouTable')
-def HangzhouTable():
+@app.route('/HuangzhouTableData', methods={"POST", "GET"})
+def HuangzhouTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Hangzhou
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Huangzhou limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('HangzhouTable.html', datalist=datalist)
+    return jsonify(datalist)
 
 
 
 
 
-@app.route('/Chengdu')
+@app.route('/Chengdu', methods={"POST", "GET"})
 def Chengdu():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Chengdu
-       '''
+               select * from Chengdu
+               '''
+    sql1 = f'select * from Chengdu limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -1142,51 +1452,65 @@ def Chengdu():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Chengdu.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Chengdu.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-
-@app.route('/ChengduTable')
-def ChengduTable():
+@app.route('/ChengduTableData', methods={"POST", "GET"})
+def ChengduTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Chengdu
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Chengdu limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('ChengduTable.html', datalist=datalist)
+    return jsonify(datalist)
 
 
 
-@app.route('/Shijiazhuang')
+@app.route('/Shijiazhuang', methods={"POST", "GET"})
 def Shijiazhuang():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Shijiazhuang
-       '''
+               select * from Shijiazhuang
+               '''
+    sql1 = f'select * from Shijiazhuang limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -1290,51 +1614,65 @@ def Shijiazhuang():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Shijiazhuang.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Shijiazhuang.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-
-@app.route('/ShijiazhuangTable')
-def ShijiazhuangTable():
+@app.route('/ShijiazhuangTableData', methods={"POST", "GET"})
+def ShijiazhuangTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Shijiazhuang
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Shijiazhuang limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('ShijiazhuangTable.html', datalist=datalist)
+    return jsonify(datalist)
 
 
 
-@app.route('/Changsha')
+@app.route('/Changsha', methods={"POST", "GET"})
 def Changsha():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Changsha
-       '''
+               select * from Changsha
+               '''
+    sql1 = f'select * from Changsha limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -1438,54 +1776,68 @@ def Changsha():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Changsha.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Changsha.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-
-@app.route('/ChangshaTable')
-def ChangshaTable():
+@app.route('/ChangshaTableData', methods={"POST", "GET"})
+def ChangshaTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Changsha
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Changsha limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('ChangshaTable.html', datalist=datalist)
+    return jsonify(datalist)
 
 
 
 
 #3
 
-@app.route('/Dongguan')
+@app.route('/Dongguan', methods={"POST", "GET"})
 def Dongguan():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Dongguan
-       '''
+               select * from Dongguan
+               '''
+    sql1 = f'select * from Dongguan limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -1589,48 +1941,63 @@ def Dongguan():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Dongguan.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Dongguan.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/DongguanTable')
-def DongguanTable():
+@app.route('/DongguanTableData', methods={"POST", "GET"})
+def DongguanTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Dongguan
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Dongguan limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('DongguanTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Foshan')
+@app.route('/Foshan', methods={"POST", "GET"})
 def Foshan():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Foshan
-       '''
+               select * from Foshan
+               '''
+    sql1 = f'select * from Foshan limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -1734,49 +2101,64 @@ def Foshan():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Foshan.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Foshan.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/FoshanTable')
-def FoshanTable():
+@app.route('/FoshanTableData', methods={"POST", "GET"})
+def FoshanTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Foshan
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Foshan limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('FoshanTable.html', datalist=datalist)
+    return jsonify(datalist)
 
 
-@app.route('/Haikou')
+@app.route('/Haikou', methods={"POST", "GET"})
 def Haikou():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Haikou
-       '''
+               select * from Haikou
+               '''
+    sql1 = f'select * from Haikou limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -1880,48 +2262,64 @@ def Haikou():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Haikou.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Haikou.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/HaikouTable')
-def HaikouTable():
+@app.route('/HaikouTableData', methods={"POST", "GET"})
+def HaikouTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Haikou
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Haikou limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('HaikouTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Kunming')
+
+@app.route('/Kunming', methods={"POST", "GET"})
 def Kunming():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Kunming
-       '''
+               select * from Kunming
+               '''
+    sql1 = f'select * from Kunming limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -2025,49 +2423,64 @@ def Kunming():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Kunming.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Kunming.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/KunmingTable')
-def KunmingTable():
+@app.route('/KunmingTableData', methods={"POST", "GET"})
+def KunmingTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Kunming
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Kunming limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('KunmingTable.html', datalist=datalist)
+    return jsonify(datalist)
 
 
-@app.route('/Xiamen')
+@app.route('/Xiamen', methods={"POST", "GET"})
 def Xiamen():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Xiamen
-       '''
+               select * from Xiamen
+               '''
+    sql1 = f'select * from Xiamen limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -2171,48 +2584,64 @@ def Xiamen():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Xiamen.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Xiamen.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/XiamenTable')
-def XiamenTable():
+@app.route('/XiamenTableData', methods={"POST", "GET"})
+def XiamenTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Xiamen
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Xiamen limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('XiamenTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Wuxi')
+
+@app.route('/Wuxi', methods={"POST", "GET"})
 def Wuxi():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Wuxi
-       '''
+               select * from Wuxi
+               '''
+    sql1 = f'select * from Wuxi limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -2316,48 +2745,63 @@ def Wuxi():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Wuxi.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Wuxi.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/WuxiTable')
-def WuxiTable():
+@app.route('/WuxiTableData', methods={"POST", "GET"})
+def WuxiTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Wuxi
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Wuxi limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('WuxiTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Wuhan')
+@app.route('/Wuhan', methods={"POST", "GET"})
 def Wuhan():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Wuhan
-       '''
+               select * from Wuhan
+               '''
+    sql1 = f'select * from Wuhan limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -2461,52 +2905,67 @@ def Wuhan():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Wuhan.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Wuhan.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/WuhanTable')
-def WuhanTable():
+@app.route('/WuhanTableData', methods={"POST", "GET"})
+def WuhanTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Wuhan
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Wuhan limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('WuhanTable.html', datalist=datalist)
+    return jsonify(datalist)
 
 
 
 
 #4
-@app.route('/Beihai')
+@app.route('/Beihai', methods={"POST", "GET"})
 def Beihai():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Beihai
-       '''
+               select * from Beihai
+               '''
+    sql1 = f'select * from Beihai limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -2610,48 +3069,64 @@ def Beihai():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Beihai.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Beihai.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/BeihaiTable')
-def BeihaiTable():
+@app.route('/BeihaiTableData', methods={"POST", "GET"})
+def BeihaiTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Beihai
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Beihai limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('BeihaiTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Jiangmen')
+
+@app.route('/Jiangmen', methods={"POST", "GET"})
 def Jiangmen():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Jiangmen
-       '''
+               select * from Jiangmen
+               '''
+    sql1 = f'select * from Jiangmen limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -2755,49 +3230,64 @@ def Jiangmen():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Jiangmen.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Jiangmen.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/JiangmenTable')
-def JiangmenTable():
+@app.route('/JiangmenTableData', methods={"POST", "GET"})
+def JiangmenTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Jiangmen
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Jiangmen limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('JiangmenTable.html', datalist=datalist)
+    return jsonify(datalist)
 
 
-@app.route('/Langfang')
+@app.route('/Langfang', methods={"POST", "GET"})
 def Langfang():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Langfang
-       '''
+               select * from Langfang
+               '''
+    sql1 = f'select * from Langfang limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -2901,48 +3391,63 @@ def Langfang():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Langfang.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Langfang.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/LangfangTable')
-def LangfangTable():
+@app.route('/LangfangTableData', methods={"POST", "GET"})
+def LangfangTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Langfang
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Langfang limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('LangfangTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Liuzhou')
+@app.route('/Liuzhou', methods={"POST", "GET"})
 def Liuzhou():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Liuzhou
-       '''
+               select * from Liuzhou
+               '''
+    sql1 = f'select * from Liuzhou limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -3046,48 +3551,63 @@ def Liuzhou():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Liuzhou.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Liuzhou.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/LiuzhouTable')
-def LiuzhouTable():
+@app.route('/LiuzhouTableData', methods={"POST", "GET"})
+def LiuzhouTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Liuzhou
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Liuzhou limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('LiuzhouTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Maanshan')
+@app.route('/Maanshan', methods={"POST", "GET"})
 def Maanshan():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Maanshan
-       '''
+               select * from Maanshan
+               '''
+    sql1 = f'select * from Maanshan limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -3191,48 +3711,64 @@ def Maanshan():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Maanshan.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Maanshan.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/MaanshanTable')
-def MaanshanTable():
+@app.route('/MaanshanTableData', methods={"POST", "GET"})
+def MaanshanTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Maanshan
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Maanshan limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('MaanshanTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Nanjing')
+
+@app.route('/Nanjing', methods={"POST", "GET"})
 def Nanjing():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Nanjing
-       '''
+               select * from Nanjing
+               '''
+    sql1 = f'select * from Nanjing limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -3336,48 +3872,63 @@ def Nanjing():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Nanjing.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Nanjing.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/NanjingTable')
-def NanjingTable():
+@app.route('/NanjingTableData', methods={"POST", "GET"})
+def NanjingTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Nanjing
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Nanjing limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('NanjingTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Nanning')
+@app.route('/Nanning', methods={"POST", "GET"})
 def Nanning():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Nanning
-       '''
+               select * from Nanning
+               '''
+    sql1 = f'select * from Nanning limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -3481,48 +4032,64 @@ def Nanning():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Nanning.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Nanning.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/NanningTable')
-def NanningTable():
+@app.route('/NanningTableData', methods={"POST", "GET"})
+def NanningTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Nanning
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Nanning limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('NanningTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Quanzhou')
+
+@app.route('/Quanzhou', methods={"POST", "GET"})
 def Quanzhou():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Quanzhou
-       '''
+               select * from Quanzhou
+               '''
+    sql1 = f'select * from Quanzhou limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -3626,48 +4193,63 @@ def Quanzhou():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Quanzhou.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Quanzhou.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/QuanzhouTable')
-def QuanzhouTable():
+@app.route('/QuanzhouTableData', methods={"POST", "GET"})
+def QuanzhouTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Quanzhou
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Quanzhou limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('QuanzhouTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Shenzhen')
+@app.route('/Shenzhen', methods={"POST", "GET"})
 def Shenzhen():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Shenzhen
-       '''
+               select * from Shenzhen
+               '''
+    sql1 = f'select * from Shenzhen limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -3771,48 +4353,65 @@ def Shenzhen():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Shenzhen.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Shenzhen.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/ShenzhenTable')
-def ShenzhenTable():
+@app.route('/ShenzhenTableData', methods={"POST", "GET"})
+def ShenzhenTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Shenzhen
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Shenzhen limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('ShenzhenTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Suzhou')
+
+
+@app.route('/Suzhou', methods={"POST", "GET"})
 def Suzhou():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Suzhou
-       '''
+               select * from Suzhou
+               '''
+    sql1 = f'select * from Suzhou limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -3916,49 +4515,64 @@ def Suzhou():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Suzhou.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Suzhou.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/SuzhouTable')
-def SuzhouTable():
+@app.route('/SuzhouTableData', methods={"POST", "GET"})
+def SuzhouTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Suzhou
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Suzhou limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('SuzhouTable.html', datalist=datalist)
+    return jsonify(datalist)
 
 
-@app.route('/Tangshan')
+@app.route('/Tangshan', methods={"POST", "GET"})
 def Tangshan():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Tangshan
-       '''
+               select * from Tangshan
+               '''
+    sql1 = f'select * from Tangshan limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -4062,48 +4676,64 @@ def Tangshan():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Suzhou.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Tangshan.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/TangshanTable')
-def TangshanTable():
+@app.route('/TangshanTableData', methods={"POST", "GET"})
+def TangshanTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Tangshan
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Tangshan limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('TangshanTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Xinxiang')
+
+@app.route('/Xinxiang', methods={"POST", "GET"})
 def Xinxiang():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Xinxiang
-       '''
+               select * from Xinxiang
+               '''
+    sql1 = f'select * from Xinxiang limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -4207,48 +4837,64 @@ def Xinxiang():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Xinxiang.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Xinxiang.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/XinxiangTable')
-def XinxiangTable():
+@app.route('/XinxiangTableData', methods={"POST", "GET"})
+def XinxiangTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Xinxiang
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Xinxiang limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('XinxiangTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Yueyang')
+
+@app.route('/Yueyang', methods={"POST", "GET"})
 def Yueyang():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Yueyang
-       '''
+               select * from Yueyang
+               '''
+    sql1 = f'select * from Yueyang limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -4352,48 +4998,63 @@ def Yueyang():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Yueyang.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Yueyang.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/YueyangTable')
-def YueyangTable():
+@app.route('/YueyangTableData', methods={"POST", "GET"})
+def YueyangTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Yueyang
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Yueyang limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('YueyangTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Zhanjiang')
+@app.route('/Zhanjiang', methods={"POST", "GET"})
 def Zhanjiang():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Zhanjiang
-       '''
+               select * from Zhanjiang
+               '''
+    sql1 = f'select * from Zhanjiang limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -4497,48 +5158,63 @@ def Zhanjiang():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Zhanjiang.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Zhanjiang.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/ZhanjiangTable')
-def ZhanjiangTable():
+@app.route('/ZhanjiangTableData', methods={"POST", "GET"})
+def ZhanjiangTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Zhanjiang
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Zhanjiang limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('ZhanjiangTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Zhangjiakou')
+@app.route('/Zhangjiakou', methods={"POST", "GET"})
 def Zhangjiakou():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Zhangjiakou
-       '''
+               select * from Zhangjiakou
+               '''
+    sql1 = f'select * from Zhangjiakou limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -4642,48 +5318,63 @@ def Zhangjiakou():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Zhangjiakou.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Zhangjiakou.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/ZhangjiakouTable')
-def ZhangjiakouTable():
+@app.route('/ZhangjiakouTableData', methods={"POST", "GET"})
+def ZhangjiakouTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Zhangjiakou
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Zhangjiakou limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('ZhangjiakouTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Zhangzhou')
+@app.route('/Zhangzhou', methods={"POST", "GET"})
 def Zhangzhou():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Zhangzhou
-       '''
+               select * from Zhangzhou
+               '''
+    sql1 = f'select * from Zhangzhou limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -4787,51 +5478,66 @@ def Zhangzhou():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Zhangzhou.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Zhangzhou.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/ZhangzhouTable')
-def ZhangzhouTable():
+@app.route('/ZhangzhouTableData', methods={"POST", "GET"})
+def ZhangzhouTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Zhangzhou
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Zhangzhou limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('ZhangzhouTable.html', datalist=datalist)
+    return jsonify(datalist)
 
 
 #5
 
-@app.route('/Changzhou')
+@app.route('/Changzhou', methods={"POST", "GET"})
 def Changzhou():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Changzhou
-       '''
+               select * from Changzhou
+               '''
+    sql1 = f'select * from Changzhou limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -4935,48 +5641,64 @@ def Changzhou():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Changzhou.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Changzhou.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/ChangzhouTable')
-def ChangzhouTable():
+@app.route('/ChangzhouTableData', methods={"POST", "GET"})
+def ChangzhouTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Changzhou
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Changzhou limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('ChangzhouTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Dazhou')
+
+@app.route('/Dazhou', methods={"POST", "GET"})
 def Dazhou():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Dazhou
-       '''
+               select * from Dazhou
+               '''
+    sql1 = f'select * from Dazhou limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -5080,49 +5802,64 @@ def Dazhou():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Dazhou.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Dazhou.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/DazhouTable')
-def DazhouTable():
+@app.route('/DazhouTableData', methods={"POST", "GET"})
+def DazhouTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Dazhou
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Dazhou limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('DazhouTable.html', datalist=datalist)
+    return jsonify(datalist)
 
 
-@app.route('/Dlian')
-def Dlian():
+@app.route('/Dalian', methods={"POST", "GET"})
+def Dalian():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Dlian
-       '''
+               select * from Dalian
+               '''
+    sql1 = f'select * from Dalian limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -5226,48 +5963,64 @@ def Dlian():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Dalian.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Dlian.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/DlianTable')
-def DlianTable():
+@app.route('/DalianTableData', methods={"POST", "GET"})
+def DalianTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Dlian
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Dalian limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('DlianTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Dandong')
+
+@app.route('/Dandong', methods={"POST", "GET"})
 def Dandong():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Dandong
-       '''
+               select * from Dandong
+               '''
+    sql1 = f'select * from Dandong limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -5371,48 +6124,65 @@ def Dandong():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Dandong.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Dandong.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/DandongTable')
-def DandongTable():
+@app.route('/DandongTableData', methods={"POST", "GET"})
+def DandongTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Dandong
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Dandong limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('DandongTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Guilin')
+
+
+@app.route('/Guilin', methods={"POST", "GET"})
 def Guilin():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Guilin
-       '''
+               select * from Guilin
+               '''
+    sql1 = f'select * from Guilin limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -5516,48 +6286,63 @@ def Guilin():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Guilin.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Guilin.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/GuilinTable')
-def GuilinTable():
+@app.route('/GuilinTableData', methods={"POST", "GET"})
+def GuilinTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Guilin
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Guilin limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('GuilinTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Haerbin')
+@app.route('/Haerbin', methods={"POST", "GET"})
 def Haerbin():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Haerbin
-       '''
+               select * from Haerbin
+               '''
+    sql1 = f'select * from Haerbin limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -5661,48 +6446,63 @@ def Haerbin():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Haerbin.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Haerbin.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/HaerbinTable')
-def HaerbinTable():
+@app.route('/HaerbinTableData', methods={"POST", "GET"})
+def HaerbinTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Haerbin
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Haerbin limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('HaerbinTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Huaian')
+@app.route('/Huaian', methods={"POST", "GET"})
 def Huaian():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Huaian
-       '''
+               select * from Huaian
+               '''
+    sql1 = f'select * from Huaian limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -5806,48 +6606,63 @@ def Huaian():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Huaian.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Huaian.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/HuaianTable')
-def HuaianTable():
+@app.route('/HuaianTableData', methods={"POST", "GET"})
+def HuaianTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Huaian
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Huaian limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('HuaianTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Huangshi')
-def Huangshi():
+@app.route('/Huangshan', methods={"POST", "GET"})
+def Huangshan():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Huangshi
-       '''
+               select * from Huangshan
+               '''
+    sql1 = f'select * from Huangshan limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -5951,48 +6766,63 @@ def Huangshi():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Huangshan.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Huangshi.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/HuangshiTable')
-def HuangshiTable():
+@app.route('/HuangshanTableData', methods={"POST", "GET"})
+def HuangshanTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Huangshi
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Huangshan limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('HuangshiTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Jilin')
+@app.route('/Jilin', methods={"POST", "GET"})
 def Jilin():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Jilin
-       '''
+               select * from Jilin
+               '''
+    sql1 = f'select * from Jilin limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -6096,48 +6926,63 @@ def Jilin():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Jilin.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Jilin.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/JilinTable')
-def JilinTable():
+@app.route('/JilinTableData', methods={"POST", "GET"})
+def JilinTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Jilin
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Jilin limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('JilinTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Jiujiang')
+@app.route('/Jiujiang', methods={"POST", "GET"})
 def Jiujiang():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Jiujiang
-       '''
+               select * from Jiujiang
+               '''
+    sql1 = f'select * from Jiujiang limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -6241,49 +7086,64 @@ def Jiujiang():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Jiujiang.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Jiujiang.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/JiujiangTable')
-def JiujiangTable():
+@app.route('/JiujiangTableData', methods={"POST", "GET"})
+def JiujiangTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Jiujiang
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Jiujiang limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('JiujiangTable.html', datalist=datalist)
+    return jsonify(datalist)
 
 
-@app.route('/Luoyang')
+@app.route('/Luoyang', methods={"POST", "GET"})
 def Luoyang():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Luoyang
-       '''
+               select * from Luoyang
+               '''
+    sql1 = f'select * from Luoyang limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -6387,48 +7247,63 @@ def Luoyang():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Luoyang.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Luoyang.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/LuoyangTable')
-def LuoyangTable():
+@app.route('/LuoyangTableData', methods={"POST", "GET"})
+def LuoyangTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Luoyang
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Luoyang limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('LuoyangTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Nantong')
+@app.route('/Nantong', methods={"POST", "GET"})
 def Nantong():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Nantong
-       '''
+               select * from Nantong
+               '''
+    sql1 = f'select * from Nantong limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -6532,48 +7407,63 @@ def Nantong():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Nantong.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Nantong.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/NantongTable')
-def NantongTable():
+@app.route('/NantongTableData', methods={"POST", "GET"})
+def NantongTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Nantong
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Nantong limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('NantongTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Qingdao')
+@app.route('/Qingdao', methods={"POST", "GET"})
 def Qingdao():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Qingdao
-       '''
+               select * from Qingdao
+               '''
+    sql1 = f'select * from Qingdao limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -6677,48 +7567,63 @@ def Qingdao():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Qingdao.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Qingdao.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/QingdaoTable')
-def QingdaoTable():
+@app.route('/QingdaoTableData', methods={"POST", "GET"})
+def QingdaoTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Qingdao
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Qingdao limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('QingdaoTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Shangrao')
+@app.route('/Shangrao', methods={"POST", "GET"})
 def Shangrao():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Shangrao
-       '''
+               select * from Shangrao
+               '''
+    sql1 = f'select * from Shangrao limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -6822,48 +7727,63 @@ def Shangrao():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Shangrao.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Shangrao.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/ShangraoTable')
-def ShangraoTable():
+@app.route('/ShangraoTableData', methods={"POST", "GET"})
+def ShangraoTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Shangrao
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Shangrao limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('ShangraoTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Weihai')
+@app.route('/Weihai', methods={"POST", "GET"})
 def Weihai():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Weihai
-       '''
+               select * from Weihai
+               '''
+    sql1 = f'select * from Weihai limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -6967,48 +7887,63 @@ def Weihai():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Weihai.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Weihai.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/WeihaiTable')
-def WeihaiTable():
+@app.route('/WeihaiTableData', methods={"POST", "GET"})
+def WeihaiTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Weihai
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Weihai limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('WeihaiTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Weifang')
+@app.route('/Weifang', methods={"POST", "GET"})
 def Weifang():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Weifang
-       '''
+               select * from Weifang
+               '''
+    sql1 = f'select * from Weifang limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -7112,48 +8047,63 @@ def Weifang():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Weifang.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Weifang.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/WeifangTable')
-def WeifangTable():
+@app.route('/WeifangTableData', methods={"POST", "GET"})
+def WeifangTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Weifang
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Weifang limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('WeifangTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Xiangyang')
+@app.route('/Xiangyang', methods={"POST", "GET"})
 def Xiangyang():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Xiangyang
-       '''
+               select * from Xiangyang
+               '''
+    sql1 = f'select * from Xiangyang limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -7257,48 +8207,63 @@ def Xiangyang():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Xiangyang.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Xiangyang.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/XiangyangTable')
-def XiangyangTable():
+@app.route('/XiangyangTableData', methods={"POST", "GET"})
+def XiangyangTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Xiangyang
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Xiangyang limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('XiangyangTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Xuchang')
+@app.route('/Xuchang', methods={"POST", "GET"})
 def Xuchang():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Xuchang
-       '''
+               select * from Xuchang
+               '''
+    sql1 = f'select * from Xuchang limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -7402,48 +8367,62 @@ def Xuchang():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Xuchang.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Xuchang.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
-
-@app.route('/XuchangTable')
-def XuchangTable():
+@app.route('/XuchangTableData', methods={"POST", "GET"})
+def XuchangTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Xuchang
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Xuchang limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('XuchangTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Yancheng')
+@app.route('/Yancheng', methods={"POST", "GET"})
 def Yancheng():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Yancheng
-       '''
+               select * from Yancheng
+               '''
+    sql1 = f'select * from Yancheng limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -7547,48 +8526,62 @@ def Yancheng():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Yancheng.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Yancheng.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
-
-@app.route('/YanchengTable')
-def YanchengTable():
+@app.route('/YanchengTableData', methods={"POST", "GET"})
+def YanchengTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Yancheng
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Yancheng limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('YanchengTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Yinchuan')
+@app.route('/Yinchuan', methods={"POST", "GET"})
 def Yinchuan():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Yinchuan
-       '''
+               select * from Yinchuan
+               '''
+    sql1 = f'select * from Yinchuan limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -7692,48 +8685,62 @@ def Yinchuan():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Yinchuan.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Yinchuan.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
-
-@app.route('/YinchuanTable')
-def YinchuanTable():
+@app.route('/YinchuanTableData', methods={"POST", "GET"})
+def YinchuanTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Yinchuan
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Yinchuan limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('YinchuanTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Zhengzhou')
-def Zhengzhou():
+@app.route('/Zhenzhou', methods={"POST", "GET"})
+def Zhenzhou():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Zhengzhou
-       '''
+               select * from Zhenzhou
+               '''
+    sql1 = f'select * from Zhenzhou limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -7837,51 +8844,65 @@ def Zhengzhou():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Zhenzhou.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Zhengzhou.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
-
-@app.route('/ZhengzhouTable')
-def ZhengzhouTable():
+@app.route('/ZhenzhouTableData', methods={"POST", "GET"})
+def ZhenzhouTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Zhengzhou
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Zhenzhou limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('ZhengzhouTable.html', datalist=datalist)
+    return jsonify(datalist)
 
 
 #6
 
-@app.route('/Baoji')
+@app.route('/Baoji', methods={"POST", "GET"})
 def Baoji():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Baoji
-       '''
+               select * from Baoji
+               '''
+    sql1 = f'select * from Baoji limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -7985,48 +9006,62 @@ def Baoji():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Baoji.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Baoji.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
-
-@app.route('/BaojiTable')
-def BaojiTable():
+@app.route('/BaojiTableData', methods={"POST", "GET"})
+def BaojiTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Baoji
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Baoji limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('BaojiTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Baoding')
+@app.route('/Baoding', methods={"POST", "GET"})
 def Baoding():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Baoding
-       '''
+               select * from Baoding
+               '''
+    sql1 = f'select * from Baoding limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -8130,49 +9165,63 @@ def Baoding():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Baoding.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Baoding.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
-
-@app.route('/BaodingTable')
-def BaodingTable():
+@app.route('/BaodingTableData', methods={"POST", "GET"})
+def BaodingTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Baoding
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Baoding limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('BaodingTable.html', datalist=datalist)
+    return jsonify(datalist)
 
 
-@app.route('/Changde')
+@app.route('/Changde', methods={"POST", "GET"})
 def Changde():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Changde
-       '''
+               select * from Changde
+               '''
+    sql1 = f'select * from Changde limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -8276,48 +9325,62 @@ def Changde():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Changde.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Changde.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
-
-@app.route('/ChangdeTable')
-def ChangdeTable():
+@app.route('/ChangdeTableData', methods={"POST", "GET"})
+def ChangdeTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Changde
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Changde limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('ChangdeTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Chifeng')
+@app.route('/Chifeng', methods={"POST", "GET"})
 def Chifeng():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Chifeng
-       '''
+               select * from Chifeng
+               '''
+    sql1 = f'select * from Chifeng limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -8421,48 +9484,62 @@ def Chifeng():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Chifeng.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Chifeng.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
-
-@app.route('/ChifengTable')
-def ChifengTable():
+@app.route('/ChifengTableData', methods={"POST", "GET"})
+def ChifengTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Chifeng
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Chifeng limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('ChifengTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Guiyang')
+@app.route('/Guiyang', methods={"POST", "GET"})
 def Guiyang():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Guiyang
-       '''
+               select * from Guiyang
+               '''
+    sql1 = f'select * from Guiyang limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -8566,48 +9643,62 @@ def Guiyang():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Guiyang.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Guiyang.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
-
-@app.route('/GuiyangTable')
-def GuiyangTable():
+@app.route('/GuiyangTableData', methods={"POST", "GET"})
+def GuiyangTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Guiyang
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Guiyang limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('GuiyangTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Hanzhong')
+@app.route('/Hanzhong', methods={"POST", "GET"})
 def Hanzhong():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Hanzhong
-       '''
+               select * from Hanzhong
+               '''
+    sql1 = f'select * from Hanzhong limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -8711,48 +9802,62 @@ def Hanzhong():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Hanzhong.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Hanzhong.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
-
-@app.route('/HanzhongTable')
-def HanzhongTable():
+@app.route('/HanzhongTableData', methods={"POST", "GET"})
+def HanzhongTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Hanzhong
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Hanzhong limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('HanzhongTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Huhehaote')
+@app.route('/Huhehaote', methods={"POST", "GET"})
 def Huhehaote():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Huhehaote
-       '''
+               select * from Huhehaote
+               '''
+    sql1 = f'select * from Huhehaote limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -8856,48 +9961,62 @@ def Huhehaote():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Huhehaote.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Huhehaote.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
-
-@app.route('/HuhehaoteTable')
-def HuhehaoteTable():
+@app.route('/HuhehaoteTableData', methods={"POST", "GET"})
+def HuhehaoteTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Huhehaote
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Huhehaote limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('HuhehaoteTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Huzhou')
+@app.route('/Huzhou', methods={"POST", "GET"})
 def Huzhou():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Huzhou
-       '''
+               select * from Huzhou
+               '''
+    sql1 = f'select * from Huzhou limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -9001,48 +10120,62 @@ def Huzhou():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Huzhou.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Huzhou.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
-
-@app.route('/HuzhouTable')
-def HuzhouTable():
+@app.route('/HuzhouTableData', methods={"POST", "GET"})
+def HuzhouTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Huzhou
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Huzhou limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('HuzhouTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Jinan')
+@app.route('/Jinan', methods={"POST", "GET"})
 def Jinan():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Jinan
-       '''
+               select * from Jinan
+               '''
+    sql1 = f'select * from Jinan limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -9146,48 +10279,65 @@ def Jinan():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Jinan.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Jinan.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
 
-@app.route('/JinanTable')
-def JinanTable():
+@app.route('/JinanTableData', methods={"POST", "GET"})
+def JinanTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Jinan
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Jinan limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('JinanTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Jinhua')
+
+
+@app.route('/Jinhua', methods={"POST", "GET"})
 def Jinhua():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Jinhua
-       '''
+               select * from Jinhua
+               '''
+    sql1 = f'select * from Jinhua limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -9291,49 +10441,63 @@ def Jinhua():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Jinhua.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Jinhua.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
-
-@app.route('/JinhuaTable')
-def JinhuaTable():
+@app.route('/JinhuaTableData', methods={"POST", "GET"})
+def JinhuaTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Jinhua
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Jinhua limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('JinhuaTable.html', datalist=datalist)
+    return jsonify(datalist)
 
 
-@app.route('/Lanzhou')
+@app.route('/Lanzhou', methods={"POST", "GET"})
 def Lanzhou():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Lanzhou
-       '''
+               select * from Lanzhou
+               '''
+    sql1 = f'select * from Lanzhou limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -9437,48 +10601,63 @@ def Lanzhou():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Lanzhou.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Lanzhou.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
-
-@app.route('/LanzhouTable')
-def LanzhouTable():
+@app.route('/LanzhouTableData', methods={"POST", "GET"})
+def LanzhouTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Lanzhou
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Lanzhou limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('LanzhouTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Liangshan')
+
+@app.route('/Liangshan', methods={"POST", "GET"})
 def Liangshan():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Liangshan
-       '''
+               select * from Liangshan
+               '''
+    sql1 = f'select * from Liangshan limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -9582,48 +10761,63 @@ def Liangshan():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Liangshan.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Liangshan.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
-
-@app.route('/LiangshanTable')
-def LiangshanTable():
+@app.route('/LiangshanTableData', methods={"POST", "GET"})
+def LiangshanTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Liangshan
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Liangshan limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('LiangshanTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Linyi')
+
+@app.route('/Linyi', methods={"POST", "GET"})
 def Linyi():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Linyi
-       '''
+               select * from Linyi
+               '''
+    sql1 = f'select * from Linyi limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -9727,48 +10921,62 @@ def Linyi():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Linyi.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Linyi.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
-
-@app.route('/LinyiTable')
-def LinyiTable():
+@app.route('/LinyiTableData', methods={"POST", "GET"})
+def LinyiTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Linyi
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Linyi limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('LinyiTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Mianyang')
+@app.route('/Mianyang', methods={"POST", "GET"})
 def Mianyang():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Mianyang
-       '''
+               select * from Mianyang
+               '''
+    sql1 = f'select * from Mianyang limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -9872,48 +11080,62 @@ def Mianyang():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Mianyang.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Mianyang.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
-
-@app.route('/MianyangTable')
-def MianyangTable():
+@app.route('/MianyangTableData', methods={"POST", "GET"})
+def MianyangTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Mianyang
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Mianyang limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('MianyangTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Ningbo')
+@app.route('/Ningbo', methods={"POST", "GET"})
 def Ningbo():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Ningbo
-       '''
+               select * from Ningbo
+               '''
+    sql1 = f'select * from Ningbo limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -10017,23 +11239,29 @@ def Ningbo():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Ningbo.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Ningbo.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
-
-@app.route('/NingboTable')
-def NingboTable():
+@app.route('/NingboTableData', methods={"POST", "GET"})
+def NingboTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Ningbo
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Ningbo limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('NingboTable.html', datalist=datalist)
+    return jsonify(datalist)
 
 @app.route('/Shaoxing')
 def Shaoxing():
@@ -10042,23 +11270,31 @@ def Shaoxing():
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Shaoxing
-       '''
+               select * from Shaoxing
+               '''
+    sql1 = f'select * from Shaoxing limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -10162,48 +11398,62 @@ def Shaoxing():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Shaoxing.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Shaoxing.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
-
-@app.route('/ShaoxingTable')
-def ShaoxingTable():
+@app.route('/ShaoxingTableData', methods={"POST", "GET"})
+def ShaoxingTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Shaoxing
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Shaoxing limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('ShaoxingTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Taizhou')
+@app.route('/Taizhou', methods={"POST", "GET"})
 def Taizhou():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Taizhou
-       '''
+               select * from Taizhou
+               '''
+    sql1 = f'select * from Taizhou limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -10307,48 +11557,62 @@ def Taizhou():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Taizhou.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Taizhou.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
-
-@app.route('/TaizhouTable')
-def TaizhouTable():
+@app.route('/TaizhouTableData', methods={"POST", "GET"})
+def TaizhouTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Taizhou
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Taizhou limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('TaizhouTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Wenzhou')
+@app.route('/Wenzhou', methods={"POST", "GET"})
 def Wenzhou():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Wenzhou
-       '''
+               select * from Wenzhou
+               '''
+    sql1 = f'select * from Wenzhou limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -10452,48 +11716,62 @@ def Wenzhou():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Wenzhou.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Wenzhou.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
-
-@app.route('/WenzhouTable')
-def WenzhouTable():
+@app.route('/WenzhouTableData', methods={"POST", "GET"})
+def WenzhouTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Wenzhou
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Wenzhou limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('WenzhouTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Xianyang')
+@app.route('/Xianyang', methods={"POST", "GET"})
 def Xianyang():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Xianyang
-       '''
+               select * from Xianyang
+               '''
+    sql1 = f'select * from Xianyang limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -10597,48 +11875,62 @@ def Xianyang():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Xianyang.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Xianyang.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
-
-@app.route('/XianyangTable')
-def XianyangTable():
+@app.route('/XianyangTableData', methods={"POST", "GET"})
+def XianyangTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Xianyang
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Xianyang limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('XianyangTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Yantai')
+@app.route('/Yantai', methods={"POST", "GET"})
 def Yantai():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Yantai
-       '''
+               select * from Yantai
+               '''
+    sql1 = f'select * from Yantai limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -10742,48 +12034,62 @@ def Yantai():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Yantai.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Yantai.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
-
-@app.route('/YantaiTable')
-def YantaiTable():
+@app.route('/YantaiTableData', methods={"POST", "GET"})
+def YantaiTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Yantai
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Yantai limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('YantaiTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Zhenjiang')
+@app.route('/Zhenjiang', methods={"POST", "GET"})
 def Zhenjiang():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Zhenjiang
-       '''
+               select * from Zhenjiang
+               '''
+    sql1 = f'select * from Zhenjiang limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -10887,48 +12193,63 @@ def Zhenjiang():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Zhenjiang.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Zhenjiang.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
-
-@app.route('/ZhenjiangTable')
-def ZhenjiangTable():
+@app.route('/ZhenjiangTableData', methods={"POST", "GET"})
+def ZhenjiangTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Zhenjiang
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Zhenjiang limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('ZhenjiangTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Zhuhai')
+
+@app.route('/Zhuhai', methods={"POST", "GET"})
 def Zhuhai():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Zhuhai
-       '''
+               select * from Zhuhai
+               '''
+    sql1 = f'select * from Zhuhai limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -11032,48 +12353,62 @@ def Zhuhai():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Zhuhai.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Zhuhai.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
-
-@app.route('/ZhuhaiTable')
-def ZhuhaiTable():
+@app.route('/ZhuhaiTableData', methods={"POST", "GET"})
+def ZhuhaiTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql = '''
-            select * from Zhuhai
-            '''
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Zhuhai limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('ZhuhaiTable.html', datalist=datalist)
+    return jsonify(datalist)
 
-@app.route('/Zibo')
+@app.route('/Zibo', methods={"POST", "GET"})
 def Zibo():
     count = 0
     count1 = 0
     datalist = []
     datalist1 = []
     datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     # sql = '''
     #     select totalprice,price,hdata from Fuzhou
     #     '''
     sql = '''
-       select * from Zibo
-       '''
+               select * from Zibo
+               '''
+    sql1 = f'select * from Zibo limit {size} offset {offset}'
+
     d = cur.execute(sql)
     for item in d:
         # count+=1
         datalist.append(item)
         # datalist1.append(item[1])
         # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
     cur.close()
     conn.close()
-    print(datalist2)
 
     ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -11177,49 +12512,29 @@ def Zibo():
     for i in range(0, 17):
         sum[i] = sum[i] / ran[i]
 
+    return render_template('Zibo.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
 
-    return render_template('Zibo.html',count=count,count1=count1,ran=ran,l=l,ll=ll,datalist=datalist,sum=sum)
-
-@app.route('/ZiboTable',methods={"POST","GET"})
-def ZiboTable():
-    args=request.args
-    page=args.get("page",1,0)
-    size=int(args.get("size"))
-    offset= size * page
-    print(args)
-    datalist = []
-    conn = sqlite3.connect(db_path)
-    cur = conn.cursor()
-    sql=f'select * from Zibo limit {size} offset {offset}'
-    # sql = '''
-    #         select * from Zibo
-    #         '''
-    d = cur.execute(sql)
-    for item in d:
-        datalist.append(item)
-    cur.close()
-    conn.close()
-    return render_template('ZiboTable.html', datalist=datalist)
-@app.route('/ZiboTableData',methods={"POST","GET"})
+@app.route('/ZiboTableData', methods={"POST", "GET"})
 def ZiboTableData():
-    args=request.args
-    page=int(args.get("page"))
-    size=int(args.get("size"))
-    offset= size * page
-    print(args)
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
     datalist = []
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    sql=f'select * from Zibo limit {size} offset {offset}'
     # sql = '''
-    #         select * from Zibo
-    #         '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Zibo limit {size} offset {offset}'
     d = cur.execute(sql)
     for item in d:
         datalist.append(item)
     cur.close()
     conn.close()
-    return render_template('ZiboTable.html', datalist=datalist)
+    return jsonify(datalist)
 
 
 if __name__ == '__main__':
