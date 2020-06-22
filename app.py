@@ -25,6 +25,126 @@ def Shandong():
     # Map=['澳门特别行政区','香港特别行政区','内蒙古自治区','宁夏回族自治区','新疆维吾尔自治区','西藏自治区','广西壮族自治区','云南省','甘肃省','台湾省','福建省','贵州省','浙江省','海南省','广东省','上海','北京','天津','重庆','黑龙江省','吉林省','辽宁省','江苏省','山东省','安徽省','河北省','河南省','湖北省','湖南省','江西省','陕西省','山西省','四川省','青海省']
     return render_template('Shandong.html')
 
+
+@app.route('/Ningxia')
+def Ningxia():
+    # Map=['澳门特别行政区','香港特别行政区','内蒙古自治区','宁夏回族自治区','新疆维吾尔自治区','西藏自治区','广西壮族自治区','云南省','甘肃省','台湾省','福建省','贵州省','浙江省','海南省','广东省','上海','北京','天津','重庆','黑龙江省','吉林省','辽宁省','江苏省','山东省','安徽省','河北省','河南省','湖北省','湖南省','江西省','陕西省','山西省','四川省','青海省']
+    return render_template('Ningxia.html')
+
+@app.route('/Neimenggu')
+def Neimenggu():
+    # Map=['澳门特别行政区','香港特别行政区','内蒙古自治区','宁夏回族自治区','新疆维吾尔自治区','西藏自治区','广西壮族自治区','云南省','甘肃省','台湾省','福建省','贵州省','浙江省','海南省','广东省','上海','北京','天津','重庆','黑龙江省','吉林省','辽宁省','江苏省','山东省','安徽省','河北省','河南省','湖北省','湖南省','江西省','陕西省','山西省','四川省','青海省']
+    return render_template('Neimenggu.html')
+
+@app.route('/Sichuan')
+def Sichuan():
+    # Map=['澳门特别行政区','香港特别行政区','内蒙古自治区','宁夏回族自治区','新疆维吾尔自治区','西藏自治区','广西壮族自治区','云南省','甘肃省','台湾省','福建省','贵州省','浙江省','海南省','广东省','上海','北京','天津','重庆','黑龙江省','吉林省','辽宁省','江苏省','山东省','安徽省','河北省','河南省','湖北省','湖南省','江西省','陕西省','山西省','四川省','青海省']
+    return render_template('Sichuan.html')
+
+
+@app.route('/Hainan')
+def Hainan():
+    # Map=['澳门特别行政区','香港特别行政区','内蒙古自治区','宁夏回族自治区','新疆维吾尔自治区','西藏自治区','广西壮族自治区','云南省','甘肃省','台湾省','福建省','贵州省','浙江省','海南省','广东省','上海','北京','天津','重庆','黑龙江省','吉林省','辽宁省','江苏省','山东省','安徽省','河北省','河南省','湖北省','湖南省','江西省','陕西省','山西省','四川省','青海省']
+    return render_template('Hainan.html')
+
+@app.route('/Fujian')
+def Fujian():
+    # Map=['澳门特别行政区','香港特别行政区','内蒙古自治区','宁夏回族自治区','新疆维吾尔自治区','西藏自治区','广西壮族自治区','云南省','甘肃省','台湾省','福建省','贵州省','浙江省','海南省','广东省','上海','北京','天津','重庆','黑龙江省','吉林省','辽宁省','江苏省','山东省','安徽省','河北省','河南省','湖北省','湖南省','江西省','陕西省','山西省','四川省','青海省']
+    return render_template('Fujian.html')
+
+@app.route('/Guangdong')
+def Guangdong():
+    # Map=['澳门特别行政区','香港特别行政区','内蒙古自治区','宁夏回族自治区','新疆维吾尔自治区','西藏自治区','广西壮族自治区','云南省','甘肃省','台湾省','福建省','贵州省','浙江省','海南省','广东省','上海','北京','天津','重庆','黑龙江省','吉林省','辽宁省','江苏省','山东省','安徽省','河北省','河南省','湖北省','湖南省','江西省','陕西省','山西省','四川省','青海省']
+    return render_template('Guangdong.html')
+
+
+@app.route('/Guizhou')
+def Guizhou():
+    # Map=['澳门特别行政区','香港特别行政区','内蒙古自治区','宁夏回族自治区','新疆维吾尔自治区','西藏自治区','广西壮族自治区','云南省','甘肃省','台湾省','福建省','贵州省','浙江省','海南省','广东省','上海','北京','天津','重庆','黑龙江省','吉林省','辽宁省','江苏省','山东省','安徽省','河北省','河南省','湖北省','湖南省','江西省','陕西省','山西省','四川省','青海省']
+    return render_template('Guizhou.html')
+
+@app.route('/Jilinsheng')
+def Jilinsheng():
+    # Map=['澳门特别行政区','香港特别行政区','内蒙古自治区','宁夏回族自治区','新疆维吾尔自治区','西藏自治区','广西壮族自治区','云南省','甘肃省','台湾省','福建省','贵州省','浙江省','海南省','广东省','上海','北京','天津','重庆','黑龙江省','吉林省','辽宁省','江苏省','山东省','安徽省','河北省','河南省','湖北省','湖南省','江西省','陕西省','山西省','四川省','青海省']
+    return render_template('Jilinsheng.html')
+
+
+@app.route('/Shanxi')
+def Shanxi():
+    # Map=['澳门特别行政区','香港特别行政区','内蒙古自治区','宁夏回族自治区','新疆维吾尔自治区','西藏自治区','广西壮族自治区','云南省','甘肃省','台湾省','福建省','贵州省','浙江省','海南省','广东省','上海','北京','天津','重庆','黑龙江省','吉林省','辽宁省','江苏省','山东省','安徽省','河北省','河南省','湖北省','湖南省','江西省','陕西省','山西省','四川省','青海省']
+    return render_template('Shanxi.html')
+
+
+@app.route('/Gansu')
+def Gansu():
+    # Map=['澳门特别行政区','香港特别行政区','内蒙古自治区','宁夏回族自治区','新疆维吾尔自治区','西藏自治区','广西壮族自治区','云南省','甘肃省','台湾省','福建省','贵州省','浙江省','海南省','广东省','上海','北京','天津','重庆','黑龙江省','吉林省','辽宁省','江苏省','山东省','安徽省','河北省','河南省','湖北省','湖南省','江西省','陕西省','山西省','四川省','青海省']
+    return render_template('Gansu.html')
+
+
+@app.route('/Guangxi')
+def Guangxi():
+    # Map=['澳门特别行政区','香港特别行政区','内蒙古自治区','宁夏回族自治区','新疆维吾尔自治区','西藏自治区','广西壮族自治区','云南省','甘肃省','台湾省','福建省','贵州省','浙江省','海南省','广东省','上海','北京','天津','重庆','黑龙江省','吉林省','辽宁省','江苏省','山东省','安徽省','河北省','河南省','湖北省','湖南省','江西省','陕西省','山西省','四川省','青海省']
+    return render_template('Guangxi.html')
+
+
+@app.route('/Zhejiang')
+def Zhejiang():
+    # Map=['澳门特别行政区','香港特别行政区','内蒙古自治区','宁夏回族自治区','新疆维吾尔自治区','西藏自治区','广西壮族自治区','云南省','甘肃省','台湾省','福建省','贵州省','浙江省','海南省','广东省','上海','北京','天津','重庆','黑龙江省','吉林省','辽宁省','江苏省','山东省','安徽省','河北省','河南省','湖北省','湖南省','江西省','陕西省','山西省','四川省','青海省']
+    return render_template('Zhejiang.html')
+
+@app.route('/Hubei')
+def Hubei():
+    # Map=['澳门特别行政区','香港特别行政区','内蒙古自治区','宁夏回族自治区','新疆维吾尔自治区','西藏自治区','广西壮族自治区','云南省','甘肃省','台湾省','福建省','贵州省','浙江省','海南省','广东省','上海','北京','天津','重庆','黑龙江省','吉林省','辽宁省','江苏省','山东省','安徽省','河北省','河南省','湖北省','湖南省','江西省','陕西省','山西省','四川省','青海省']
+    return render_template('Hubei.html')
+
+@app.route('/Jiangxi')
+def Jiangxi():
+    # Map=['澳门特别行政区','香港特别行政区','内蒙古自治区','宁夏回族自治区','新疆维吾尔自治区','西藏自治区','广西壮族自治区','云南省','甘肃省','台湾省','福建省','贵州省','浙江省','海南省','广东省','上海','北京','天津','重庆','黑龙江省','吉林省','辽宁省','江苏省','山东省','安徽省','河北省','河南省','湖北省','湖南省','江西省','陕西省','山西省','四川省','青海省']
+    return render_template('Jiangxi.html')
+
+@app.route('/Jiangsu')
+def Jiangsu():
+    # Map=['澳门特别行政区','香港特别行政区','内蒙古自治区','宁夏回族自治区','新疆维吾尔自治区','西藏自治区','广西壮族自治区','云南省','甘肃省','台湾省','福建省','贵州省','浙江省','海南省','广东省','上海','北京','天津','重庆','黑龙江省','吉林省','辽宁省','江苏省','山东省','安徽省','河北省','河南省','湖北省','湖南省','江西省','陕西省','山西省','四川省','青海省']
+    return render_template('Jiangsu.html')
+
+
+@app.route('/Anhui')
+def Anhui():
+    # Map=['澳门特别行政区','香港特别行政区','内蒙古自治区','宁夏回族自治区','新疆维吾尔自治区','西藏自治区','广西壮族自治区','云南省','甘肃省','台湾省','福建省','贵州省','浙江省','海南省','广东省','上海','北京','天津','重庆','黑龙江省','吉林省','辽宁省','江苏省','山东省','安徽省','河北省','河南省','湖北省','湖南省','江西省','陕西省','山西省','四川省','青海省']
+    return render_template('Anhui.html')
+
+@app.route('/Hunan')
+def Hunan():
+    # Map=['澳门特别行政区','香港特别行政区','内蒙古自治区','宁夏回族自治区','新疆维吾尔自治区','西藏自治区','广西壮族自治区','云南省','甘肃省','台湾省','福建省','贵州省','浙江省','海南省','广东省','上海','北京','天津','重庆','黑龙江省','吉林省','辽宁省','江苏省','山东省','安徽省','河北省','河南省','湖北省','湖南省','江西省','陕西省','山西省','四川省','青海省']
+    return render_template('Hunan.html')
+
+@app.route('/Heilongjiang')
+def Heilongjiang():
+    # Map=['澳门特别行政区','香港特别行政区','内蒙古自治区','宁夏回族自治区','新疆维吾尔自治区','西藏自治区','广西壮族自治区','云南省','甘肃省','台湾省','福建省','贵州省','浙江省','海南省','广东省','上海','北京','天津','重庆','黑龙江省','吉林省','辽宁省','江苏省','山东省','安徽省','河北省','河南省','湖北省','湖南省','江西省','陕西省','山西省','四川省','青海省']
+    return render_template('Heilongjiang.html')
+
+@app.route('/Liaoning')
+def Liaoning():
+    # Map=['澳门特别行政区','香港特别行政区','内蒙古自治区','宁夏回族自治区','新疆维吾尔自治区','西藏自治区','广西壮族自治区','云南省','甘肃省','台湾省','福建省','贵州省','浙江省','海南省','广东省','上海','北京','天津','重庆','黑龙江省','吉林省','辽宁省','江苏省','山东省','安徽省','河北省','河南省','湖北省','湖南省','江西省','陕西省','山西省','四川省','青海省']
+    return render_template('Liaoning.html')
+
+@app.route('/Hebei')
+def Hebei():
+    # Map=['澳门特别行政区','香港特别行政区','内蒙古自治区','宁夏回族自治区','新疆维吾尔自治区','西藏自治区','广西壮族自治区','云南省','甘肃省','台湾省','福建省','贵州省','浙江省','海南省','广东省','上海','北京','天津','重庆','黑龙江省','吉林省','辽宁省','江苏省','山东省','安徽省','河北省','河南省','湖北省','湖南省','江西省','陕西省','山西省','四川省','青海省']
+    return render_template('Hebei.html')
+
+
+@app.route('/Henan')
+def Henan():
+    # Map=['澳门特别行政区','香港特别行政区','内蒙古自治区','宁夏回族自治区','新疆维吾尔自治区','西藏自治区','广西壮族自治区','云南省','甘肃省','台湾省','福建省','贵州省','浙江省','海南省','广东省','上海','北京','天津','重庆','黑龙江省','吉林省','辽宁省','江苏省','山东省','安徽省','河北省','河南省','湖北省','湖南省','江西省','陕西省','山西省','四川省','青海省']
+    return render_template('Henan.html')
+
+
+@app.route('/Yunnan')
+def Yunnan():
+    # Map=['澳门特别行政区','香港特别行政区','内蒙古自治区','宁夏回族自治区','新疆维吾尔自治区','西藏自治区','广西壮族自治区','云南省','甘肃省','台湾省','福建省','贵州省','浙江省','海南省','广东省','上海','北京','天津','重庆','黑龙江省','吉林省','辽宁省','江苏省','山东省','安徽省','河北省','河南省','湖北省','湖南省','江西省','陕西省','山西省','四川省','青海省']
+    return render_template('Yunnan.html')
+
 @app.route('/Beijing',methods={"POST","GET"})
 def Beijing():
     count = 0
@@ -209,7 +329,7 @@ def Shanghai():
     sql = '''
                select * from Shanghai
                '''
-    sql1 = f'select * from Shaghai limit {size} offset {offset}'
+    sql1 = f'select * from Shanghai limit {size} offset {offset}'
 
     d = cur.execute(sql)
     for item in d:
@@ -482,7 +602,8 @@ def Chongqing():
             ran[16] += 1
             sum[16] += data[7]
     for i in range(0, 17):
-        sum[i] = sum[i] / ran[i]
+        if ran[i]!=0:
+            sum[i] = sum[i] / ran[i]
 
     return render_template('Chongqing.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
                            datalist=datalist, sum=sum, datalist1=datalist1)
@@ -1354,8 +1475,10 @@ def Chengdu():
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
     ll = [0, 0, 0, 0, 0]  # 单价
+    i=0
     for data in datalist:
-        # print(type(data[6]))
+        i+=1
+        print(type(data[6]),i)
         if data[6] > 0 and data[6] <= 200:
             l[0] += 1
         elif data[6] > 200 and data[6] <= 400:
@@ -1612,7 +1735,8 @@ def Shijiazhuang():
             ran[16] += 1
             sum[16] += data[7]
     for i in range(0, 17):
-        sum[i] = sum[i] / ran[i]
+        if ran[i]!=0:
+            sum[i] = sum[i] / ran[i]
 
     return render_template('Shijiazhuang.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
                            datalist=datalist, sum=sum, datalist1=datalist1)
@@ -2903,7 +3027,8 @@ def Wuhan():
             ran[16] += 1
             sum[16] += data[7]
     for i in range(0, 17):
-        sum[i] = sum[i] / ran[i]
+        if ran[i] != 0:
+            sum[i] = sum[i] / ran[i]
 
     return render_template('Wuhan.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
                            datalist=datalist, sum=sum, datalist1=datalist1)
@@ -3389,7 +3514,8 @@ def Langfang():
             ran[16] += 1
             sum[16] += data[7]
     for i in range(0, 17):
-        sum[i] = sum[i] / ran[i]
+        if ran[i] != 0:
+            sum[i] = sum[i] / ran[i]
 
     return render_template('Langfang.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
                            datalist=datalist, sum=sum, datalist1=datalist1)
@@ -3774,8 +3900,10 @@ def Nanjing():
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
     ll = [0, 0, 0, 0, 0]  # 单价
+    i=0
     for data in datalist:
-        # print(type(data[6]))
+        # i+=1
+        # print(type(data[6]),i)
         if data[6] > 0 and data[6] <= 200:
             l[0] += 1
         elif data[6] > 200 and data[6] <= 400:
@@ -4674,9 +4802,10 @@ def Tangshan():
             ran[16] += 1
             sum[16] += data[7]
     for i in range(0, 17):
-        sum[i] = sum[i] / ran[i]
+        if ran[i] != 0:
+            sum[i] = sum[i] / ran[i]
 
-    return render_template('Suzhou.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+    return render_template('Tangshan.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
                            datalist=datalist, sum=sum, datalist1=datalist1)
 
 
@@ -4835,7 +4964,8 @@ def Xinxiang():
             ran[16] += 1
             sum[16] += data[7]
     for i in range(0, 17):
-        sum[i] = sum[i] / ran[i]
+        if ran[i] != 0:
+            sum[i] = sum[i] / ran[i]
 
     return render_template('Xinxiang.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
                            datalist=datalist, sum=sum, datalist1=datalist1)
@@ -4996,7 +5126,8 @@ def Yueyang():
             ran[16] += 1
             sum[16] += data[7]
     for i in range(0, 17):
-        sum[i] = sum[i] / ran[i]
+        if ran[i] != 0:
+            sum[i] = sum[i] / ran[i]
 
     return render_template('Yueyang.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
                            datalist=datalist, sum=sum, datalist1=datalist1)
@@ -5316,7 +5447,8 @@ def Zhangjiakou():
             ran[16] += 1
             sum[16] += data[7]
     for i in range(0, 17):
-        sum[i] = sum[i] / ran[i]
+        if ran[i]!=0:
+             sum[i] = sum[i] / ran[i]
 
     return render_template('Zhangjiakou.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
                            datalist=datalist, sum=sum, datalist1=datalist1)
@@ -5503,7 +5635,165 @@ def ZhangzhouTableData():
     conn.close()
     return jsonify(datalist)
 
+@app.route('/Hangzhou', methods={"POST", "GET"})
+def Hangzhou():
+    count = 0
+    count1 = 0
+    datalist = []
+    datalist1 = []
+    datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #     select totalprice,price,hdata from Fuzhou
+    #     '''
+    sql = '''
+               select * from Hangzhou
+               '''
+    sql1 = f'select * from Hangzhou limit {size} offset {offset}'
 
+    d = cur.execute(sql)
+    for item in d:
+        # count+=1
+        datalist.append(item)
+        # datalist1.append(item[1])
+        # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
+    cur.close()
+    conn.close()
+
+    ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
+    sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
+    ll = [0, 0, 0, 0, 0]  # 单价
+    for data in datalist:
+        # print(type(data[6]))
+        if data[6] > 0 and data[6] <= 200:
+            l[0] += 1
+        elif data[6] > 200 and data[6] <= 400:
+            l[1] += 1
+        elif data[6] > 400 and data[6] <= 600:
+            l[2] += 1
+        elif data[6] > 600 and data[6] <= 800:
+            l[3] += 1
+        elif data[6] > 800 and data[6] <= 1000:
+            l[4] += 1
+        else:
+            l[5] += 1
+    for data in datalist:
+        if data[7] > 0 and data[7] <= 10000:
+            ll[0] += 1
+        elif data[7] > 10000 and data[7] <= 20000:
+            ll[1] += 1
+        elif data[7] > 20000 and data[7] <= 30000:
+            ll[2] += 1
+        elif data[7] > 30000 and data[7] <= 40000:
+            ll[3] += 1
+        else:
+            ll[4] += 1
+
+    for data in datalist:
+        if data[8] <= '2019.01.31':
+            count1 += 1
+            ran[0] += 1
+            sum[0] += data[7]
+        elif data[8] >= '2019.02.01' and data[8] <= '2019.02.29':
+            count1 += 1
+            ran[1] += 1
+            sum[1] += data[7]
+        elif data[8] >= '2019.03.01' and data[8] <= '2019.03.31':
+            count1 += 1
+            ran[2] += 1
+            sum[2] += data[7]
+        elif data[8] > '2019.04.01' and data[8] <= '2019.04.30':
+            count1 += 1
+            ran[3] += 1
+            sum[3] += data[7]
+        elif data[8] > '2019.05.01' and data[8] <= '2019.05.31':
+            count1 += 1
+            ran[4] += 1
+            sum[4] += data[7]
+        elif data[8] > '2019.06.01' and data[8] <= '2019.06.30':
+            count1 += 1
+            ran[5] += 1
+            sum[5] += data[7]
+        elif data[8] >= '2019.07.01' and data[8] <= '2019.07.31':
+            count1 += 1
+            ran[6] += 1
+            sum[6] += data[7]
+        elif data[8] >= '2019.08.01' and data[8] <= '2019.08.31':
+            count1 += 1
+            ran[7] += 1
+            sum[7] += data[7]
+        elif data[8] >= '2019.09.01' and data[8] <= '2019.09.30':
+            count1 += 1
+            ran[8] += 1
+            sum[8] += data[7]
+        elif data[8] >= '2019.10.01' and data[8] <= '2019.10.31':
+            count1 += 1
+            ran[9] += 1
+            sum[9] += data[7]
+        elif data[8] >= '2019.11.01' and data[8] <= '2019.11.30':
+            count1 += 1
+            ran[10] += 1
+            sum[10] += data[7]
+        elif data[8] >= '2019.12.01' and data[8] <= '2019.12.31':
+            count1 += 1
+            ran[11] += 1
+            sum[11] += data[7]
+        elif data[8] >= '2020.01.01' and data[8] <= '2020.01.31':
+            count1 += 1
+            ran[12] += 1
+            sum[12] += data[7]
+        elif data[8] >= '2020.02.01' and data[8] <= '2020.02.29':
+            count += 1
+            ran[13] += 1
+            sum[13] += data[7]
+        elif data[8] >= '2020.03.01' and data[8] <= '2020.03.31':
+            count += 1
+            ran[14] += 1
+            sum[14] += data[7]
+        elif data[8] > '2020.04.01' and data[8] <= '2020.04.30':
+            count += 1
+            ran[15] += 1
+            sum[15] += data[7]
+        elif data[8] >= '2020.05.01' and data[8] <= '2020.05.31':
+            count += 1
+            ran[16] += 1
+            sum[16] += data[7]
+    for i in range(0, 17):
+        sum[i] = sum[i] / ran[i]
+
+    return render_template('Hangzhou.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
+
+
+@app.route('/HangzhouTableData', methods={"POST", "GET"})
+def HangzhouTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
+    datalist = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Hangzhou limit {size} offset {offset}'
+    d = cur.execute(sql)
+    for item in d:
+        datalist.append(item)
+    cur.close()
+    conn.close()
+    return jsonify(datalist)
 #5
 
 @app.route('/Changzhou', methods={"POST", "GET"})
@@ -6444,7 +6734,8 @@ def Haerbin():
             ran[16] += 1
             sum[16] += data[7]
     for i in range(0, 17):
-        sum[i] = sum[i] / ran[i]
+        if ran[i]!=0:
+            sum[i] = sum[i] / ran[i]
 
     return render_template('Haerbin.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
                            datalist=datalist, sum=sum, datalist1=datalist1)
@@ -6790,6 +7081,171 @@ def HuangshanTableData():
     cur.close()
     conn.close()
     return jsonify(datalist)
+
+
+
+
+@app.route('/Huangshi', methods={"POST", "GET"})
+def Huangshi():
+    count = 0
+    count1 = 0
+    datalist = []
+    datalist1 = []
+    datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #     select totalprice,price,hdata from Fuzhou
+    #     '''
+    sql = '''
+               select * from Huangshi
+               '''
+    sql1 = f'select * from Huangshi limit {size} offset {offset}'
+
+    d = cur.execute(sql)
+    for item in d:
+        # count+=1
+        datalist.append(item)
+        # datalist1.append(item[1])
+        # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
+    cur.close()
+    conn.close()
+
+    ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
+    sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
+    ll = [0, 0, 0, 0, 0]  # 单价
+    for data in datalist:
+        # print(type(data[6]))
+        if data[6] > 0 and data[6] <= 200:
+            l[0] += 1
+        elif data[6] > 200 and data[6] <= 400:
+            l[1] += 1
+        elif data[6] > 400 and data[6] <= 600:
+            l[2] += 1
+        elif data[6] > 600 and data[6] <= 800:
+            l[3] += 1
+        elif data[6] > 800 and data[6] <= 1000:
+            l[4] += 1
+        else:
+            l[5] += 1
+    for data in datalist:
+        if data[7] > 0 and data[7] <= 10000:
+            ll[0] += 1
+        elif data[7] > 10000 and data[7] <= 20000:
+            ll[1] += 1
+        elif data[7] > 20000 and data[7] <= 30000:
+            ll[2] += 1
+        elif data[7] > 30000 and data[7] <= 40000:
+            ll[3] += 1
+        else:
+            ll[4] += 1
+
+    for data in datalist:
+        if data[8] <= '2019.01.31':
+            count1 += 1
+            ran[0] += 1
+            sum[0] += data[7]
+        elif data[8] >= '2019.02.01' and data[8] <= '2019.02.29':
+            count1 += 1
+            ran[1] += 1
+            sum[1] += data[7]
+        elif data[8] >= '2019.03.01' and data[8] <= '2019.03.31':
+            count1 += 1
+            ran[2] += 1
+            sum[2] += data[7]
+        elif data[8] > '2019.04.01' and data[8] <= '2019.04.30':
+            count1 += 1
+            ran[3] += 1
+            sum[3] += data[7]
+        elif data[8] > '2019.05.01' and data[8] <= '2019.05.31':
+            count1 += 1
+            ran[4] += 1
+            sum[4] += data[7]
+        elif data[8] > '2019.06.01' and data[8] <= '2019.06.30':
+            count1 += 1
+            ran[5] += 1
+            sum[5] += data[7]
+        elif data[8] >= '2019.07.01' and data[8] <= '2019.07.31':
+            count1 += 1
+            ran[6] += 1
+            sum[6] += data[7]
+        elif data[8] >= '2019.08.01' and data[8] <= '2019.08.31':
+            count1 += 1
+            ran[7] += 1
+            sum[7] += data[7]
+        elif data[8] >= '2019.09.01' and data[8] <= '2019.09.30':
+            count1 += 1
+            ran[8] += 1
+            sum[8] += data[7]
+        elif data[8] >= '2019.10.01' and data[8] <= '2019.10.31':
+            count1 += 1
+            ran[9] += 1
+            sum[9] += data[7]
+        elif data[8] >= '2019.11.01' and data[8] <= '2019.11.30':
+            count1 += 1
+            ran[10] += 1
+            sum[10] += data[7]
+        elif data[8] >= '2019.12.01' and data[8] <= '2019.12.31':
+            count1 += 1
+            ran[11] += 1
+            sum[11] += data[7]
+        elif data[8] >= '2020.01.01' and data[8] <= '2020.01.31':
+            count1 += 1
+            ran[12] += 1
+            sum[12] += data[7]
+        elif data[8] >= '2020.02.01' and data[8] <= '2020.02.29':
+            count += 1
+            ran[13] += 1
+            sum[13] += data[7]
+        elif data[8] >= '2020.03.01' and data[8] <= '2020.03.31':
+            count += 1
+            ran[14] += 1
+            sum[14] += data[7]
+        elif data[8] > '2020.04.01' and data[8] <= '2020.04.30':
+            count += 1
+            ran[15] += 1
+            sum[15] += data[7]
+        elif data[8] >= '2020.05.01' and data[8] <= '2020.05.31':
+            count += 1
+            ran[16] += 1
+            sum[16] += data[7]
+    for i in range(0, 17):
+        if ran[i]!=0:
+            sum[i] = sum[i] / ran[i]
+
+    return render_template('Huangshi.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
+
+
+@app.route('/HuangshiTableData', methods={"POST", "GET"})
+def HuangshiTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
+    datalist = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Huangshi limit {size} offset {offset}'
+    d = cur.execute(sql)
+    for item in d:
+        datalist.append(item)
+    cur.close()
+    conn.close()
+    return jsonify(datalist)
+
 
 @app.route('/Jilin', methods={"POST", "GET"})
 def Jilin():
@@ -7245,7 +7701,8 @@ def Luoyang():
             ran[16] += 1
             sum[16] += data[7]
     for i in range(0, 17):
-        sum[i] = sum[i] / ran[i]
+        if ran[i] != 0:
+            sum[i] = sum[i] / ran[i]
 
     return render_template('Luoyang.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
                            datalist=datalist, sum=sum, datalist1=datalist1)
@@ -7629,8 +8086,10 @@ def Shangrao():
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
     ll = [0, 0, 0, 0, 0]  # 单价
+    i=0
     for data in datalist:
-        # print(type(data[6]))
+        i+=1
+        print(type(data[6]),i)
         if data[6] > 0 and data[6] <= 200:
             l[0] += 1
         elif data[6] > 200 and data[6] <= 400:
@@ -8205,7 +8664,8 @@ def Xiangyang():
             ran[16] += 1
             sum[16] += data[7]
     for i in range(0, 17):
-        sum[i] = sum[i] / ran[i]
+        if ran[i]!=0:
+            sum[i] = sum[i] / ran[i]
 
     return render_template('Xiangyang.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
                            datalist=datalist, sum=sum, datalist1=datalist1)
@@ -8365,7 +8825,8 @@ def Xuchang():
             ran[16] += 1
             sum[16] += data[7]
     for i in range(0, 17):
-        sum[i] = sum[i] / ran[i]
+        if ran[i] != 0:
+            sum[i] = sum[i] / ran[i]
 
     return render_template('Xuchang.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
                            datalist=datalist, sum=sum, datalist1=datalist1)
@@ -9163,7 +9624,8 @@ def Baoding():
             ran[16] += 1
             sum[16] += data[7]
     for i in range(0, 17):
-        sum[i] = sum[i] / ran[i]
+        if ran[i] != 0:
+            sum[i] = sum[i] / ran[i]
 
     return render_template('Baoding.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
                            datalist=datalist, sum=sum, datalist1=datalist1)
@@ -9323,7 +9785,8 @@ def Changde():
             ran[16] += 1
             sum[16] += data[7]
     for i in range(0, 17):
-        sum[i] = sum[i] / ran[i]
+        if ran[i]!=0:
+            sum[i] = sum[i] / ran[i]
 
     return render_template('Changde.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
                            datalist=datalist, sum=sum, datalist1=datalist1)
@@ -9482,7 +9945,8 @@ def Chifeng():
             ran[16] += 1
             sum[16] += data[7]
     for i in range(0, 17):
-        sum[i] = sum[i] / ran[i]
+        if ran[i]!=0:
+            sum[i] = sum[i] / ran[i]
 
     return render_template('Chifeng.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
                            datalist=datalist, sum=sum, datalist1=datalist1)
@@ -9800,7 +10264,8 @@ def Hanzhong():
             ran[16] += 1
             sum[16] += data[7]
     for i in range(0, 17):
-        sum[i] = sum[i] / ran[i]
+        if ran[i]!=0:
+            sum[i] = sum[i] / ran[i]
 
     return render_template('Hanzhong.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
                            datalist=datalist, sum=sum, datalist1=datalist1)
@@ -12535,7 +13000,165 @@ def ZiboTableData():
     cur.close()
     conn.close()
     return jsonify(datalist)
+@app.route('/Zhengzhou', methods={"POST", "GET"})
+def Zhengzhou():
+    count = 0
+    count1 = 0
+    datalist = []
+    datalist1 = []
+    datalist2 = []
+    args = request.args
+    page = args.get("page", 1, int)
+    size = args.get("limit", 10, int)
+    offset = size * page
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #     select totalprice,price,hdata from Fuzhou
+    #     '''
+    sql = '''
+               select * from Zhengzhou
+               '''
+    sql1 = f'select * from Zhengzhou limit {size} offset {offset}'
 
+    d = cur.execute(sql)
+    for item in d:
+        # count+=1
+        datalist.append(item)
+        # datalist1.append(item[1])
+        # datalist2.append(item[2])
+    d = cur.execute(sql1)
+    for item in d:
+        datalist1.append(item)
+    cur.close()
+    conn.close()
+
+    ran = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # 成交金额范围
+    sum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    l = [0, 0, 0, 0, 0, 0]  # 各成交金额范围的数量,总价
+    ll = [0, 0, 0, 0, 0]  # 单价
+    for data in datalist:
+        # print(type(data[6]))
+        if data[6] > 0 and data[6] <= 200:
+            l[0] += 1
+        elif data[6] > 200 and data[6] <= 400:
+            l[1] += 1
+        elif data[6] > 400 and data[6] <= 600:
+            l[2] += 1
+        elif data[6] > 600 and data[6] <= 800:
+            l[3] += 1
+        elif data[6] > 800 and data[6] <= 1000:
+            l[4] += 1
+        else:
+            l[5] += 1
+    for data in datalist:
+        if data[7] > 0 and data[7] <= 10000:
+            ll[0] += 1
+        elif data[7] > 10000 and data[7] <= 20000:
+            ll[1] += 1
+        elif data[7] > 20000 and data[7] <= 30000:
+            ll[2] += 1
+        elif data[7] > 30000 and data[7] <= 40000:
+            ll[3] += 1
+        else:
+            ll[4] += 1
+
+    for data in datalist:
+        if data[8] <= '2019.01.31':
+            count1 += 1
+            ran[0] += 1
+            sum[0] += data[7]
+        elif data[8] >= '2019.02.01' and data[8] <= '2019.02.29':
+            count1 += 1
+            ran[1] += 1
+            sum[1] += data[7]
+        elif data[8] >= '2019.03.01' and data[8] <= '2019.03.31':
+            count1 += 1
+            ran[2] += 1
+            sum[2] += data[7]
+        elif data[8] > '2019.04.01' and data[8] <= '2019.04.30':
+            count1 += 1
+            ran[3] += 1
+            sum[3] += data[7]
+        elif data[8] > '2019.05.01' and data[8] <= '2019.05.31':
+            count1 += 1
+            ran[4] += 1
+            sum[4] += data[7]
+        elif data[8] > '2019.06.01' and data[8] <= '2019.06.30':
+            count1 += 1
+            ran[5] += 1
+            sum[5] += data[7]
+        elif data[8] >= '2019.07.01' and data[8] <= '2019.07.31':
+            count1 += 1
+            ran[6] += 1
+            sum[6] += data[7]
+        elif data[8] >= '2019.08.01' and data[8] <= '2019.08.31':
+            count1 += 1
+            ran[7] += 1
+            sum[7] += data[7]
+        elif data[8] >= '2019.09.01' and data[8] <= '2019.09.30':
+            count1 += 1
+            ran[8] += 1
+            sum[8] += data[7]
+        elif data[8] >= '2019.10.01' and data[8] <= '2019.10.31':
+            count1 += 1
+            ran[9] += 1
+            sum[9] += data[7]
+        elif data[8] >= '2019.11.01' and data[8] <= '2019.11.30':
+            count1 += 1
+            ran[10] += 1
+            sum[10] += data[7]
+        elif data[8] >= '2019.12.01' and data[8] <= '2019.12.31':
+            count1 += 1
+            ran[11] += 1
+            sum[11] += data[7]
+        elif data[8] >= '2020.01.01' and data[8] <= '2020.01.31':
+            count1 += 1
+            ran[12] += 1
+            sum[12] += data[7]
+        elif data[8] >= '2020.02.01' and data[8] <= '2020.02.29':
+            count += 1
+            ran[13] += 1
+            sum[13] += data[7]
+        elif data[8] >= '2020.03.01' and data[8] <= '2020.03.31':
+            count += 1
+            ran[14] += 1
+            sum[14] += data[7]
+        elif data[8] > '2020.04.01' and data[8] <= '2020.04.30':
+            count += 1
+            ran[15] += 1
+            sum[15] += data[7]
+        elif data[8] >= '2020.05.01' and data[8] <= '2020.05.31':
+            count += 1
+            ran[16] += 1
+            sum[16] += data[7]
+    for i in range(0, 17):
+        sum[i] = sum[i] / ran[i]
+
+    return render_template('Zhengzhou.html', count=count, count1=count1, ran=ran, l=l, ll=ll,
+                           datalist=datalist, sum=sum, datalist1=datalist1)
+
+
+@app.route('/ZhengzhouTableData', methods={"POST", "GET"})
+def ZhengzhouTableData():
+    values = request.values
+    page = values.get("page", 1, int)
+    size = values.get("limit", 10, int)
+    offset = size * page
+    print(values)
+    datalist = []
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    # sql = '''
+    #             select * from Beijing
+    #             '''
+    sql = f'select * from Zhengzhou limit {size} offset {offset}'
+    d = cur.execute(sql)
+    for item in d:
+        datalist.append(item)
+    cur.close()
+    conn.close()
+    return jsonify(datalist)
 
 if __name__ == '__main__':
     app.run()

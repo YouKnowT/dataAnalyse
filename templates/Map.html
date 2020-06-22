@@ -63,6 +63,7 @@
         <div class="section-title">
           <h2>全国二手房交易地图</h2>
           <p>这是全国二手房交易的表格，请单击省份，进入该省主页</p>
+            <p>个别省份没有数据，则均价为0，且没有设置主页</p>
         </div>
 
         <div class="row">
@@ -81,19 +82,15 @@
         data: ['中国二手房交易地图']
       },
       visualMap: {
-         type: 'piecewise',
-        pieces: [
-            {min: 200},
-            {min: 160, max: 200},
-            {min: 120, max: 160},
-            {min: 80, max: 120},
-            // {min: 10, max: 200, label: '10 到 200（自定义label）'},
-            {value: 123, label: '123（自定义特殊颜色）', color: 'grey'},
-            // {min: 5, max: 5, label: '5（自定义特殊颜色）', color: 'black'},
-            {max: 80}
-        ],
-        color: ['#E0022B', '#E09107', '#A3E00B']
-      },
+                            min: 6000,
+                            max: 60000,
+                            text: ['High', 'Low'],
+                            realtime: false,
+                            calculable: true,
+                            inRange: {
+                                color: ['lightskyblue', 'blue', 'darkblue']
+                            }
+                        },
       toolbox: {
         show: true,
         orient: 'vertical',
@@ -115,7 +112,7 @@
       },
       series: [
         {
-          name: '成交均价',
+          name: '成交均价(元/平米)',
           type: 'map',
           mapType: 'china',
           roam: false,
@@ -126,7 +123,7 @@
           data: [
             {
               name: '北京',
-              value: 506,
+              value: 62635,
               herf:"/Beijing"
                 //url:"http://www.baidu.com"
             }, {
@@ -134,103 +131,126 @@
               value: Math.round(Math.random()*150)
             }, {
               name: '上海',
-              value: 404,
+              value: 48363,
               herf:"/Shanghai"
             }, {
               name: '重庆',
-              value: 105,
+              value: 13543,
               herf:"/Chongqing"
             }, {
               name: '河北',
-              value: Math.round(90+Math.random()*30)
+              value: 9799.8,
+                  herf:"/Hebei"
             }, {
               name: '河南',
-              value: Math.round(80+Math.random()*30)
+              value: 7817.5,
+                  herf:"/Henan"
             }, {
               name: '云南',
-              value: Math.round(80+Math.random()*30)
+              value: 11420,
+                  herf:"/Yunnan"
             }, {
               name: '辽宁',
-              value: Math.round(90+Math.random()*30)
+              value: 5626,
+                  herf:"/Liaoning"
             }, {
               name: '黑龙江',
-              value: Math.round(90+Math.random()*50)
+              value: 8257,
+                  herf:"/Heilongjiang"
             }, {
               name: '湖南',
-              value: Math.round(90+Math.random()*10)
+              value: 8010.6,
+                  herf:"/Hunan"
             }, {
               name: '安徽',
-              value: Math.round(90+Math.random()*10)
+              value: 11772.5,
+                  herf:"/Anhui"
             }, {
               name: '山东',
-              value: Math.round(100+Math.random()*10),
+              value: 10536.8,
                   herf:"/Shandong"
             }, {
               name: '新疆',
-              value: Math.round(80+Math.random()*10)
+              value: 0
             }, {
               name: '江苏',
-              value: Math.round(100+Math.random()*10)
+              value: 16172.3,
+                  herf:"/Jiangsu"
             }, {
               name: '浙江',
-              value: Math.round(100+Math.random()*40)
+              value: 17556.5,
+                  herf:"/Zhejiang"
             }, {
               name: '江西',
-              value: Math.round(80+Math.random()*10)
+              value: 7734.5,
+                  herf:"/Jiangxi"
             }, {
               name: '湖北',
-              value: Math.round(100+Math.random()*10)
+              value: 11020,
+                  herf:"/Hubei"
             }, {
               name: '广西',
-              value: Math.round(80+Math.random()*10)
+              value: 8158,
+                  herf:"/Guangxi"
             }, {
               name: '甘肃',
-              value: Math.round(80+Math.random()*10)
+              value: 12044,
+                  herf:"/Gansu"
             }, {
               name: '山西',
-              value: Math.round(80+Math.random()*20)
+              value: 0
             }, {
               name: '内蒙古',
-              value: Math.round(80+Math.random()*10)
+              value: 10303.5,
+                  herf:"/Neimenggu"
             }, {
               name: '陕西',
-              value: Math.round(80+Math.random()*20)
+              value: 5691,
+                  herf:"/Shanxi"
             }, {
               name: '吉林',
-              value: Math.round(100+Math.random()*20)
+              value: 6582,
+                  herf:"/Jilinsheng"
             }, {
               name: '福建',
-              value: Math.round(100+Math.random()*20)
+              value: 20439,
+                  herf:"/Fujian"
+
             }, {
               name: '贵州',
-              value: Math.round(80+Math.random()*10)
+              value: 8904,
+                  herf:"/Guizhou"
             }, {
               name: '广东',
-              value: Math.round(100+Math.random()*50)
+              value: 22251.5,
+                  herf:"/Guangdong"
             }, {
               name: '青海',
-              value: Math.round(80+Math.random()*10)
+              value: 0
             }, {
               name: '西藏',
-              value: Math.round(Math.random()*90)
+              value: 0
             }, {
               name: '四川',
-              value: Math.round(90+Math.random()*10)
+              value: 9870.25,
+                  herf:"/Sichuan"
             }, {
               name: '宁夏',
-              value: Math.round(Math.random()*100)
+              value: 5634,
+                  herf:"/Ningxia"
             }, {
               name: '海南',
-              value: Math.round(150+Math.random()*20)
+              value: 14764,
+                  herf:"/Hainan"
             }, {
               name: '台湾',
-              value: Math.round(100+Math.random()*20)
+              value: 0
             }, {
               name: '香港',
-              value: Math.round(120+Math.random()*20)
+              value: 0
             }, {
               name: '澳门',
-              value: Math.round(100+Math.random()*20)
+              value: 0
             }
           ]
         }

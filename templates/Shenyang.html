@@ -55,8 +55,8 @@
         <ul>
           <li class="active"><a href="#situation">Situation</a></li>
           <li><a href="#echarts">Echarts</a></li>
-          <li><a href="#wordcloud">Word Cloud</a></li>
-          <li><a href="/ShenyangTable" target="_blank">Table</a></li>
+
+          <li><a href="#table" target="_blank">Table</a></li>
         </ul>
       </nav><!-- .nav-menu -->
 
@@ -263,7 +263,7 @@
             max: 35000,
             interval: 5000,
             axisLabel: {
-                formatter: '{value} 万/平米'
+                formatter: '{value} 元/平米'
             }
         },
         {
@@ -303,40 +303,141 @@
     </section>
 
     <!-- ======= Services Section ======= -->
-    <section id="wordcloud" class="services">
-      <div class="container">
-
-        <div class="row no-gutters">
-          <div class="col-lg-6 video-box">
-            <img src="static/assets/img/wordcloudshenyang.jpg" class="img-fluid" alt="">
-            </div>
-
-          <div class="col-lg-6 d-flex flex-column justify-content-center about-content">
-
-            <div class="section-title">
-              <h2>二手房热词</h2>
-              <p>根据成交热词，提炼出词云树，可以使我们更清晰地了解到人们对二手房交易的关注重点。</p>
-            </div>
-
-            <div class="icon-box" data-aos="fade-up" data-aos-delay="100">
-              <div class="icon"><i class="bx bx-fingerprint"></i></div>
-              <h4 class="title"><a href="">关于二手房</a></h4>
-              <p class="description">二手房胜一手房，住着舒心，用着放心，幸福家庭现在就行。</p>
-            </div>
+    <!-- End Services Section -->
+      <section id="table" class="team">
+              <div class="container">
 
 
+                <div class="section-title">
+                  <h2>沈阳市二手房成交信息</h2>
+
+                </div>
+
+                <!-- ======= Counts Section ======= -->
+            <section class="counts section-bg">
+              <div class="container">
+
+                <table id="table" class="table table-striped">
+                    <thead>
+                        <tr>
+                              <td>小区名称</td>
+                              <td>房屋户型</td>
+                              <td>建筑面积</td>
+                              <td>房屋朝向</td>
+                              <td>装修情况</td>
+                              <td>总价</td>
+                              <td>单价</td>
+                              <td>成交日期</td>
+                              <td>所在楼层</td>
+                              <td>房屋信息</td>
+                          </tr>
+                    </thead>
+                    <tbody id="tbody">
+                        {% for data in datalist1%}
+                            <tr>
+                                <td>{{ data[1] }}</td>
+                                <td>{{ data[2] }}</td>
+                                <td>{{ data[3] }}</td>
+                                <td>{{ data[4] }}</td>
+                                <td>{{ data[5] }}</td>
+                                <td>{{ data[6] }}</td>
+                                <td>{{ data[7] }}</td>
+                                <td>{{ data[8] }}</td>
+                                <td>{{ data[9] }}</td>
+                                <td>{{ data[10] }}</td>
+                          </tr>
+                        {% endfor %}
+                    </tbody>
 
 
-          </div>
-        </div>
+                    <div>
+                        <div style="float: left"><button type="button" class="btn btn-light" onclick='ajaxPre()'>上一页</button></div>
+                        <div style="float: right"><button type="button" class="btn btn-light" onclick='ajaxNext()'>下一页</button></div>
+                    </div>
+                </table>
 
-      </div>
+
+              </div>
+            </section><!-- End Counts Section -->
 
 
+              </div>
+            </section><!-- End Our Team Section -->
+        <script>
+              let currentPage=0;
+              let limit=10;
+              function ajaxNext(){
+                  currentPage++;
+                  let data={page:currentPage,limit:limit};
+                  $.ajax({
+                      url:"ShenyangTableData",
+                      data:data,
+                      type:"POST",
+                      dataType:"json",
+                      success:function (data) {
+                          if(data!=null){
+                              let str=""
+                              for (let i=0;i<data.length;i++){
+                                  str+="<tr><td>"+data[i][1]+
+                                          "</td><td>"+data[i][2]+
+                                          "</td><td>"+data[i][3]+
+                                          "</td><td>"+data[i][4]+
+                                          "</td><td>"+data[i][5]+
+                                          "</td><td>"+data[i][6]+
+                                          "</td><td>"+data[i][7]+
+                                          "</td><td>"+data[i][8]+
+                                          "</td><td>"+data[i][9]+
+                                          "</td><td>"+data[i][10]
 
+                              }
+                              $("tbody").html(str);
+                          }
 
-      </div>
-    </section><!-- End Services Section -->
+                      },
+                      error:function(err){
+                          console.log(err);
+                      }
+                  });
+                  {#window.open("BeijingTable?page="+currentPage+"&size="+limit,"_self");#}
+              }
+
+              function ajaxPre(){
+                  if (currentPage>=1){
+                      currentPage--;
+                  }
+
+                  let data={page:currentPage,limit:limit};
+                  $.ajax({
+                      url:"QingdaoTableData",
+                      data:data,
+                      type:"POST",
+                      dataType:"json",
+                      success:function (data) {
+                          if(data!=null){
+                              let str=""
+                              for (let i=0;i<data.length;i++){
+                                  str+="<tr><td>"+data[i][1]+
+                                          "</td><td>"+data[i][2]+
+                                          "</td><td>"+data[i][3]+
+                                          "</td><td>"+data[i][4]+
+                                          "</td><td>"+data[i][5]+
+                                          "</td><td>"+data[i][6]+
+                                          "</td><td>"+data[i][7]+
+                                          "</td><td>"+data[i][8]+
+                                          "</td><td>"+data[i][9]+
+                                          "</td><td>"+data[i][10]
+
+                              }
+                              $("tbody").html(str);
+                          }
+
+                      },
+                      error:function(err){
+                          console.log(err);
+                      }
+                  });
+              }
+          </script>
 
     <!-- ======= Our Portfolio Section ======= -->
 

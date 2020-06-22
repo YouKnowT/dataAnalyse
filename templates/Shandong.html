@@ -64,7 +64,7 @@
 
         <div class="section-title">
           <h2>山东二手房交易地图</h2>
-          <p>山东二手房交易地图，请单击省份，进入该省主页</p>
+          <p>山东二手房交易地图，请单击城市，进入城市主页</p>
         </div>
 
         <div class="row">
@@ -88,7 +88,7 @@
                         },
                         tooltip: {
                             trigger: 'item',
-                            formatter: '{b}<br/>{c} (万)'
+                            formatter: '{b}<br/>{c} (元)'
                         },
                         toolbox: {
                             show: true,
@@ -102,8 +102,8 @@
                             }
                         },
                         visualMap: {
-                            min: 80,
-                            max: 500,
+                            min: 5000,
+                            max: 21000,
                             text: ['High', 'Low'],
                             realtime: false,
                             calculable: true,
@@ -122,73 +122,74 @@
                                 data: [
                             {
                               name: '济南市',
-                              value: 506,
+                              value: 16965,
                               herf:"/Jinan"
                                 //url:"http://www.baidu.com"
                             }, {
                               name: '青岛市',
-                              value: Math.round(Math.random()*150),
+                              value: 20009,
                                         herf:"/Qingdao"
                             }, {
                               name: '淄博市',
-                              value: 404,
+                              value: 7702,
                               herf:"/Zibo"
                             }, {
                               name: '枣庄市',
-                              value: 105,
+                              value: 0
 
                             }, {
                               name: '东营市',
-                              value: Math.round(90+Math.random()*30),
+                              value: 0
 
                             }, {
                               name: '烟台市',
-                              value: Math.round(80+Math.random()*30),
+                              value: 11837,
                                         herf:"/Yantai"
                             }, {
                               name: '潍坊市',
-                              value: Math.round(80+Math.random()*30),
+                              value: 6581,
                                         herf:"/Weifang"
                             }, {
                               name: '济宁市',
-                              value: Math.round(90+Math.random()*30),
+                              value: 0,
 
                             }, {
                               name: '泰安市',
-                              value: Math.round(90+Math.random()*50),
+                              value: 0,
 
 
                             }, {
                               name: '威海市',
-                              value: Math.round(90+Math.random()*10),
+                              value: 7904,
                                         herf:"/Weihai"
                             }, {
                               name: '日照市',
-                              value: Math.round(90+Math.random()*10),
+                              value: 0
 
                             }, {
                               name: '滨州市',
-                              value: Math.round(100+Math.random()*10),
+                              value: 0
 
                             }, {
                               name: '德州市',
-                              value: Math.round(80+Math.random()*10),
+                              value: 0
 
                             }, {
                               name: '聊城市',
-                              value: Math.round(100+Math.random()*10),
+                              value: 0
 
                             }, {
                               name: '临沂市',
-                              value: Math.round(100+Math.random()*40),
+                              value: 9341,
+                                        herf:"/Linyi"
 
                             }, {
                               name: '菏泽市',
-                              value: Math.round(80+Math.random()*10),
+                              value: 0
 
                             }, {
                               name: '莱芜市',
-                              value: Math.round(100+Math.random()*10),
+                              value: 0
 
                             }
                           ],

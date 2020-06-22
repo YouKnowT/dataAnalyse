@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <script src="static/assets/js/echarts.min.js"></script>
+  <!--引入中国的地图数据js文件，引入后会自动注册地图名字和数据-->
+  <script src="static/map/js/fujian.js"></script>
+
+  <title>福建二手房交易地图</title>
+  <meta content="" name="descriptison">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="static/assets/img/favicon.png" rel="icon">
+  <link href="static/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,600,600i,700,700i,900" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="static/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="static/assets/vendor/icofont/icofont.min.css" rel="stylesheet">
+  <link href="static/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="static/assets/vendor/animate.css/animate.min.css" rel="stylesheet">
+  <link href="static/assets/vendor/venobox/venobox.css" rel="stylesheet">
+  <link href="static/assets/vendor/aos/aos.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="static/assets/css/style.css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+  <!-- =======================================================
+  * Template Name: Mamba - v2.0.1
+  * Template URL: https://bootstrapmade.com/mamba-one-page-bootstrap-template-free/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+
+
+
+  <!-- ======= Header ======= -->
+  <header id="header">
+    <div class="container">
+
+      <div class="logo float-left">
+        <h1 class="text-light"><a href="/Map"><span>HOUSE</span></a></h1>
+        <!-- Uncomment below if you prefer to use an image logo -->
+        <!-- <a href="index.html"><img src="static/assets/img/logo.png" alt="" class="img-fluid"></a>-->
+      </div>
+
+
+    </div>
+  </header><!-- End Header -->
+
+   <!-- ======= Our Portfolio Section ======= -->
+    <section id="portfolio" class="portfolio section-bg">
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="section-title">
+          <h2>福建二手房交易地图</h2>
+          <p>福建二手房交易地图，请单击城市，进入城市主页</p>
+        </div>
+
+        <div class="row">
+            <div id="myEcharts" style="width: 800px;height:600px;left: 15% !important;"></div>
+            <script>
+                $(function(){
+                var myChart = echarts.init(document.getElementById('myEcharts'));
+                myChart.showLoading();
+
+                $.get('/static/map/json/province/fujian.json', function (geoJson) {
+
+                    myChart.hideLoading();
+
+                    echarts.registerMap('fujian', geoJson);
+
+                    myChart.setOption(option = {
+                        title: {
+                            text: '',
+                            {#subtext: '人口密度数据来自Wikipedia',#}
+                            {#sublink: 'http://zh.wikipedia.org/wiki/%E9%A6%99%E6%B8%AF%E8%A1%8C%E6%94%BF%E5%8D%80%E5%8A%83#cite_note-12'#}
+                        },
+                        tooltip: {
+                            trigger: 'item',
+                            formatter: '{b}<br/>{c} (元)'
+                        },
+                        toolbox: {
+                            show: true,
+                            orient: 'vertical',
+                            left: 'right',
+                            top: 'center',
+                            feature: {
+                                dataView: {readOnly: false},
+                                restore: {},
+                                saveAsImage: {}
+                            }
+                        },
+                        visualMap: {
+                            min: 8000,
+                            max: 45000,
+                            text: ['High', 'Low'],
+                            realtime: false,
+                            calculable: true,
+                            inRange: {
+                                color: ['lightskyblue', 'yellow', 'orangered']
+                            }
+                        },
+                        series: [
+                            {
+                                name: '',
+                                type: 'map',
+                                mapType: 'fujian', // 自定义扩展图表类型
+                                label: {
+                                    show: true
+                                },
+                                data: [
+                            {
+                              name: '福州市',
+                              value: 21426,
+                                herf:"/Fuzhou"
+
+
+                                //url:"http://www.baidu.com"
+                            }, {
+                              name: '厦门市',
+                              value: 38778,
+                                        herf:"/Xiamen"
+
+                            }, {
+                              name: '漳州市',
+                              value: 11229,
+                                        herf:"/Zhangzhou"
+
+                            }, {
+                              name: '泉州市',
+                              value: 10323,
+                                        herf:"/Quanzhou"
+
+                            }, {
+                              name: '莆田市',
+                              value: 0
+
+                            }, {
+                              name: '三明市',
+                              value: 0
+
+
+                            }, {
+                              name: '南平市',
+                              value: 0
+
+
+                            }, {
+                              name: '龙岩市',
+                              value: 0
+
+
+                            }, {
+                              name: '宁德市',
+                              value: 0
+
+                            }
+                          ],
+
+                            }
+                        ]
+                    });
+                    myChart.setOption(option);
+                myChart.on('click',function (param) {
+                    window.open(param.data.herf);
+                });
+                });
+
+                })
+
+            </script>
+
+
+        </div>
+
+        <div class="row portfolio-container">
+
+
+
+
+        </div>
+
+      </div>
+    </section><!-- End Our Portfolio Section -->
+
+
+
+
+
+  <!-- ======= Footer ======= -->
+
+
+  <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="static/assets/vendor/jquery/jquery.min.js"></script>
+  <script src="static/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="static/assets/vendor/jquery.easing/jquery.easing.min.js"></script>
+  <script src="static/assets/vendor/php-email-form/validate.js"></script>
+  <script src="static/assets/vendor/jquery-sticky/jquery.sticky.js"></script>
+  <script src="static/assets/vendor/venobox/venobox.min.js"></script>
+  <script src="static/assets/vendor/waypoints/jquery.waypoints.min.js"></script>
+  <script src="static/assets/vendor/counterup/counterup.min.js"></script>
+  <script src="static/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="static/assets/vendor/aos/aos.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="static/assets/js/main.js"></script>
+
+</body>
+
+</html>
